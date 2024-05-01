@@ -1,5 +1,5 @@
 # LR2-VT
-:cherries::cherries::cherries::cherries:    Virgin Tracker 1.59    :cherries::cherries::cherries::cherries: 
+:cherries::cherries::cherries::cherries:    LR2-VT    :cherries::cherries::cherries::cherries: 
 :lotus: Adds a visual virginity tracker for those with the virgin/dom kinks.  Serums added to regrow the hymen or reset the virginities by stimulation and regrowth.
 
 :pixelpurplefire: It is a PATCH, not a mod! :pixelpurplefire: It adds to the game files, and needs to overwrite a few of them.
@@ -14,7 +14,7 @@
      :exclamation: Jennifer Content dev - no
      :exclamation: Pregnant Content dev - no
      :pixelbluefire: Lab Rats2 Reformulate: 2023.12-code-beta  Ren'Py 8.2.1
-     :pixelgreenfire: lr2mods-develop - April 27, 2024 6:19 PM EDT - https://discord.com/channels/564870606382956576/571557121716387840/1233905271558901886
+     :pixelgreenfire: lr2mods-develop - May 1, 2024 8:03 AM EDT - https://discord.com/channels/564870606382956576/571557121716387840/1235199993342857247
 :lotus: Vanilla files modified: 12 files
 :lotus: Image Files added: 50+ images to gui
 :lotus: The Visuals: Located under the gal's info hud when you talk to them.
