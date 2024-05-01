@@ -2,7 +2,8 @@
 :cherries::cherries::cherries::cherries:    LR2-VT    :cherries::cherries::cherries::cherries: 
 :lotus: Adds a visual virginity tracker for those with the virgin/dom kinks.  Serums added to regrow the hymen or reset the virginities by stimulation and regrowth.
 
-:pixelpurplefire: It is a PATCH, not a mod! :pixelpurplefire: It adds to the game files, and needs to overwrite a few of them.
+:pixelpurplefire: It is a PATCH, not a mod! 
+:pixelpurplefire: It adds to the game files, and needs to overwrite a few of them.
 
 :lotus: Category: Visual, QoL, serums, virginity :lotus: Dependencies: None
 :lotus: Compatibility: 
