@@ -1535,7 +1535,7 @@ class Person(): #Everything that needs to be known about a person.
 
     @property
     def has_significant_other(self) -> bool:
-        return self.relationship != "Single"
+        return self.relationship != "Single" if self.relationship is not None else False
 
     @property
     def is_single(self) -> bool:
