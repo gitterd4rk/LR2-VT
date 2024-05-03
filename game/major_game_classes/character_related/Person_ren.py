@@ -13,6 +13,7 @@ from renpy.display.im import AlphaMask, Composite, Image
 from renpy.display.layout import Flatten
 from renpy.text.text import Text
 from game.random_lists_ren import build_generic_weighted_list, get_random_copy_from_named_list, get_random_from_weighted_list, index_in_weighted_list, is_in_weighted_list
+from game.bugfix_additions.debug_info_ren import write_log
 from game.bugfix_additions.mapped_list_ren import generate_identifier
 from game.helper_functions.character_display_functions_ren import clear_scene
 from game.helper_functions.convert_to_string_ren import SO_relationship_to_title, capitalize_first_word, girl_relationship_to_title, opinion_score_to_string, remove_punctuation
@@ -1662,11 +1663,11 @@ class Person(): #Everything that needs to be known about a person.
 
     @property
     def pubes_description(self) -> str:
-        if self.pubes_style == shaved_pubes:
+        if self.pubes_style.is_similar(shaved_pubes):
             return "bald"
-        if self.pubes_style == landing_strip_pubes:
+        if self.pubes_style.is_similar(landing_strip_pubes):
             return "brazilian waxed"
-        if self.pubes_style == default_pubes:
+        if self.pubes_style.is_similar(default_pubes):
             return "hairy"
         return "neatly trimmed"
 
@@ -2166,10 +2167,11 @@ class Person(): #Everything that needs to be known about a person.
         special_modifier = None
         lighting = [.98, .98, .98]
 
-        disp_key = "P:{}_C:{}".format(self.identifier,
+        disp_key = "P:{}_C:{}_BO:{}".format(self.identifier,
             hash((self.face_style, self.hair_style.name, self.skin, special_modifier)
                 + tuple(self.hair_style.colour)
-                + tuple(self.eyes[1])))
+                + tuple(self.eyes[1])),
+            hash(tuple([x.identifier for x in self.base_outfit])))
 
         global portrait_cache
 
@@ -2178,6 +2180,7 @@ class Person(): #Everything that needs to be known about a person.
 
         displayable_list = []
         displayable_list.append(self.expression_images.generate_emotion_displayable(position, emotion, special_modifier = special_modifier, eye_colour = self.eyes[1], lighting = lighting)) #Get the face displayable
+        displayable_list.extend(self.base_outfit.generate_draw_list(self, position, emotion, special_modifier, lighting))
         displayable_list.append(self.hair_style.generate_item_displayable("standard_body", self.tits, position, lighting = lighting)) #Get hair
 
         composite_list = [position_size_dict.get(position)]
