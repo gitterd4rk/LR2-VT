@@ -871,7 +871,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                 idle "truevirgin"
                 action NullAction()
                 tooltip "Her lips seem to beckon you."
-            if person.arousal_perc >=50:
+            if person.arousal_perc >=59:
                 imagebutton:
                     pos(678, 166)
                     idle "bitelip"
@@ -880,7 +880,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
         else:
             if person.oral_virgin >=1 and person.oral_virgin <=10:
                 if person.oral_first == mc.name:
-                    if person.arousal_perc >=50:
+                    if person.arousal_perc >=59:
                         imagebutton:
                             pos(678, 166)
                             idle "bitelip"
@@ -899,7 +899,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                         action NullAction()
                         tooltip "Someone else had her lips before you... CLAIM IT!"
 
-            if person.arousal_perc >= 50:
+            if person.arousal_perc >= 59:
                 imagebutton:
                     pos(678, 166)
                     idle "bitelip"
@@ -912,7 +912,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                 idle "truevirgin"
                 action NullAction()
                 tooltip "Her ass looks so ripe for the taking."
-            if person.arousal_perc >=50:
+            if person.arousal_perc >=59:
                 imagebutton:
                     pos(715, 166)
                     idle "yespeach"
@@ -928,7 +928,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                     tooltip "Someone else had this ass before you... CLAIM IT!"
             #Claimed/unclaimed?
             if person.anal_virgin == 1:
-                if person.arousal_perc >=50:
+                if person.arousal_perc >=59:
                     imagebutton:
                         pos(715, 166)
                         idle "yespeach"
@@ -942,7 +942,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                             action NullAction()
                             tooltip "You Claimed this Ass!"
             elif person.anal_virgin == 2:
-                if person.arousal_perc >=50:
+                if person.arousal_perc >=59:
                     imagebutton:
                         pos(715, 166)
                         idle "yespeach"
@@ -956,7 +956,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                             action NullAction()
                             tooltip "You Claimed this Ass!"
             elif person.anal_virgin == 3:
-                if person.arousal_perc >=50:
+                if person.arousal_perc >=59:
                     imagebutton:
                         pos(715, 166)
                         idle "yespeach"
@@ -970,7 +970,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                             action NullAction()
                             tooltip "You Claimed this Ass!"
             elif person.anal_virgin >=4:
-                if person.arousal_perc >=50:
+                if person.arousal_perc >=59:
                     imagebutton:
                         pos(715, 166)
                         idle "handass"
@@ -991,7 +991,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                 idle "truevirgin"
                 action NullAction()
                 tooltip "She looks so innocent and inexperienced."
-            if person.arousal_perc >=50:
+            if person.arousal_perc >=59:
                 imagebutton:
                     pos(752, 166)
                     idle "openvag"
@@ -1003,7 +1003,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                 idle "vaghymen"
                 action NullAction()
                 tooltip "Freshly claimed woman."
-            if person.arousal_perc >=50:
+            if person.arousal_perc >=59:
                 imagebutton:
                     pos(752, 166)
                     idle "ahegaoface"
@@ -1012,7 +1012,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
         else:
             if person.vaginal_virgin >=1 and person.vaginal_virgin <=3:
                 if person.vaginal_first == mc.name:
-                    if person.arousal_perc >=50:
+                    if person.arousal_perc >=59:
                         imagebutton:
                             pos(752, 166)
                             idle "spreadvag"
@@ -1040,7 +1040,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                     else:
                         $ daysince = "been "+str(dayslastsex)+" more days"
 
-                    if person.arousal_perc <=50:
+                    if person.arousal_perc <=59:
                         imagebutton:
                             pos(752, 166)
                             idle "openvag"
@@ -1053,7 +1053,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                                 action NullAction()
                                 tooltip "MmmmMm I still feel you in me! It has "+ daysince +"\nmmmmm please give me more!!! I need it now!\n*You can really smell her arousal*"
                 else:
-                    if person.arousal_perc >=50:
+                    if person.arousal_perc >=59:
                         imagebutton:
                             pos(752, 166)
                             idle "ahegaoface"
@@ -1067,7 +1067,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                             tooltip "MmmmMm I still feel you in me! Going to feel it for "+ str(4 - person.days_since_event("last_insemination"))+" more days... mmmmm"
             else:
                 if person.vaginal_first == mc.name:
-                    if person.arousal_perc >=50:
+                    if person.arousal_perc >=59:
                         imagebutton:
                             pos(752, 166)
                             idle "spreadvag"
@@ -1086,7 +1086,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                         action NullAction()
                         tooltip "Someone else owns this pussy... OWN IT!"
                 
-                if person.arousal_perc >=50:
+                if person.arousal_perc >=59:
                     imagebutton:
                         pos(752, 166)
                         idle "openvag"
