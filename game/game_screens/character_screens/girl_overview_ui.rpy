@@ -13,6 +13,7 @@ screen person_info_detailed(person):
     default visible_roles = ", ".join([x.role_name for x in person.special_role if not x.hidden])
     default person_portrait = person.build_person_portrait()
     default person_job_info = person_info_ui_get_job_title(person)
+    default base_salary = sum(x.base_salary for x in person.jobs if x.is_paid)
     default fertility_info = f"{person.effective_fertility:.1f}%"
     if person.is_infertile: # infertile
         $ fertility_info = "Infertile"
@@ -279,7 +280,7 @@ screen person_info_detailed(person):
                     text "Production: [prod_base] Production Points" style "menu_text_style"
                     text "Supply: [supply_base] Supply Units" style "menu_text_style"
                     if person in mc.business.on_payroll:
-                        text "Desired Salary: $[person.salary:.2f]/day" style "menu_text_style"
+                        text "Desired Salary: $[base_salary:.2f]/day" style "menu_text_style"
 
             frame:
                 background None
