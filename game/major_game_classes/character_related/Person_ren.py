@@ -13,7 +13,7 @@ from renpy.display.im import AlphaMask, Composite, Image
 from renpy.display.layout import Flatten
 from renpy.text.text import Text
 from game.random_lists_ren import build_generic_weighted_list, get_random_copy_from_named_list, get_random_from_weighted_list, index_in_weighted_list, is_in_weighted_list
-from game.bugfix_additions.debug_info_ren import write_log
+from game.bugfix_additions.debug_info_ren import validate_texture_memory, write_log
 from game.bugfix_additions.mapped_list_ren import generate_identifier
 from game.helper_functions.character_display_functions_ren import clear_scene
 from game.helper_functions.convert_to_string_ren import SO_relationship_to_title, capitalize_first_word, girl_relationship_to_title, opinion_score_to_string, remove_punctuation
@@ -27,9 +27,9 @@ from game.main_character.perks.Perks_ren import perk_system
 from game.main_character.mc_serums._mc_serum_definitions_ren import mc_serum_aura_obedience, mc_serum_aura_fertility
 from game.main_character.MainCharacter_ren import mc
 from game.map.map_code_ren import list_of_hubs
-from game.map.MapHub_ren import MapHub, home_hub, office_hub, strip_club_hub
+from game.map.MapHub_ren import MapHub, home_hub, office_hub, strip_club_hub, harem_hub, aunt_home_hub
 from game.map.HomeHub_ren import HomeHub, residential_home_hub, industrial_home_hub, downtown_home_hub, university_home_hub
-from game.game_roles._role_definitions_ren import girlfriend_role, harem_role, affair_role, generic_student_role, instapic_role, dikdok_role, onlyfans_role, trance_role, heavy_trance_role, very_heavy_trance_role, slave_role, anal_fetish_role, cum_fetish_role, breeding_fetish_role, exhibition_fetish_role, jealous_sister_role, jealous_act_get_score
+from game.game_roles._role_definitions_ren import Role, girlfriend_role, harem_role, affair_role, generic_student_role, instapic_role, dikdok_role, onlyfans_role, trance_role, heavy_trance_role, very_heavy_trance_role, slave_role, caged_role, anal_fetish_role, cum_fetish_role, breeding_fetish_role, exhibition_fetish_role, jealous_sister_role, jealous_act_get_score
 from game.game_roles.role_pregnant_definition_ren import become_pregnant, pregnant_role
 from game.game_roles.stripclub._stripclub_role_definitions_ren import strip_club_is_closed
 from game.game_roles.business_roles._business_role_definitions_ren import employee_role, college_intern_role, clone_role, employee_freeuse_role
@@ -40,14 +40,13 @@ from game.business_policies.special_policies_ren import genetic_manipulation_pol
 from game.personality_types._personality_definitions_ren import relaxed_personality
 from game.major_game_classes.clothing_related.zip_manager_ren import emotion_images_dict
 from game.major_game_classes.business_related.Infraction_ren import Infraction
-from game.major_game_classes.game_logic.Position_ren import Position
 from game.major_game_classes.serum_related.SerumDesign_ren import SerumDesign
 from game.major_game_classes.serum_related.serums.fetish_serums_ren import start_anal_fetish_quest, start_cum_fetish_quest, start_breeding_fetish_quest
 from game.major_game_classes.serum_related.SerumTrait_ren import SerumTrait
 from game.major_game_classes.game_logic.Action_ren import Action, Limited_Time_Action
 from game.major_game_classes.game_logic.ActionList_ren import ActionList
 from game.major_game_classes.game_logic.Duty_ren import Duty
-from game.major_game_classes.game_logic.Role_ren import Role, caged_role
+from game.major_game_classes.game_logic.Position_ren import Position
 from game.major_game_classes.game_logic.Room_ren import Room, list_of_places, lily_bedroom, mom_bedroom, aunt_bedroom, cousin_bedroom, strip_club, prostitute_bedroom, generic_bedroom_1, generic_bedroom_2, generic_bedroom_3, generic_bedroom_4, gym, gym_shower, her_hallway, purgatory, dungeon, clone_facility, downtown_bar, standard_indoor_lighting
 from game.major_game_classes.game_logic.RoomObject_factories_ren import make_wall, make_floor, make_couch, make_window
 from game.major_game_classes.character_related.scene_manager_ren import Scene
@@ -69,7 +68,6 @@ from game.major_game_classes.clothing_related.wardrobe_builder_ren import Wardro
 from game.major_game_classes.clothing_related.wardrobe_preferences_ren import WardrobePreference
 from game.major_game_classes.clothing_related.LimitedWardrobeCollection_ren import limited_wardrobes
 from game.people.Sarah.sarah_definition_ren import sarah_threesomes_unlocked
-
 
 GAME_SPEED = 1
 TIER_0_TIME_DELAY = 1
@@ -819,7 +817,8 @@ class Person(): #Everything that needs to be known about a person.
         self.available = True
 
         self._location: int = None
-        self._home = None   # private home identifier
+        self._home: int = None
+
         self._follow_mc = False
         self._baby_desire = 0   #Set to 0, but with negative modifiers on realistic settings. Mostly used only on realistic setting
         self._birth_control = True
@@ -837,7 +836,7 @@ class Person(): #Everything that needs to be known about a person.
             self.set_mc_title(mc_title)     #What they call the main character, i.e. "first name", "Mr.last name", "master", "sir".
 
         if home:
-            self.home = home #The room the character goes to at night. If none a random public location is picked.
+            self._set_home(home)
 
         self.schedule = Schedule()
 
@@ -1168,17 +1167,11 @@ class Person(): #Everything that needs to be known about a person.
             return self.name == other.name and self.last_name == other.last_name and self.age == other.age
         return False
 
-    def __ne__(self, other):
-        if isinstance(self, other.__class__):
-            return self.name != other.name or self.last_name != other.last_name or self.age != other.age
-        return True
-
     def __getstate__(self): # excludes decorators from serialization
         state = self.__dict__.copy()
-        if "opinion" in state:
-            del state["opinion"]
-        if "progress" in state:
-            del state["progress"]
+        excluded = ["opinion", "known_opinion", "progress", "location", "current_location_hub", "home", "home_hub"]
+        for x in excluded:
+            state.pop(x, None)
         return state
 
     def wrap_string(self, string: str, the_colour: Color | None = None, the_font: str | None = None, size_mod: int | None = None): #Useful for wrapping a piece of advanced tag dialogue with the proper font, colour, style.
@@ -1230,25 +1223,43 @@ class Person(): #Everything that needs to be known about a person.
     def idle_pose(self, value):
         self._idle_pose = value
 
-    @property
+    @cached_property
     def location(self) -> Room:
-        return next((x for x in list_of_places if x.identifier == self._location), self.home or purgatory) # fallback location is her home
+        return next((x for x in list_of_places if x.identifier == self._location), self.home or purgatory)
 
-    @location.setter
-    def location(self, value: Room):
-        if isinstance(value, Room):
-            self._location = value.identifier
+    def _set_location(self, value: Room):
+        if not isinstance(value, Room):
+            write_log("location.setter(): Error new location parameter is not a room.")
+        self._location = value.identifier
+        self.__dict__.pop("location", None)
+        self.__dict__.pop("current_location_hub", None)
 
-    @property
+    @cached_property
+    def current_location_hub(self) -> MapHub:
+        return next((x for x in list_of_hubs if self.location in x), MapHub("Unknown", "Unkonwn"))
+
+    @cached_property
     def home(self) -> Room:
         return next((x for x in list_of_places if x.identifier == self._home), None)
 
-    @home.setter
-    def home(self, value: Room):
-        if isinstance(value, Room):
-            self._home = value.identifier
-        else:
-            self._home = None
+    def _set_home(self, value: Room):
+        if not isinstance(value, Room):
+            write_log("home.setter(): Error new home parameter is not a room.")
+        self._home = value.identifier
+        self.__dict__.pop("home", None)
+        self.__dict__.pop("home_hub", None)
+
+    @cached_property
+    def home_hub(self) -> HomeHub:
+        if not self.home:
+            return HomeHub("Unknown", "Unkonwn")
+        if self.home in [harem_hub.locations]:
+            return harem_hub
+        if self in [lily, mom]:
+            return home_hub
+        if self in [aunt, cousin]:
+            return aunt_home_hub
+        return next((x for x in [residential_home_hub, industrial_home_hub, downtown_home_hub, university_home_hub] if self.home in x), HomeHub("Unknown", "Unknown"))
 
     def learn_home(self) -> bool: # Adds the_person.home to mc.known_home_locations allowing it to be visited without having to go through date label
         if self.home not in mc.known_home_locations + [lily_bedroom, mom_bedroom, aunt_bedroom, cousin_bedroom]:
@@ -1285,7 +1296,7 @@ class Person(): #Everything that needs to be known about a person.
 
         # set home and default schedule to new home location
         self.set_schedule(new_home, time_slots = [0, 4])
-        self.home = new_home
+        self._set_home(new_home)
 
     def toggle_favourite(self):
         self.is_favourite = not self.is_favourite
@@ -1306,15 +1317,6 @@ class Person(): #Everything that needs to be known about a person.
         if not scheduled_job and self.has_job(unemployed_job):
             return self.primary_job
         return scheduled_job
-
-    @property
-    def current_location_hub(self) -> MapHub:
-        # returns the location hub she is currently at
-        return next((x for x in list_of_hubs if self.location in x), MapHub("Current", "Current", locations = [self.location], position = home_hub.position))
-
-    @property
-    def home_hub(self) -> HomeHub:
-        return next((x for x in [residential_home_hub, industrial_home_hub, downtown_home_hub, university_home_hub] if self.home in x), HomeHub("unknown", "unknown"))
 
     @property
     def is_at_work(self) -> bool:
@@ -1365,7 +1367,7 @@ class Person(): #Everything that needs to be known about a person.
         if not isinstance(destination, Room) or self.location == destination:
             return False
 
-        self.location = destination
+        self._set_location(destination)
 
         # only change outfit when not following mc
         if self.follow_mc:
@@ -1724,17 +1726,17 @@ class Person(): #Everything that needs to be known about a person.
         self.sex_record["Fingered"] = 0
         self.sex_record["Kissing"] = 0
 
-    def generate_home(self, set_home_time = True) -> Room: #Creates a home location for this person and adds it to the master list of locations so their turns are processed.
+    def generate_home(self, set_home_time = True, force_new_home = False) -> Room: #Creates a home location for this person and adds it to the master list of locations so their turns are processed.
         # generate new home location if we don't have one
         start_home = self.home
-        if not start_home:
+        if force_new_home or not start_home:
             start_home = Room(f"{self.name} {self.last_name}", f"{self.name} {self.last_name}", house_background, [make_wall(), make_floor(), make_couch(), make_window()], [], False, [0.5, 0.5], visible = False, hide_in_known_house_map = False, lighting_conditions = standard_indoor_lighting)
 
         # add home location to list of places, before assignment
         if start_home not in list_of_places:
             list_of_places.append(start_home)
 
-        self.home = start_home
+        self._set_home(start_home)
 
         if set_home_time:
             self.set_schedule(self.home, time_slots = [0, 4])
@@ -4779,9 +4781,6 @@ class Person(): #Everything that needs to be known about a person.
         '''
         Return True when person has any job is based on passed JobDefinition(s) or Job Title
         '''
-        if len(self.jobs) == 0:
-            return False
-
         if isinstance(job, JobDefinition):
             return any(x for x in self.jobs if x.job_definition == job)
         if isinstance(job, basestring):
@@ -4794,9 +4793,6 @@ class Person(): #Everything that needs to be known about a person.
         '''
         Return ActiveJob based on passed JobDefinition(s) or Job Title
         '''
-        if len(self.jobs) == 0:
-            return None
-
         if isinstance(job, JobDefinition):
             return next((x for x in self.jobs if x.job_definition == job), None)
         if isinstance(job, basestring):
@@ -4809,11 +4805,6 @@ class Person(): #Everything that needs to be known about a person.
         '''
         Returns True when any job has the passed role(s) or role_name
         '''
-        if len(self.jobs) == 0:
-            return False
-
-        roles = [role for job in self.jobs for role in job.job_roles]
-
         if isinstance(job_role, Role):
             return job_role in roles
         if isinstance(job_role, basestring):
