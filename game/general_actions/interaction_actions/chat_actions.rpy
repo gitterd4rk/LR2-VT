@@ -280,7 +280,10 @@ label small_talk_person(the_person, apply_energy_cost = True, is_phone = False):
                 else:
                     "You listen while [the_person.possessive_title] talks and discover that she [opinion_string] [opinion_learned]."
 
-            $ the_person.change_stats(happiness = the_person.opinion.small_talk + 1, love = 3 - prediction_difference, max_love = 35, obedience = 1 if mc_serum_aura_obedience.is_active else 0, arousal = 1 if mc_serum_aura_arousal.is_active else 0)
+            $ the_person.change_stats(happiness = the_person.opinion.small_talk + 1,
+                love = 3 - prediction_difference, max_love = 35,
+                obedience = 1 if not is_phone and mc_serum_aura_obedience.is_active else 0,
+                arousal = 1 if not is_phone and mc_serum_aura_arousal.is_active else 0)
 
         else:
             if is_phone:
@@ -340,7 +343,10 @@ label compliment_person(the_person): #Tier 1. Raises the character's love. #TODO
         $ the_person.call_dialogue("compliment_response_affair")
     else:
         $ the_person.call_dialogue("compliment_response")
-    $ the_person.change_stats(happiness = 2, love = 5 if mc.charisma > 4 else 3,  max_love = 20, obedience = 1 if mc_serum_aura_obedience.is_active else 0, arousal = 1 if mc_serum_aura_arousal.is_active else 0)
+    $ the_person.change_stats(happiness = 2,
+        love = 5 if mc.charisma > 4 else 3, max_love = 20,
+        obedience = 1 if mc_serum_aura_obedience.is_active else 0,
+        arousal = 1 if mc_serum_aura_arousal.is_active else 0)
     the_person "It's been fun talking [the_person.mc_title], we should do this again sometime!"
     $ the_person.apply_serum_study()
     $ mc.stats.change_tracked_stat("Girl", "Complimented", 1)
@@ -450,7 +456,11 @@ label flirt_person(the_person): #Tier 1. Raises a character's sluttiness up to a
         if change_amount <= 0:
             change_amount = 1
 
-        the_person.change_stats(happiness = the_person.opinion.flirting, arousal = change_amount + (1 if mc_serum_aura_arousal.is_active else 0), slut = change_amount, max_slut = 20, love = 1, max_love = 25, obedience = 1 if mc_serum_aura_obedience.is_active else 0)
+        the_person.change_stats(happiness = the_person.opinion.flirting,
+            arousal = change_amount + (1 if mc_serum_aura_arousal.is_active else 0),
+            slut = change_amount, max_slut = 20,
+            love = 1, max_love = 25,
+            obedience = 1 if mc_serum_aura_obedience.is_active else 0)
         the_person.discover_opinion("flirting")
         the_person.apply_serum_study()
 
