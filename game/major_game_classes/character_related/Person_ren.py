@@ -4723,9 +4723,9 @@ class Person(): #Everything that needs to be known about a person.
 
         return self.schedule.get_destination(day_slot, time_slot) #Otherwise, go where we want.
 
-    def person_meets_requirements(self, slut_required = 0, slut_max = 2000, obedience_required = 0, obedience_max = 2000, love_required = -200, love_max = 2000):
+    def person_meets_requirements(self, slut_required = 0, slut_max = 2000, obedience_required = 0, obedience_max = 2000, love_required = -200, love_max = 2000, at_work = None, at_office = None):
         if self.sluttiness >= slut_required and self.sluttiness <= slut_max and self.obedience >= obedience_required and self.obedience <= obedience_max and self.love >= love_required and self.love <= love_max:
-            return True
+            return (at_work is None or self.is_at_work == at_work) and (at_office is None or self.is_at_office == at_office)
         return False
 
     def create_formatted_title(self, title: str) -> str:
