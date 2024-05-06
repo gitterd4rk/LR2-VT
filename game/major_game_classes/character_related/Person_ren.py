@@ -4064,7 +4064,7 @@ class Person(): #Everything that needs to be known about a person.
         if self.is_highly_fertile:  # she's fertile, increases her need to get filled up
             creampie_threshold -= 10
 
-        effective_slut = self.effective_sluttiness("creampie") + (10 * self.opinion.creampies) + (10 * self.opinion.anal_creampies)
+        effective_slut = self.sluttiness + (10 * self.opinion.creampies) + (10 * self.opinion.anal_creampies)
         if effective_slut >= creampie_threshold or self.knows_pregnant:
             return True
 
