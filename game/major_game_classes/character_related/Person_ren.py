@@ -4808,25 +4808,20 @@ class Person(): #Everything that needs to be known about a person.
         Returns True when any job has the passed role(s) or role_name
         '''
         if isinstance(job_role, Role):
-            return job_role in roles
+            return job_role in self.job_roles
         if isinstance(job_role, basestring):
-            return any(x for x in roles if x.role_name == job_role)
+            return any(x for x in self.job_roles if x.role_name == job_role)
         if is_iterable(job_role):
-            return any(x for x in job_role for y in roles if x == y)
+            return any(x for x in job_role for y in self.job_roles if x == y)
         return False
 
     @property
     def jobs(self) -> list[ActiveJob]:
         '''
         Returns the list of ActiveJobs, ordered by their prevalance (scheduling priority)
+        Priority: side_job <- primary_job <- secondary_job
         '''
-        jobs = []
-        if self.side_job:   # overrides default primary job schedule
-            jobs.append(self.side_job)
-        jobs.append(self.primary_job)
-        if self.secondary_job: # only scheduled when not allocated in primary or side-job (moonlighting)
-            jobs.append(self.secondary_job)
-        return jobs
+        return [x for x in (self.side_job, self.primary_job, self.secondary_job) if x]
 
     @property
     def salary(self) -> float:
@@ -5468,7 +5463,6 @@ class Person(): #Everything that needs to be known about a person.
         # clear all references held by person object.
         self.schedule = None
         self.override_schedule = None
-        self.home = None
         self.primary_job = None
         self.secondary_job = None
         self.side_job = None
