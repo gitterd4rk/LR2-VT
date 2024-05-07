@@ -67,7 +67,6 @@ def build_menu_item_list(element_list, draw_hearts_for_people = True, draw_perso
             info = []
             if item.is_favourite:
                 info.append("{image=full_star_token_small}")
-
             if item.has_relation_with_mc:
                 if item.has_role(harem_role):
                     if item.has_role(affair_role):
@@ -200,14 +199,9 @@ class MenuItem():
         return hash((self.title, self.display_key))
 
     def __eq__(self, other):
-        if isinstance(self, other.__class__):
-            return self.title == other.title and self.display_key == other.display_key
-        return False
-
-    def __ne__(self, other):
-        if isinstance(self, other.__class__):
-            return self.title != other.title or self.display_key != other.display_key
-        return True
+        if not isinstance(self, other.__class__):
+            return NotImplemented
+        return self.title == other.title and self.display_key == other.display_key
 
     def __del__(self):
         try:

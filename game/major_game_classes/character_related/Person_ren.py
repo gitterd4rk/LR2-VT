@@ -1163,13 +1163,13 @@ class Person(): #Everything that needs to be known about a person.
         return self.identifier
 
     def __eq__(self, other):
-        if isinstance(self, other.__class__):
-            return self.name == other.name and self.last_name == other.last_name and self.age == other.age
-        return False
+        if not isinstance(self, other.__class__):
+            return NotImplemented
+        return self.name == other.name and self.last_name == other.last_name and self.age == other.age
 
     def __getstate__(self): # excludes decorators from serialization
         state = self.__dict__.copy()
-        excluded = ["opinion", "known_opinion", "progress", "location", "current_location_hub", "home", "home_hub"]
+        excluded = ["opinion", "known_opinion", "progress", "location", "current_job", "is_at_work", "current_location_hub", "home", "home_hub"]
         for x in excluded:
             state.pop(x, None)
         return state
@@ -1227,12 +1227,14 @@ class Person(): #Everything that needs to be known about a person.
     def location(self) -> Room:
         return next((x for x in list_of_places if x.identifier == self._location), self.home or purgatory)
 
+    _location_clear_keys = ("location", "current_location_hub", "current_job", "is_at_work")
+
     def _set_location(self, value: Room):
         if not isinstance(value, Room):
             write_log("location.setter(): Error new location parameter is not a room.")
         self._location = value.identifier
-        self.__dict__.pop("location", None)
-        self.__dict__.pop("current_location_hub", None)
+        for x in Person._location_clear_keys:
+            self.__dict__.pop(x, None)
 
     @cached_property
     def current_location_hub(self) -> MapHub:
@@ -1309,7 +1311,7 @@ class Person(): #Everything that needs to be known about a person.
     def mc_knows_address(self) -> bool:
         return self.home in mc.known_home_locations
 
-    @property
+    @cached_property
     def current_job(self) -> ActiveJob | None:
         # returns job she should be working at now
         scheduled_job = next((x for x in self.jobs if x.is_work_day() and x.is_work_shift()), None)
@@ -1318,7 +1320,7 @@ class Person(): #Everything that needs to be known about a person.
             return self.primary_job
         return scheduled_job
 
-    @property
+    @cached_property
     def is_at_work(self) -> bool:
         current_job = self.current_job
         if current_job and current_job.scheduled_location:
@@ -4806,25 +4808,20 @@ class Person(): #Everything that needs to be known about a person.
         Returns True when any job has the passed role(s) or role_name
         '''
         if isinstance(job_role, Role):
-            return job_role in roles
+            return job_role in self.job_roles
         if isinstance(job_role, basestring):
-            return any(x for x in roles if x.role_name == job_role)
+            return any(x for x in self.job_roles if x.role_name == job_role)
         if is_iterable(job_role):
-            return any(x for x in job_role for y in roles if x == y)
+            return any(x for x in job_role for y in self.job_roles if x == y)
         return False
 
     @property
     def jobs(self) -> list[ActiveJob]:
         '''
         Returns the list of ActiveJobs, ordered by their prevalance (scheduling priority)
+        Priority: side_job <- primary_job <- secondary_job
         '''
-        jobs = []
-        if self.side_job:   # overrides default primary job schedule
-            jobs.append(self.side_job)
-        jobs.append(self.primary_job)
-        if self.secondary_job: # only scheduled when not allocated in primary or side-job (moonlighting)
-            jobs.append(self.secondary_job)
-        return jobs
+        return [x for x in (self.side_job, self.primary_job, self.secondary_job) if x]
 
     @property
     def salary(self) -> float:
@@ -5466,7 +5463,6 @@ class Person(): #Everything that needs to be known about a person.
         # clear all references held by person object.
         self.schedule = None
         self.override_schedule = None
-        self.home = None
         self.primary_job = None
         self.secondary_job = None
         self.side_job = None
