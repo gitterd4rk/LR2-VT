@@ -324,7 +324,7 @@ screen person_info_detailed(person):
                                 for serum in person.serum_effects:
                                     text f"{serum.name}: {serum.duration - serum.duration_counter} Turns Left" style "menu_text_style"
 
-    use default_tooltip()
+    use default_tooltip("person_info_detailed")
 
 screen opinion_list(opinion_dict, preference):
     if len([x for x in opinion_dict if opinion_dict[x][0] == preference]) > 10:
