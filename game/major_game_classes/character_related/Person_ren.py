@@ -1165,7 +1165,7 @@ class Person(): #Everything that needs to be known about a person.
     def __eq__(self, other):
         if not isinstance(self, other.__class__):
             return NotImplemented
-        return self.name == other.name and self.last_name == other.last_name and self.age == other.age
+        return self.identifier == other.identifier
 
     def __getstate__(self): # excludes decorators from serialization
         state = self.__dict__.copy()
