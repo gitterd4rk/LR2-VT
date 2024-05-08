@@ -1127,4 +1127,4 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                 action NullAction()
                 tooltip "Already Trained her!"
 
-    use default_tooltip()
+    use default_tooltip("person_info_ui")
