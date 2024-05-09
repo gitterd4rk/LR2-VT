@@ -835,12 +835,12 @@ class Person(): #Everything that needs to be known about a person.
         if mc_title is not None:
             self.set_mc_title(mc_title)     #What they call the main character, i.e. "first name", "Mr.last name", "master", "sir".
 
+        self.schedule = Schedule()
+        self.override_schedule = Schedule() #The mandatory place a person will go EVEN if they have work (useful for giving days off or requiring weekend work)
+
         if home:
             self._set_home(home)
-
-        self.schedule = Schedule()
-
-        self.override_schedule = Schedule() #The mandatory place a person will go EVEN if they have work (useful for giving days off or requiring weekend work)
+            self.set_schedule(self.home, time_slots = [0, 4])
 
         # Relationship and family stuff
         if relationship:
@@ -1165,7 +1165,7 @@ class Person(): #Everything that needs to be known about a person.
     def __eq__(self, other):
         if not isinstance(self, other.__class__):
             return NotImplemented
-        return self.name == other.name and self.last_name == other.last_name and self.age == other.age
+        return self.identifier == other.identifier
 
     def __getstate__(self): # excludes decorators from serialization
         state = self.__dict__.copy()
@@ -1802,8 +1802,6 @@ class Person(): #Everything that needs to be known about a person.
 
         if start_home is None:
             the_daughter.generate_home()
-        else:
-            the_daughter.set_schedule(start_home, time_slots = [0, 4])
 
         the_daughter.home.add_person(the_daughter)
 
@@ -1881,8 +1879,6 @@ class Person(): #Everything that needs to be known about a person.
 
         if start_home is None:
             the_mother.generate_home()
-        else:
-            the_mother.set_schedule(start_home, time_slots = [0, 4])
 
         the_mother.home.add_person(the_mother)
 
