@@ -325,7 +325,7 @@ def create_random_person(name = None, name_list = None, last_name = None, last_n
                     if renpy.random.randint(0, 100) < 50
                     else big_glasses.get_copy()
                 )
-                the_glasses.colour = list(Person.get_random_glasses_frame_colour())
+                the_glasses.colour = [.212, .271, .31, .95]
                 base_outfit.add_accessory(the_glasses)
 
             if renpy.random.randint(0, 3) == 0:
@@ -724,19 +724,19 @@ def create_hooker(add_to_game = True):
         sex_skill_range_array = [[2, Person.get_sex_skill_ceiling()] for x in range(8)],
         job = prostitute_job,
         forced_opinions = [
-            ["flirting", 2, True],
-            ["high heels", 2, True],
-            ["makeup", 1, True],
+            ["flirting", 2, False],
+            ["high heels", 2, False],
+            ["makeup", 1, False],
             ["pants", -2, False],
-            ["skirts", 2, True],
+            ["skirts", 2, False],
         ],
         forced_sexy_opinions = [
-            ["bareback sex", -2, True],
+            ["bareback sex", -2, False],
             ["being submissive", 1, False],
             ["giving blowjobs", 2, False],
             ["public sex", 2, False],
             ["showing her tits", 1, False],
-            ["skimpy outfits", 2, True],
+            ["skimpy outfits", 2, False],
             ["vaginal sex", 2, False],
         ])
     person.set_mc_title("Honey")
@@ -756,16 +756,16 @@ def create_stripper():
         job = stripper_job,
         sex_skill_range_array = [[2, Person.get_sex_skill_ceiling()] for x in range(8)],
         forced_opinions = [
-            ["small talk", 1, True],
-            ["conservative outfits", -2, True],
-            ["flirting", 2, True],
-            ["high heels", 2, True],
-            ["work uniforms", 1, True],
+            ["small talk", 1, False],
+            ["conservative outfits", -2, False],
+            ["flirting", 2, False],
+            ["high heels", 2, False],
+            ["work uniforms", 1, False],
         ], forced_sexy_opinions = [
-            ["showing her tits", 2, True],
-            ["showing her ass", 2, True],
-            ["skimpy outfits", 2, True],
-            ["taking control", 2, True],
+            ["showing her tits", 2, False],
+            ["showing her ass", 2, False],
+            ["skimpy outfits", 2, False],
+            ["taking control", 2, False],
         ])
     person.set_mc_title("Honey")
     person.generate_home()

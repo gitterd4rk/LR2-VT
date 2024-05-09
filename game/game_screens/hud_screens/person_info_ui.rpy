@@ -59,7 +59,9 @@ init -2 python:
         return title
 
 screen person_info_ui(person): #Used to display stats for a person while you're talking to them.
+    tag master_tooltip
     layer "solo" #By making this layer active it is cleared whenever we draw a person or clear them off the screen.
+    zorder 200
 
     default home_hub_name = person.home_hub.formal_name
     default job_title = person_info_ui_get_job_title(person)
@@ -1126,5 +1128,3 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                 idle "donetrain"
                 action NullAction()
                 tooltip "Already Trained her!"
-
-    use default_tooltip("person_info_ui")
