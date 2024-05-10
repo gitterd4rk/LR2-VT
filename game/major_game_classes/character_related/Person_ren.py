@@ -1603,13 +1603,18 @@ class Person(): #Everything that needs to be known about a person.
     @property
     def weight(self) -> float:
         if not hasattr(self, "_weight"):
-            if self.body_type == "thin_body": #60, 75, 90
+            check_type = self.event_triggers_dict.get("pre_preg_body", self.body_type)
+            if check_type == "thin_body": #60, 75, 90
                 self._weight = 51 * self.height
-            elif self.body_type == "standard_body":
+            elif check_type == "standard_body":
                 self._weight = 58 * self.height
             else:
                 self._weight = 67 * self.height
-        return self._weight
+
+        extra_modifier = 0
+        if self.is_pregnant:
+            extra_modifier = max(self.days_since_event("preg_start_date") - 25, 0) * .17
+        return self._weight + extra_modifier
 
     @weight.setter
     def weight(self, value: float):
