@@ -721,7 +721,9 @@ def get_premade_character(age_range, tits_range, height_range, kids_range, relat
 
 def create_hooker(add_to_game = True):
     person = make_person(sluttiness = renpy.random.randint(30, 55),
-        sex_skill_range_array = [[2, Person.get_sex_skill_ceiling()] for x in range(8)],
+        #sex_skill_range_array = [[2, Person.get_sex_skill_ceiling()] for x in range(8)],
+        # sex array 0-Foreplay 1-Oral 2-Vaginal 3-Anal
+        sex_skill_array = [renpy.random.randint(4,8),renpy.random.randint(3,8),renpy.random.randint(2,8),renpy.random.randint(2,8)],
         job = prostitute_job,
         forced_opinions = [
             ["flirting", 2, False],
@@ -754,7 +756,8 @@ def create_old_hooker_with_daughter():
 def create_stripper():
     person = make_person(sluttiness = renpy.random.randint(15, 55),
         job = stripper_job,
-        sex_skill_range_array = [[2, Person.get_sex_skill_ceiling()] for x in range(8)],
+        #sex_skill_range_array = [[2, Person.get_sex_skill_ceiling()] for x in range(8)],
+        sex_skill_array = [renpy.random.randint(4,8),renpy.random.randint(3,8),renpy.random.randint(2,8),renpy.random.randint(2,8)],
         forced_opinions = [
             ["small talk", 1, False],
             ["conservative outfits", -2, False],
