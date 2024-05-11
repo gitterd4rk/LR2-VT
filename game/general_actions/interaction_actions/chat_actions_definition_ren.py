@@ -320,7 +320,7 @@ kiss_action = Action("Kiss goodbye  {energy=-5}", requirement = kiss_requirement
 specific_actions.append(kiss_action)
 
 grope_action = Action("Grope her  {energy=-5}", requirement = grope_requirement, effect = "grope_person",
-    menu_tooltip = "Be \"friendly\" and see how far she is willing to let you take things. May make her more comfortable with physical contact, but at the cost of her opinion of you.")
+    menu_tooltip = 'Be "friendly" and see how far she is willing to let you take things. May make her more comfortable with physical contact, but at the cost of her opinion of you.')
 specific_actions.append(grope_action)
 
 command_action = Action("Give her a command", requirement = command_requirement, effect = "command_person",
