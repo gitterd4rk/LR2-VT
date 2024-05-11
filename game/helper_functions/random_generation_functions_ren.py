@@ -490,7 +490,7 @@ def create_random_person(name = None, name_list = None, last_name = None, last_n
                             sex_skill_array[3] = anal_virgin
                         else: 
                             if sex_skill_array[3]>10: anal_virgin = 10
-                            else: anal_virgin = sex_skill_array[2]
+                            else: anal_virgin = sex_skill_array[3]
                     else:
                         anal_virgin = 0
                         sex_skill_array[3] = 0
