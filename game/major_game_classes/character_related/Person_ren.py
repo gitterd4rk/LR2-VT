@@ -77,35 +77,35 @@ TIER_3_TIME_DELAY = 20
 
 global report_log
 report_log: dict[str, int]
-unique_character_list: list['Person'] = []
-list_of_people: list['Person'] = []
-list_of_patreon_characters: list['Person'] = []
+unique_character_list: list[Person] = []
+list_of_people: list[Person] = []
+list_of_patreon_characters: list[Person] = []
 list_of_instantiation_functions: list[Callable[[], None]]
 
-cousin: 'Person'
-lily: 'Person'
-aunt: 'Person'
-mom: 'Person'
-stephanie: 'Person'
-emily: 'Person'
-christina: 'Person'
-nora: 'Person'
-erica: 'Person'
-police_chief: 'Person'
-sarah: 'Person'
-naomi: 'Person'
-alexia: 'Person'
-ashley: 'Person'
-candace: 'Person'
-salon_manager: 'Person'
-starbuck: 'Person'
-camila: 'Person'
-kaya: 'Person'
-sakari: 'Person'
-ellie: 'Person'
-myra: 'Person'
-city_rep: 'Person'
-iris: 'Person'
+cousin: Person
+lily: Person
+aunt: Person
+mom: Person
+stephanie: Person
+emily: Person
+christina: Person
+nora: Person
+erica: Person
+police_chief: Person
+sarah: Person
+naomi: Person
+alexia: Person
+ashley: Person
+candace: Person
+salon_manager: Person
+starbuck: Person
+camila: Person
+kaya: Person
+sakari: Person
+ellie: Person
+myra: Person
+city_rep: Person
+iris: Person
 
 ShaderPerson = renpy.displayable
 day = 0
@@ -120,13 +120,13 @@ house_background = Image("")
 
 # proxy methods for type system
 
-def make_character_unique(person: 'Person') -> bool:
+def make_character_unique(person: Person) -> bool:
     return True
-def build_specific_action_list(person: 'Person', keep_talking = True):
+def build_specific_action_list(person: Person, keep_talking = True) -> None:
     return
-def apply_sex_modifiers(person: 'Person', private = True):
+def apply_sex_modifiers(person: Person, private = True) -> None:
     return
-def clear_sex_modifiers(person: 'Person'):
+def clear_sex_modifiers(person: Person) -> None:
     return
 def scale_person(x):
     return x
@@ -705,7 +705,7 @@ class Person(): #Everything that needs to be known about a person.
         return cls._height_step
 
     @staticmethod
-    def get_person_by_identifier(identifier: int) -> 'Person':
+    def get_person_by_identifier(identifier: int) -> Person:
         return next((x for x in list_of_people if x.identifier == identifier), None)
 
     @staticmethod
@@ -983,7 +983,7 @@ class Person(): #Everything that needs to be known about a person.
         if vaginal_first is None:
             self.vaginal_first = None
         else:
-            self.vaginal_first = vaginal_first 
+            self.vaginal_first = vaginal_first
         #anal virginity
         if anal_virgin is None:
             self.anal_virgin = 0
@@ -1758,9 +1758,9 @@ class Person(): #Everything that needs to be known about a person.
             self.set_schedule(self.home, time_slots = [0, 4])
         return self.home
 
-    def generate_daughter(self, force_live_at_home = False, age: int = None, job: JobDefinition = None) -> 'Person': #Generates a random person who shares a number of similarities to the mother
+    def generate_daughter(self, force_live_at_home = False, age: int = None, job: JobDefinition = None) -> Person: #Generates a random person who shares a number of similarities to the mother
         if not age:
-            age = renpy.random.randint(Person.get_age_floor(), self.age - Person.get_age_floor())
+            age = renpy.random.randint(Person.get_age_floor(), self.age - 16)
 
         if renpy.random.randint(0, 100) < 60:
             if self.is_pregnant:
@@ -1828,7 +1828,7 @@ class Person(): #Everything that needs to be known about a person.
 
         return the_daughter
 
-    def generate_mother(self, lives_with_daughter = False, age: int = None, job: JobDefinition = None) -> 'Person': #Generates a random person who shares a number of similarities to the mother
+    def generate_mother(self, lives_with_daughter = False, age: int = None, job: JobDefinition = None) -> Person: #Generates a random person who shares a number of similarities to the mother
         '''
         Generates a mother for this person.
         When a mother already exists, returns existing mother.
