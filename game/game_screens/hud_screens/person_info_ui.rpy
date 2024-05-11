@@ -867,75 +867,271 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
         #hymen is 0 = sealed, 1=recently torn bleeding, 2=normal - serum to regenerate vaginal and hymen
         #0=virgin, 1=just the tip, 2=full penetration, 3-10 is degree of tightness
 ### Oral Virgin Flag
+        $ OralArousal = ""            
         if person.oral_virgin == 0:
+            $ OralArousal = "looks at you with lust \n in her innocent hungry eyes"
             imagebutton:
                 pos(678, 166)
                 idle "truevirgin"
                 action NullAction()
-                tooltip "Her lips seem to beckon you."
-            if person.arousal_perc >=59:
-                imagebutton:
-                    pos(678, 166)
-                    idle "bitelip"
-                    action NullAction()
-                    tooltip "She looks at you with lust in her innocent hungry eyes."
+                tooltip "Her lips seem to beckon you..."
         else:
-            if person.oral_virgin >=1 and person.oral_virgin <=10:
-                if person.oral_first == mc.name:
-                    if person.arousal_perc >=59:
+            if person.oral_first == mc.name:
+                $ OralArousal = "starts to drool \n and undress you with her eyes"
+            else:
+                $ OralArousal = "looks at you with savage lust in her eyes"
+        #the interactive icons during sex stuff
+        if 'position_choice' in globals():
+            if hasattr(position_choice, 'skill_tag'):
+                if position_choice.skill_tag == 'Oral':
+                    if mc.recently_orgasmed == True and person.oral_cum >=1:
                         imagebutton:
                             pos(678, 166)
-                            idle "bitelip"
+                            idle "ahegaomouth"
                             action NullAction()
-                            tooltip "She starts to drool and undress you with her eyes!"
+                            tooltip "You flood her belly with your cum."
                     else:
+                        imagebutton:
+                            pos(678, 166)
+                            idle "openmouth"
+                            action NullAction()
+                            tooltip "You fuck her mouth with your cock."
+                else:
+                    if hasattr(position_choice, 'name'):
+                        if position_choice.name == 'Kissing':
+                            imagebutton:
+                                pos(678, 166)
+                                idle "pinklips"
+                                action NullAction()
+                                tooltip "In the throes of kissing you."
+                        else:
+                            if person.arousal_perc >= 59 and person.oral_cum<=0:
+                                imagebutton:
+                                    pos(678, 166)
+                                    idle "ahegaoface"
+                                    action NullAction()
+                                    tooltip "She "+OralArousal+"."
+                            else:
+                                if person.oral_cum >0:
+                                    if person.oral_cum == 1:
+                                        imagebutton:
+                                            pos(678, 166)
+                                            idle "ahegaomouth"
+                                            action NullAction()
+                                            tooltip "She has a dose of your protein in her belly."
+                                    else:
+                                        imagebutton:
+                                            pos(678, 166)
+                                            idle "ahegaoface"
+                                            action NullAction()
+                                            tooltip "Has "+ str(person.oral_cum) +" doses of your cum\n swimming in her belly."
+                                else:
+                                    if person.oral_first == mc.name:
+                                        imagebutton:
+                                            pos(678, 166)
+                                            idle "claimedmouth"
+                                            action NullAction()
+                                            tooltip "You Claimed this Pie Hole!"
+                                    else:
+                                        if person.oral_first !=None:
+                                            imagebutton:
+                                                pos(678, 166)
+                                                idle "knowlips"
+                                                action NullAction()
+                                                tooltip "Someone else had her lips before you... CLAIM IT!"
+            else:
+                if person.arousal_perc >= 59 and person.oral_cum<=0:
+                    imagebutton:
+                        pos(678, 166)
+                        idle "ahegaoface"
+                        action NullAction()
+                        tooltip "She "+OralArousal+"."
+                else:
+                    if person.oral_cum >0:
+                        if person.oral_cum == 1:
+                                imagebutton:
+                                    pos(678, 166)
+                                    idle "ahegaomouth"
+                                    action NullAction()
+                                    tooltip "She has a dose of your protein in her belly."
+                        else:
+                            imagebutton:
+                                pos(678, 166)
+                                idle "ahegaoface"
+                                action NullAction()
+                                tooltip "Has "+ str(person.oral_cum) +" doses of your cum\n swimming in her belly."
+                    else:
+                        if person.oral_first == mc.name:
+                            imagebutton:
+                                pos(678, 166)
+                                idle "claimedmouth"
+                                action NullAction()
+                                tooltip "You Claimed this Pie Hole!"
+                        else:
+                            if person.oral_first !=None:
+                                imagebutton:
+                                    pos(678, 166)
+                                    idle "knowlips"
+                                    action NullAction()
+                                    tooltip "Someone else had her lips before you... CLAIM IT!"
+        else:
+            if person.arousal_perc >= 59 and person.oral_cum<=0:
+                imagebutton:
+                    pos(678, 166)
+                    idle "ahegaoface"
+                    action NullAction()
+                    tooltip "She "+OralArousal+"."
+            else:
+                if person.oral_cum >0:
+                    if person.oral_cum == 1:
+                            imagebutton:
+                                pos(678, 166)
+                                idle "ahegaomouth"
+                                action NullAction()
+                                tooltip "She has a dose of your protein in her belly."
+                    else:
+                        imagebutton:
+                            pos(678, 166)
+                            idle "ahegaoface"
+                            action NullAction()
+                            tooltip "Has "+ str(person.oral_cum) +" doses of your cum \n swimming in her belly."
+                else:
+                    if person.oral_first == mc.name:
                         imagebutton:
                             pos(678, 166)
                             idle "claimedmouth"
                             action NullAction()
                             tooltip "You Claimed this Pie Hole!"
-                else:
-                    imagebutton:
-                        pos(678, 166)
-                        idle "knowlips"
-                        action NullAction()
-                        tooltip "Someone else had her lips before you... CLAIM IT!"
-
-            if person.arousal_perc >= 59:
-                imagebutton:
-                    pos(678, 166)
-                    idle "bitelip"
-                    action NullAction()
-                    tooltip "She looks at you with lust in her eyes."
+                    else:
+                        if person.oral_first !=None:
+                            imagebutton:
+                                pos(678, 166)
+                                idle "knowlips"
+                                action NullAction()
+                                tooltip "Someone else had her lips before you... CLAIM IT!"
 ### Anal Virgin Flag
+        $ AnalArousal = ""            
         if person.anal_virgin == 0:
+            $ AnalArousal = "Her ass sways so ripely, ready for the taking"
             imagebutton:
                 pos(715, 166)
                 idle "truevirgin"
                 action NullAction()
                 tooltip "Her ass looks so ripe for the taking."
-            if person.arousal_perc >=59:
-                imagebutton:
-                    pos(715, 166)
-                    idle "yespeach"
-                    action NullAction()
-                    tooltip "Her ass sways so ripely, ready for the taking."
         else:
-            #we want this in the background to remind the player she is not thiers
-            if person.anal_first != mc.name:
+            if person.anal_first == mc.name:
+                $ AnalArousal = "ass sways, hypnotizing you while \nshe rubs it!"
+            else:
+                $ AnalArousal = "ass sways and she spreads her ass for you.\nCome take me!"
+            if person.anal_virgin >=4:
+                $ AnalArousal = "ass sways and she spreads her gaping asshole for you.\nCome take me!"
+        #the interactive icons during sex stuff
+        if 'position_choice' in globals():
+            if hasattr(position_choice, 'skill_tag'):
+                if position_choice.skill_tag == 'Anal':
+                    if mc.recently_orgasmed == True and person.anal_cum >= 1:
+                        imagebutton:
+                            pos(715, 166)
+                            idle "ahegaopeach"
+                            action NullAction()
+                            tooltip "You flood her bowels with your seed."
+                    else:
+                        imagebutton:
+                            pos(715, 166)
+                            idle "yesanal"
+                            action NullAction()
+                            tooltip "You fuck her ass with your cock."
+                else:
+                    if person.arousal_perc >= 59 and person.anal_cum<=0:
+                        imagebutton:
+                            pos(715, 166)
+                            idle "yesanal"
+                            action NullAction()
+                            tooltip "Her "+AnalArousal+""
+                    else:
+                        if person.anal_cum >0:
+                            if person.anal_cum == 1:
+                                imagebutton:
+                                    pos(715, 166)
+                                    idle "handass"
+                                    action NullAction()
+                                    tooltip "You painted her bowels with your cum."
+                            else:
+                                imagebutton:
+                                    pos(715, 166)
+                                    idle "ahegaopeach"
+                                    action NullAction()
+                                    tooltip "Has "+ str(person.anal_cum) +" doses of your cum \n coating her bowels."
+                        else:
+                            if person.anal_first == mc.name:
+                                imagebutton:
+                                    pos(715, 166)
+                                    idle "claimedass"
+                                    action NullAction()
+                                    tooltip "You Claimed this Ass!"
+                            else:
+                                if person.anal_first !=None:
+                                    imagebutton:
+                                        pos(715, 166)
+                                        idle "knowpeach"
+                                        action NullAction()
+                                        tooltip "Someone else had this ass before you... CLAIM IT!"
+            else:
+                if person.arousal_perc >= 59 and person.anal_cum<=0:
+                    imagebutton:
+                        pos(715, 166)
+                        idle "yesanal"
+                        action NullAction()
+                        tooltip "Her "+AnalArousal+""
+                else:
+                    if person.anal_cum >0:
+                        if person.anal_cum == 1:
+                                imagebutton:
+                                    pos(715, 166)
+                                    idle "handass"
+                                    action NullAction()
+                                    tooltip "You painted her bowels with your cum."
+                        else:
+                            imagebutton:
+                                pos(715, 166)
+                                idle "ahegaopeach"
+                                action NullAction()
+                                tooltip "Has "+ str(person.anal_cum) +" doses of your cum\n coating her bowels."
+                    else:
+                        if person.anal_first == mc.name:
+                            imagebutton:
+                                pos(715, 166)
+                                idle "claimedass"
+                                action NullAction()
+                                tooltip "You Claimed this Ass!"
+                        else:
+                            if person.anal_first !=None:
+                                imagebutton:
+                                    pos(715, 166)
+                                    idle "knowpeach"
+                                    action NullAction()
+                                    tooltip "Someone else had this ass before you... CLAIM IT!"
+        else:
+            if person.arousal_perc >= 59 and person.anal_cum<=0:
                 imagebutton:
                     pos(715, 166)
-                    idle "knowpeach"
+                    idle "yesanal"
                     action NullAction()
-                    tooltip "Someone else had this ass before you... CLAIM IT!"
-            #Claimed/unclaimed?
-            if person.anal_virgin == 1:
-                if person.arousal_perc >=59:
-                    imagebutton:
-                        pos(715, 166)
-                        idle "yespeach"
-                        action NullAction()
-                        tooltip "Her ass sways and she spreads her ass for you.\nCome take me!"
+                    tooltip "Her "+AnalArousal+""
+            else:
+                if person.anal_cum >0:
+                    if person.anal_cum == 1:
+                            imagebutton:
+                                pos(715, 166)
+                                idle "handass"
+                                action NullAction()
+                                tooltip "You painted her bowels with your cum."
+                    else:
+                        imagebutton:
+                            pos(715, 166)
+                            idle "ahegaopeach"
+                            action NullAction()
+                            tooltip "Has "+ str(person.anal_cum) +" doses of your cum \n coating her bowels."
                 else:
                     if person.anal_first == mc.name:
                         imagebutton:
@@ -943,157 +1139,164 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                             idle "claimedass"
                             action NullAction()
                             tooltip "You Claimed this Ass!"
-            elif person.anal_virgin == 2:
-                if person.arousal_perc >=59:
-                    imagebutton:
-                        pos(715, 166)
-                        idle "yespeach"
-                        action NullAction()
-                        tooltip "Her ass sways and she spreads her ass for you.\nCome take me!"
-                else:
-                    if person.anal_first == mc.name:
-                        imagebutton:
-                            pos(715, 166)
-                            idle "claimedass"
-                            action NullAction()
-                            tooltip "You Claimed this Ass!"
-            elif person.anal_virgin == 3:
-                if person.arousal_perc >=59:
-                    imagebutton:
-                        pos(715, 166)
-                        idle "yespeach"
-                        action NullAction()
-                        tooltip "Her ass sways and she spreads her ass for you.\nCome take me!"
-                else:
-                    if person.anal_first == mc.name:
-                        imagebutton:
-                            pos(715, 166)
-                            idle "claimedass"
-                            action NullAction()
-                            tooltip "You Claimed this Ass!"
-            elif person.anal_virgin >=4:
-                if person.arousal_perc >=59:
-                    imagebutton:
-                        pos(715, 166)
-                        idle "handass"
-                        action NullAction()
-                        tooltip "Her ass sways and she spreads her gaping asshole for you.\nCome take me!"
-                else:
-                    if person.anal_first == mc.name:
-                        imagebutton:
-                            pos(715, 166)
-                            idle "handass"
-                            action NullAction()
-                            tooltip "Bet she's still gaping!"
-
+                    else:
+                        if person.anal_first !=None:
+                            imagebutton:
+                                pos(715, 166)
+                                idle "knowpeach"
+                                action NullAction()
+                                tooltip "Someone else had this ass before you... CLAIM IT!"
 ### Vaginal Virgin Flag
+        $ VaginalArousal = ""
+        $ dayslastsex = 0
+        $ daysince = ""
         if person.hymen == 0 and person.vaginal_virgin <= 1:
+            $ VaginalArousal = "You can smell her arousal.\n She is ready to be fucked."
             imagebutton:
                 pos(752, 166)
                 idle "truevirgin"
                 action NullAction()
                 tooltip "She looks so innocent and inexperienced."
-            if person.arousal_perc >=59:
-                imagebutton:
-                    pos(752, 166)
-                    idle "openvag"
-                    action NullAction()
-                    tooltip "You can smell her arousal."
         elif person.hymen ==1:
+            $ VaginalArousal = "MmmmMm I still feel you in me! mmmmm please give me more!!! I need it now!\n*You can really smell her arousal*"
             imagebutton:
                 pos(752, 166)
                 idle "vaghymen"
                 action NullAction()
                 tooltip "Freshly claimed woman."
-            if person.arousal_perc >=59:
-                imagebutton:
-                    pos(752, 166)
-                    idle "ahegaoface"
-                    action NullAction()
-                    tooltip "MmmmMm I still feel you in me! mmmmm please give me more!!! I need it now!\n*You can really smell her arousal*"
         else:
-            if person.vaginal_virgin >=1 and person.vaginal_virgin <=3:
-                if person.vaginal_first == mc.name:
-                    if person.arousal_perc >=59:
+            if person.vaginal_first == mc.name:
+                $ VaginalArousal = "Her pussy is dripping for you.\n*You can really smell her arousal*\nCome take me!"
+            else:
+                $ VaginalArousal = "Her pussy is dripping down her leg.\n*She is really aroused*"
+        if person.has_event_day("last_insemination") and person.days_since_event("last_insemination") < 4:
+                if person.days_since_event("last_insemination") > 1:
+                    $ dayslastsex = 4 - person.days_since_event("last_insemination") 
+                    if dayslastsex == 1:
+                        $ daysince = "\nMy womb feels empty!"
+                    else:
+                        $ daysince = "\nYour sperm in me for "+str(dayslastsex)+" more days!\n Such warm butterflies!"
+        #the interactive icons during sex stuff
+        if 'position_choice' in globals():
+            if hasattr(position_choice, 'skill_tag'):
+                if position_choice.skill_tag == 'Vaginal':
+                    if mc.recently_orgasmed == True and person.vaginal_cum >= 1:
+                        imagebutton:
+                            pos(752, 166)
+                            idle "ahegaovag"
+                            action NullAction()
+                            tooltip "You flood her womb with your seed!"
+                    else:
                         imagebutton:
                             pos(752, 166)
                             idle "spreadvag"
                             action NullAction()
-                            tooltip "Her pussy is dripping for you.\n*You can really smell her arousal*\nCome take me!"
-                    else:
+                            tooltip "You fuck her juicy pussy with your cock."
+                else:
+                    if person.arousal_perc >= 59 and person.vaginal_cum<=0:
                         imagebutton:
                             pos(752, 166)
-                            idle "claimedvag"
+                            idle "spreadvag"
                             action NullAction()
-                            tooltip "You Claimed this Pusy!"
-                else:
+                            tooltip ""+VaginalArousal+""
+                    else:
+                        if person.vaginal_cum >0:
+                            if person.vaginal_cum == 1:
+                                imagebutton:
+                                    pos(752, 166)
+                                    idle "openvag"
+                                    action NullAction()
+                                    tooltip "She has your seed in her womb."
+                            else:
+                                imagebutton:
+                                    pos(752, 166)
+                                    idle "ahegaovag"
+                                    action NullAction()
+                                    tooltip "Has "+ str(person.vaginal_cum) +" doses of your cum\n swimming in her womb."+daysince
+                        else:
+                            if person.vaginal_first == mc.name:
+                                imagebutton:
+                                    pos(752, 166)
+                                    idle "claimedvag"
+                                    action NullAction()
+                                    tooltip "You Claimed this Pussy!"
+                            else:
+                                if person.vaginal_first !=None:
+                                    imagebutton:
+                                        pos(752, 166)
+                                        idle "knowpeach"
+                                        action NullAction()
+                                        tooltip "Someone else had this pussy before you... OWN IT!"
+            else:
+                if person.arousal_perc >= 59 and person.vaginal_cum<=0:
                     imagebutton:
                         pos(752, 166)
-                        idle "knowpeach"
+                        idle "spreadvag"
                         action NullAction()
-                        tooltip "Someone else had this pussy... OWN IT!"
-
-            if person.has_event_day("last_insemination") and person.days_since_event("last_insemination") < 4:
-                if person.days_since_event("last_insemination") > 1:
-                    $ dayslastsex = 4 - person.days_since_event("last_insemination")
-                    
-                    if dayslastsex == 1:
-                        $ daysince = "only been forever!"
-                    else:
-                        $ daysince = "been "+str(dayslastsex)+" more days"
-
-                    if person.arousal_perc <=59:
-                        imagebutton:
-                            pos(752, 166)
-                            idle "openvag"
-                            action NullAction()
-                            tooltip "Still feel you in me! It has "+ daysince+"\nMaybe we do more now?"
-                    else:
-                        imagebutton:
-                                pos(752, 166)
-                                idle "ahegaoface"
-                                action NullAction()
-                                tooltip "MmmmMm I still feel you in me! It has "+ daysince +"\nmmmmm please give me more!!! I need it now!\n*You can really smell her arousal*"
+                        tooltip ""+VaginalArousal+""
                 else:
-                    if person.arousal_perc >=59:
-                        imagebutton:
-                            pos(752, 166)
-                            idle "ahegaoface"
-                            action NullAction()
-                            tooltip "MmmmMm I still feel you in me! mmmmm\nPlease give me more!!! I need it now!\n*You can really smell her arousal*"
+                    if person.vaginal_cum >0:
+                        if person.vaginal_cum == 1:
+                                imagebutton:
+                                    pos(752, 166)
+                                    idle "openvag"
+                                    action NullAction()
+                                    tooltip "She has your seed in her womb."
+                        else:
+                            imagebutton:
+                                pos(752, 166)
+                                idle "ahegaovag"
+                                action NullAction()
+                                tooltip "Has "+ str(person.vaginal_cum) +" doses of your cum\n swimming in her womb."+daysince
+                    else:
+                        if person.vaginal_first == mc.name:
+                            imagebutton:
+                                pos(752, 166)
+                                idle "claimedvag"
+                                action NullAction()
+                                tooltip "You Claimed this Pussy!"
+                        else:
+                            if person.vaginal_first !=None:
+                                imagebutton:
+                                    pos(752, 166)
+                                    idle "knowpeach"
+                                    action NullAction()
+                                    tooltip "Someone else had this pussy before you... OWN IT!"
+        else:
+            if person.arousal_perc >= 59 and person.vaginal_cum<=0:
+                imagebutton:
+                    pos(752, 166)
+                    idle "spreadvag"
+                    action NullAction()
+                    tooltip ""+VaginalArousal+""
+            else:
+                if person.vaginal_cum >0:
+                    if person.vaginal_cum == 1:
+                            imagebutton:
+                                pos(752, 166)
+                                idle "openvag"
+                                action NullAction()
+                                tooltip "She has your seed in her womb."
                     else:
                         imagebutton:
                             pos(752, 166)
                             idle "ahegaovag"
                             action NullAction()
-                            tooltip "MmmmMm I still feel you in me! Going to feel it for "+ str(4 - person.days_since_event("last_insemination"))+" more days... mmmmm"
-            else:
-                if person.vaginal_first == mc.name:
-                    if person.arousal_perc >=59:
-                        imagebutton:
-                            pos(752, 166)
-                            idle "spreadvag"
-                            action NullAction()
-                            tooltip "Her pussy is dripping for you.\n*You can really smell her arousal*\nCome take me!"
-                    else:
+                            tooltip "Has "+ str(person.vaginal_cum) +" doses of your cum \n swimming in her womb."+daysince
+                else:
+                    if person.vaginal_first == mc.name:
                         imagebutton:
                             pos(752, 166)
                             idle "claimedvag"
                             action NullAction()
-                            tooltip "You Claimed this Pusy!"
-                else:
-                    imagebutton:
-                        pos(752, 166)
-                        idle "knowpeach"
-                        action NullAction()
-                        tooltip "Someone else owns this pussy... OWN IT!"
-                
-                if person.arousal_perc >=59:
-                    imagebutton:
-                        pos(752, 166)
-                        idle "openvag"
-                        action NullAction()
-                        tooltip "You can smell her arousal."
+                            tooltip "You Claimed this Pussy!"
+                    else:
+                        if person.vaginal_first !=None:
+                            imagebutton:
+                                pos(752, 166)
+                                idle "knowpeach"
+                                action NullAction()
+                                tooltip "Someone else had this pussy before you... OWN IT!"
 #### Had sex today
         if person.had_sex_today:
             imagebutton:

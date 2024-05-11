@@ -216,6 +216,12 @@ screen person_info_detailed(person):
                             for record, value in sorted(person.sex_record.items()):
                                 if record == "Last Sex Day":
                                     text f"Last Sex: {last_sex_to_string(day, value)}" style "menu_text_style"
+                                elif record == "Last Oral Day":
+                                    text f"Oral Last: {last_sex_to_string(day, value)} ".format(person.oral_cum) style "menu_text_style"
+                                elif record == "Last Anal Day":
+                                    text f"Anal Last: {last_sex_to_string(day, value)} ".format(person.anal_cum)  style "menu_text_style"
+                                elif record == "Last Vaginal Day":
+                                    text f"Vaginal Last: {last_sex_to_string(day, value)} ".format(person.vaginal_cum)  style "menu_text_style"
                                 else:
                                     text "[record]: [value]" style "menu_text_style"
         hbox:
