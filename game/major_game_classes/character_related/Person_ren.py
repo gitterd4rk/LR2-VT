@@ -2112,12 +2112,15 @@ class Person(): #Everything that needs to be known about a person.
         # virgin is None: #0=virgin, 1=just the tip, 2=full penetration, 3-10 is degree of tightness
         # 3 is the normal tightness of the muscles, higher would be from trauma ie, baby -> 5-7
         # will always return to normal after a few days depending on the trauma
-        if self.vaginal_virgin>3 and (day -self.sex_record.get("Last Sex Day", -1)) >= 3:
+        if self.vaginal_virgin>3 and (day -self.sex_record.get("Last Vaginal Day", -1)) >= 3:
             self.vaginal_virgin -=1
-        if self.oral_virgin>3 and (day -self.sex_record.get("Last Sex Day", -1)) >= 3:
+        if self.oral_virgin>3 and (day -self.sex_record.get("Last Oral Day", -1)) >= 3:
             self.oral_virgin -=1
-        if self.anal_virgin>3 and (day -self.sex_record.get("Last Sex Day", -1)) >= 3:
+        if self.anal_virgin>3 and (day -self.sex_record.get("Last Anal Day", -1)) >= 3:
             self.anal_virgin -=1
+        #dealing with cum in orfices
+        if self.vaginal_cum>0 and (day -self.sex_record.get("Last Vaginal Day", -1)) >=1:
+            self.vaginal_cum -=1
 
     def apply_turn_based_outfit_bonus(self):
         if self.should_wear_uniform: #She's wearing a uniform
@@ -2909,11 +2912,13 @@ class Person(): #Everything that needs to be known about a person.
                 gained_opinion = True
             ### Virginity Tracker
             if Person._record_skill_map[record_class] =="Oral":
+                self.sex_record["Last Oral Day"] = day
                 if self.oral_virgin ==0:
                     self.oral_virgin =1
                     self.oral_first = mc.name
                 elif self.oral_virgin <=9: self.oral_virgin +=1
             if Person._record_skill_map[record_class] =="Vaginal":
+                self.sex_record["Last Vaginal Day"] = day
                 if self.vaginal_virgin<=1:
                     if self.vaginal_virgin ==0:
                         self.hymen = 1
@@ -2922,6 +2927,7 @@ class Person(): #Everything that needs to be known about a person.
                     else: self.vaginal_virgin +=1
                 elif self.vaginal_virgin <=9: self.vaginal_virgin +=1
             if Person._record_skill_map[record_class] =="Anal":
+                self.sex_record["Last Anal Day"] = day
                 if self.anal_virgin ==0:
                     self.anal_virgin +=1
                     self.anal_first = mc.name
