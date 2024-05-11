@@ -100,6 +100,14 @@ def get_location_tooltip(location: Room) -> str:
             info.append(" {image=full_star_token_small}")
         else:
             info.append(" {image=empty_token_small}")
+        info.append(person.name)
+        info.append(" ")
+        info.append(person.last_name)
+        info.append(" ")
+        if any(not isinstance(x, Limited_Time_Action) for x in person.on_talk_event_list.enabled_actions(person) if not x.silent):
+            info.append("{image=speech_bubble_exclamation_token_small}")
+        elif any(x for x in person.on_talk_event_list.enabled_actions(person) if not x.silent):
+            info.append("{image=speech_bubble_token_small}")
         #made to sort through girlfriend faster
         if person.has_relation_with_mc:
             if person.has_role(harem_role):
@@ -118,14 +126,6 @@ def get_location_tooltip(location: Room) -> str:
             info.append("{image=matureteen_token_small}")
         else:
             info.append(" {image=empty_token_small}")
-        info.append(person.name)
-        info.append(" ")
-        info.append(person.last_name)
-        info.append(" ")
-        if any(not isinstance(x, Limited_Time_Action) for x in person.on_talk_event_list.enabled_actions(person) if not x.silent):
-            info.append("{image=speech_bubble_exclamation_token_small}")
-        elif any(x for x in person.on_talk_event_list.enabled_actions(person) if not x.silent):
-            info.append("{image=speech_bubble_token_small}")
         if person.is_clone:
             info.append("{image=dna_token_small}")
         if person.knows_pregnant:
@@ -276,17 +276,16 @@ def calculate_hub_offsets(hub: MapHub, idx: int, location: Room) -> tuple[int, i
         offset_y = (150 * GRID_MAP_POS[(idx % 7)][1]) - 75
         if GRID_MAP_POS[(idx % 7)][0] % 2 == 1:
             offset_y += 75
+    elif hub.position.Y < 540:
+        row_idx = idx // 3
+        offset_x = 132 * GRID_MAP_POS[(idx % 3)][0]
+        offset_y = ((150 * GRID_MAP_POS[(idx % 3)][1]) + (row_idx * 150)) - 75
+        if GRID_MAP_POS[(idx % 3)][0] % 2 != 1:
+            offset_y += 75
     else:
-        if hub.position.Y < 540:
-            row_idx = idx // 3
-            offset_x = 132 * GRID_MAP_POS[(idx % 3)][0]
-            offset_y = ((150 * GRID_MAP_POS[(idx % 3)][1]) + (row_idx * 150)) - 75
-            if GRID_MAP_POS[(idx % 3)][0] % 2 != 1:
-                offset_y += 75
-        else:
-            row_idx = 3 - (idx // 3) # inverted fill
-            offset_x = 132 * GRID_MAP_POS[(idx % 3)][0]
-            offset_y = ((150 * GRID_MAP_POS[(idx % 3)][1]) + (row_idx * 150)) - 75
-            if GRID_MAP_POS[(idx % 3)][0] % 2 == 1:
-                offset_y += 75
+        row_idx = 3 - (idx // 3) # inverted fill
+        offset_x = 132 * GRID_MAP_POS[(idx % 3)][0]
+        offset_y = ((150 * GRID_MAP_POS[(idx % 3)][1]) + (row_idx * 150)) - 75
+        if GRID_MAP_POS[(idx % 3)][0] % 2 == 1:
+            offset_y += 75
     return (offset_x, offset_y - hex_offset)

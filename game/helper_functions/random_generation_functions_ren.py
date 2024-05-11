@@ -315,7 +315,7 @@ def create_random_person(name = None, name_list = None, last_name = None, last_n
     if base_outfit is None:
         if base_outfit_list is None:
             base_outfit = Outfit(name + "'s base accessories")
-            if relationship == "Fiancée" or relationship == "Married":
+            if relationship in ("Fiancée", "Married"):
                 base_outfit.add_accessory(diamond_ring.get_copy(), colour_yellow)
 
             if renpy.random.randint(0, 100) < age:
@@ -916,7 +916,7 @@ def rebuild_wardrobe(person: Person, force = False):
     if not (force or person.wardrobe is None):
         return
 
-    base_wardrobe = Wardrobe("{}_{}_wardrobe".format(person.name, person.last_name))
+    base_wardrobe = Wardrobe(f"{person.name}_{person.last_name}_wardrobe")
     if not force and persistent.low_memory_wardrobes:
         person.wardrobe = base_wardrobe
         return
@@ -1019,10 +1019,9 @@ def update_cougar_personality(person: Person):
         if person.age > 45 and not person.is_unique:
             person.change_personality(cougar_personality)
             # mc.log_event((person.display_name) + "  A:" + str(person.age) + ": " + person.personality.personality_type_prefix, "float_text_grey")
-    else:
-        if person.personality == cougar_personality and not person.is_unique:
-            person.restore_original_personality()
-            # mc.log_event((person.display_name) + " D:" + str(person.age) + ": " + person.personality.personality_type_prefix, "float_text_grey")
+    elif person.personality == cougar_personality and not person.is_unique:
+        person.restore_original_personality()
+        # mc.log_event((person.display_name) + " D:" + str(person.age) + ": " + person.personality.personality_type_prefix, "float_text_grey")
 
 
 def update_alpha_personality(person: Person):
@@ -1037,7 +1036,6 @@ def update_alpha_personality(person: Person):
         ) and person.personality != alpha_personality:
             person.change_personality(alpha_personality)
             # mc.log_event((person.display_name) + "  A:" + str(person.age) + ": " + person.personality.personality_type_prefix, "float_text_grey")
-    else:
-        if person.personality == alpha_personality and not person.is_unique:
-            person.restore_original_personality()
-            # mc.log_event((person.display_name) + " D:" + str(person.age) + ": " + person.personality.personality_type_prefix, "float_text_grey")
+    elif person.personality == alpha_personality and not person.is_unique:
+        person.restore_original_personality()
+        # mc.log_event((person.display_name) + " D:" + str(person.age) + ": " + person.personality.personality_type_prefix, "float_text_grey")
