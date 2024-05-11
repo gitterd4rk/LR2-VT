@@ -784,6 +784,7 @@ class Person(): #Everything that needs to be known about a person.
             relationship: str | None = None, SO_name: str | None = None, kids: int | None = None, base_outfit: Outfit | None = None,
             generate_insta = False, generate_dikdok = False, generate_onlyfans = False, coffee_style: str | None = None,
             hymen = None, vaginal_virgin = 0, anal_virgin = 0, oral_virgin = 0, vaginal_first = None, anal_first = None, oral_first = None,
+            vaginal_cum = 0, anal_cum = 0, oral_cum = 0,
             work_experience = 1, type = "random"):
 
         self.type = type
@@ -975,37 +976,45 @@ class Person(): #Everything that needs to be known about a person.
             self.hymen = 0 
         else:
             self.hymen = hymen
-
         if vaginal_virgin is None:
             self.vaginal_virgin = 0
         else:
             self.vaginal_virgin = vaginal_virgin
-
         if vaginal_first is None:
             self.vaginal_first = None
         else:
             self.vaginal_first = vaginal_first 
-
+        #anal virginity
         if anal_virgin is None:
             self.anal_virgin = 0
         else:
-            self.anal_virgin = anal_virgin 
-            
+            self.anal_virgin = anal_virgin
         if anal_first is None:
             self.anal_first = None
         else:
             self.anal_first = anal_first
-
+        #oral virginity
         if oral_virgin is None:
             self.oral_virgin = 0
         else:
             self.oral_virgin = oral_virgin 
-            
         if oral_first is None:
             self.oral_first = None
         else:
             self.oral_first = oral_first
-
+        #cumstorage
+        if vaginal_cum is None:
+            self.vaginal_cum = 0
+        else:
+            self.vaginal_cum = vaginal_cum
+        if oral_cum is None:
+            self.oral_cum = 0
+        else:
+            self.oral_cum = oral_cum
+        if anal_cum is None:
+            self.anal_cum = 0
+        else:
+            self.anal_cum = anal_cum
         ##BIRTH CONTROL##
         bc_chance = 100 - (self.age + (self.opinion.bareback_sex * 15))
         if persistent.pregnancy_pref == 2 and renpy.random.randint(0, 100) > bc_chance:
@@ -1949,6 +1958,13 @@ class Person(): #Everything that needs to be known about a person.
         for role in self.special_role:
             role.run_turn(self)
 
+        #VirginTracker cum tracker dealing with cum in orfices
+        if self.oral_cum>0 and (day -self.sex_record.get("Last Oral Day", -1)) >=0:
+            self.oral_cum -=1
+        if self.anal_cum>0 and (day -self.sex_record.get("Last Anal Day", -1)) >=0:
+            self.anal_cum -=1
+        if self.vaginal_cum>4 and (day -self.sex_record.get("Last Vaginal Day", -1)) >=0:
+            self.vaginal_cum -=1
     #########################################################
     # helper method for outfit_thread to load daily outfits #
     #########################################################
@@ -2910,7 +2926,6 @@ class Person(): #Everything that needs to be known about a person.
                     self.anal_virgin +=1
                     self.anal_first = mc.name
                 elif self.anal_virgin <=9: self.anal_virgin +=1
-
         # Record the total number of orgasms for the girl
         self.sex_record["Orgasms"] = self.sex_record.get("Orgasms", 0) + report_log.get("girl orgasms", 0)
         # Record number of times public sex
@@ -4465,6 +4480,7 @@ class Person(): #Everything that needs to be known about a person.
 
     def cum_in_mouth(self, add_to_record = True): #Add the appropriate stuff to their current outfit, and perform any personal checks if required.
         mc.listener_system.fire_event("sex_cum_mouth", the_person = self)
+        self.oral_cum +=1
         if self.outfit.can_add_accessory(mouth_cum):
             the_cumshot = mouth_cum.get_copy()
             the_cumshot.layer = 0
@@ -4488,6 +4504,7 @@ class Person(): #Everything that needs to be known about a person.
 
     def cum_in_vagina(self, add_to_record = True):
         mc.listener_system.fire_event("sex_cum_vagina", the_person = self)
+        self.vaginal_cum +=1
         if self.outfit.can_add_accessory(creampie_cum):
             the_cumshot = creampie_cum.get_copy()
             the_cumshot.layer = 0
@@ -4522,6 +4539,7 @@ class Person(): #Everything that needs to be known about a person.
 
     def cum_in_ass(self, add_to_record = True):
         mc.listener_system.fire_event("sex_cum_ass", the_person = self)
+        self.anal_cum +=1
         #TODO: Add an anal specific cumshot once we have renders for it.
         if self.outfit.can_add_accessory(creampie_cum):
             the_cumshot = creampie_cum.get_copy()
