@@ -2087,22 +2087,22 @@ class Person(): #Everything that needs to be known about a person.
             job.reset()
 
         # auto-develop fetishes without serum
-        if (not self.has_anal_fetish and self.anal_sex_skill >= 5
+        if (self.has_anal_fetish==False and self.anal_sex_skill >= 5
                 and self.opinion.anal_sex >= 2 and self.opinion.anal_creampies >= 2
                 and (self.anal_sex_count > 19 or self.anal_creampie_count > 19)):
-            if start_anal_fetish_quest(self):
+            if start_anal_fetish_quest(self)==False:
                 self.event_triggers_dict["anal_fetish_start"] = True
 
-        if (not self.has_cum_fetish and self.oral_sex_skill >= 5
+        if (self.has_cum_fetish==False and self.oral_sex_skill >= 5
                 and self.opinion.giving_blowjobs >= 2 and (self.opinion.drinking_cum >= 2 or self.opinion.cum_facials >= 2)
                 and self.cum_exposure_count > 19):
-            if start_cum_fetish_quest(self):
+            if start_cum_fetish_quest(self)==False:
                 self.event_triggers_dict["cum_fetish_start"] = True
 
-        if (not self.has_breeding_fetish and self.vaginal_sex_skill >= 5
+        if (self.has_breeding_fetish==False and self.vaginal_sex_skill >= 5
                 and self.opinion.vaginal_sex >= 2 and self.opinion.creampies >= 2
                 and self.vaginal_creampie_count > 19):
-            if start_breeding_fetish_quest(self):
+            if start_breeding_fetish_quest(self)==False:
                 self.event_triggers_dict["breeding_fetish_start"] = True
 
         # dealing with virgin hymen healing, 0-seal 1-bleeding/torn 2-normalized
