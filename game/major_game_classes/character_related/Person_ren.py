@@ -2104,7 +2104,6 @@ class Person(): #Everything that needs to be known about a person.
                 and self.vaginal_creampie_count > 19):
             if start_breeding_fetish_quest(self)==False:
                 self.event_triggers_dict["breeding_fetish_start"] = True
-
         # dealing with virgin hymen healing, 0-seal 1-bleeding/torn 2-normalized
         if self.hymen==1 and (day - self.sex_record.get("Last Sex Day", -1)) == 3:
             self.hymen=2
@@ -2602,7 +2601,11 @@ class Person(): #Everything that needs to be known about a person.
                         opinion_return_list.append(topic)
         return opinion_return_list
 
-    def get_opinion_topic(self, topic: str): #topic is a string matching the topics given in our random list (ie. "the colour blue", "sports"). Returns a tuple containing the score: -2 for hates, -1 for dislikes, 0 for no opinion, 1 for likes, and 2 for loves, and a bool to say if the opinion is known or not.
+    def get_opinion_topic(self, topic: str) -> list[int, bool] | None:
+        '''
+        Returns: opinion structure [score, known]
+        If passed topic does not exist, returns None
+        '''
         if topic in self.opinions:
             return self.opinions[topic]
 
@@ -2804,6 +2807,9 @@ class Person(): #Everything that needs to be known about a person.
 
         if add_to_log:
             mc.log_event(f"{self.display_name} {opinion_score_to_string(score)} {topic}", "float_text_green")
+
+    def has_opinion(self, topic: str) -> bool:
+        return topic in self.opinions or topic in self.sexy_opinions
 
     def reset_opinions(self):
         self.opinions.clear()
