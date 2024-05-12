@@ -1181,11 +1181,18 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
             if hasattr(position_choice, 'skill_tag'):
                 if position_choice.skill_tag == 'Vaginal':
                     if mc.recently_orgasmed == True and person.vaginal_cum >= 1:
-                        imagebutton:
-                            pos(752, 166)
-                            idle "ahegaovag"
-                            action NullAction()
-                            tooltip "You flood her womb with your seed!"
+                        if person.hymen ==1:
+                            imagebutton:
+                                pos(752, 166)
+                                idle "vaghymen"
+                                action NullAction()
+                                tooltip "You mark her fresh womb with your fertile seed! \n Her virinity mixes with your cum.\nYou have claimed her."
+                        else:
+                            imagebutton:
+                                pos(752, 166)
+                                idle "ahegaovag"
+                                action NullAction()
+                                tooltip "You flood her womb with your seed!"
                     else:
                         imagebutton:
                             pos(752, 166)
@@ -1202,11 +1209,18 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                     else:
                         if person.vaginal_cum >0:
                             if person.vaginal_cum == 1:
-                                imagebutton:
-                                    pos(752, 166)
-                                    idle "openvag"
-                                    action NullAction()
-                                    tooltip "She has your seed in her womb."
+                                if person.hymen ==1:
+                                    imagebutton:
+                                        pos(752, 166)
+                                        idle "vaghymen"
+                                        action NullAction()
+                                        tooltip "You marked her fresh womb with your seed. \n You have claimed her."
+                                else:
+                                    imagebutton:
+                                        pos(752, 166)
+                                        idle "openvag"
+                                        action NullAction()
+                                        tooltip "She has your seed in her womb."
                             else:
                                 imagebutton:
                                     pos(752, 166)
@@ -1237,6 +1251,13 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                 else:
                     if person.vaginal_cum >0:
                         if person.vaginal_cum == 1:
+                            if person.hymen ==1:
+                                imagebutton:
+                                    pos(752, 166)
+                                    idle "vaghymen"
+                                    action NullAction()
+                                    tooltip "You marked her fresh womb with your seed. \n You have claimed her."
+                            else:
                                 imagebutton:
                                     pos(752, 166)
                                     idle "openvag"
@@ -1272,6 +1293,13 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
             else:
                 if person.vaginal_cum >0:
                     if person.vaginal_cum == 1:
+                        if person.hymen ==1:
+                            imagebutton:
+                                pos(752, 166)
+                                idle "vaghymen"
+                                action NullAction()
+                                tooltip "You marked her fresh womb with your seed. \n You have claimed her."
+                        else:
                             imagebutton:
                                 pos(752, 166)
                                 idle "openvag"
