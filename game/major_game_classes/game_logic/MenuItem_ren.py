@@ -6,6 +6,7 @@ from renpy.text.text import Text
 from game.bugfix_additions.debug_info_ren import validate_texture_memory
 from game.helper_functions.convert_to_string_ren import format_titles
 from game.helper_functions.heart_formatting_functions_ren import get_heart_image_list
+from game.game_roles._role_definitions_ren import employee_freeuse_role
 from game.game_roles.relationship_role_definition_ren import girlfriend_role, affair_role, harem_role
 from game.main_character.perks.Perks_ren import perk_system
 from game.major_game_classes.character_related.Person_ren import Person, scale_person, mc, character_right
@@ -98,7 +99,10 @@ def build_menu_item_list(element_list, draw_hearts_for_people = True, draw_perso
                 if item.knows_pregnant:
                     info.append("{image=feeding_bottle_token_small}")
                 if item.is_free_use:
-                    info.append("{image=stocking_token_small}")
+                    if item.has_role(employee_freeuse_role):
+                        info.append("{image=doggy_style_token_small}")
+                    else:
+                        info.append("{image=stocking_token_small}")
                 if item.serum_effects:
                     if len(item.serum_effects) > item.serum_tolerance:
                         info.append("{image=vial3_token_small}")

@@ -257,8 +257,12 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
         if person.is_free_use:
             imagebutton:
                 pos (1020, 50)
-                idle "stocking_marker"
-                tooltip "She is a free-use slut."
+                if person.has_role(employee_freeuse_role):
+                    idle "doggy_style_marker"
+                    tooltip "She is the company free-use slut and can be used anytime."
+                else:
+                    idle "stocking_marker"
+                    tooltip "She is a free-use slut, who loves sex."
                 action NullAction()
                 sensitive True
 

@@ -138,6 +138,9 @@ renpy.image("progress_token_small", progress_token_small_image)
 stocking_token_small_image = im.Scale(Image(get_file_handle("stocking_token.png")), 18, 18)
 renpy.image("stocking_token_small", stocking_token_small_image)
 
+doggy_style_token_small_image = im.Scale(Image(get_file_handle("doggy_style_token.png")), 18, 18)
+renpy.image("doggy_style_token_small", doggy_style_token_small_image)
+
 drop_down_token_image = Image(get_file_handle("drop_down_token.png")) # size 24 x 24
 renpy.image("dropdown_token", drop_down_token_image)
 
@@ -156,6 +159,7 @@ home_image = Image(get_file_handle("home_marker.png"))
 feeding_bottle_image = Image(get_file_handle("feeding_bottle.png"))
 fertile_image = Image(get_file_handle("fertile_token.png"))
 stocking_image = Image(get_file_handle("stocking_token.png"))
+doggy_style_image = Image(get_file_handle("doggy_style_token.png"))
 virgin_image = Image(get_file_handle("virgin_token.png"))
 bc_image = Image(get_file_handle("bc_token32.png"))
 nobc_image = Image(get_file_handle("nobc_token32.png"))
