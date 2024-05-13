@@ -86,6 +86,7 @@ init -10:
     image dna_sequence = "[dna_image.filename]"
     image home_marker = "[home_image.filename]"
     image stocking_marker = "[stocking_image.filename]"
+    image doggy_style_marker = "[doggy_style_image.filename]"
     image virgin_image_marker = "[virgin_image.filename]"
     image birthcontrol = "[bc_image.filename]"
     image nobirthcontrol = "[nobc_image.filename]"
