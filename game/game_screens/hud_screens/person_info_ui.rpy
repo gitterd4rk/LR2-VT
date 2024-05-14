@@ -725,7 +725,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                     else:
                         if person.opinion.vaginal_sex >= 2  and (person.opinion.creampies >= 2 and person.known_opinion("creampies")):
                             if person.vaginal_sex_skill <5:
-                                $ NeedsBreeding += f"\n{{image=question_mark_small}} Needs her vaginal sex skill raised to 5."
+                                $ NeedsBreeding += f"\n{{image=question_mark_small}} Train her vaginal sex skill "+ str(5 - person.vaginal_sex_skill)+" more times!"
                             if person.opinion.creampies <2:
                                 $ NeedsBreeding += f"\n{{image=question_mark_small}} Need her to love vaginal creampies."
                             imagebutton:
