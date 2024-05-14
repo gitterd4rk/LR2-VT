@@ -937,7 +937,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                                             action NullAction()
                                             tooltip "You Claimed this Pie Hole!"
                                     else:
-                                        if person.oral_first !=None:
+                                        if person.oral_first !=None and person.oral_virgin>0:
                                             imagebutton:
                                                 pos(678, 166)
                                                 idle "knowlips"
@@ -972,7 +972,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                                 action NullAction()
                                 tooltip "You Claimed this Pie Hole!"
                         else:
-                            if person.oral_first !=None:
+                            if person.oral_first !=None and person.oral_virgin>0:
                                 imagebutton:
                                     pos(678, 166)
                                     idle "knowlips"
@@ -1007,7 +1007,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                             action NullAction()
                             tooltip "You Claimed this Pie Hole!"
                     else:
-                        if person.oral_first !=None:
+                        if person.oral_first !=None and person.oral_virgin>0:
                             imagebutton:
                                 pos(678, 166)
                                 idle "knowlips"
@@ -1074,7 +1074,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                                     action NullAction()
                                     tooltip "You Claimed this Ass!"
                             else:
-                                if person.anal_first !=None:
+                                if person.anal_first !=None and person.anal_virgin>0:
                                     imagebutton:
                                         pos(715, 166)
                                         idle "knowpeach"
@@ -1109,7 +1109,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                                 action NullAction()
                                 tooltip "You Claimed this Ass!"
                         else:
-                            if person.anal_first !=None:
+                            if person.anal_first !=None and person.anal_virgin>0:
                                 imagebutton:
                                     pos(715, 166)
                                     idle "knowpeach"
@@ -1144,7 +1144,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                             action NullAction()
                             tooltip "You Claimed this Ass!"
                     else:
-                        if person.anal_first !=None:
+                        if person.anal_first !=None and person.anal_virgin>0:
                             imagebutton:
                                 pos(715, 166)
                                 idle "knowpeach"
@@ -1239,7 +1239,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                                     action NullAction()
                                     tooltip "You Claimed this Pussy!"
                             else:
-                                if person.vaginal_first !=None:
+                                if person.vaginal_first !=None and person.vaginal_virgin>0:
                                     imagebutton:
                                         pos(752, 166)
                                         idle "knowpeach"
@@ -1281,7 +1281,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                                 action NullAction()
                                 tooltip "You Claimed this Pussy!"
                         else:
-                            if person.vaginal_first !=None:
+                            if person.vaginal_first !=None and person.vaginal_virgin>0:
                                 imagebutton:
                                     pos(752, 166)
                                     idle "knowpeach"
@@ -1323,7 +1323,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                             action NullAction()
                             tooltip "You Claimed this Pussy!"
                     else:
-                        if person.vaginal_first !=None:
+                        if person.vaginal_first !=None and person.vaginal_virgin>0:
                             imagebutton:
                                 pos(752, 166)
                                 idle "knowpeach"
