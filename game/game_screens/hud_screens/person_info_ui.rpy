@@ -1239,7 +1239,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                                     action NullAction()
                                     tooltip "You Claimed this Pussy!"
                             else:
-                                if person.vaginal_first !=None and person.vaginal_virgin>0:
+                                if person.vaginal_first !=None and person.hymen==2:
                                     imagebutton:
                                         pos(752, 166)
                                         idle "knowpeach"
@@ -1281,7 +1281,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                                 action NullAction()
                                 tooltip "You Claimed this Pussy!"
                         else:
-                            if person.vaginal_first !=None and person.vaginal_virgin>0:
+                            if person.vaginal_first !=None and person.hymen==2:
                                 imagebutton:
                                     pos(752, 166)
                                     idle "knowpeach"
@@ -1323,7 +1323,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                             action NullAction()
                             tooltip "You Claimed this Pussy!"
                     else:
-                        if person.vaginal_first !=None and person.vaginal_virgin>0:
+                        if person.vaginal_first !=None and person.hymen==2:
                             imagebutton:
                                 pos(752, 166)
                                 idle "knowpeach"
