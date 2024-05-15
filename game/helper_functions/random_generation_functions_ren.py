@@ -109,9 +109,15 @@ def create_random_person(name = None, name_list = None, last_name = None, last_n
             else get_random_from_list(last_name_list)
         )
 
+    if job is None:
+        job = get_random_job() if job_list is None else get_random_from_list(job_list)
+
     if age is None:
         if age_range is None:
-            age_range = [Person.get_age_floor(), Person.get_age_ceiling()]
+            if job.age_range:
+                age_range = job.age_range
+            else:
+                age_range = [Person.get_age_floor(), Person.get_age_ceiling()]
 
         if age_range[0] > age_range[1]: #Make sure range is correct order
             age_range.reverse()
@@ -215,9 +221,6 @@ def create_random_person(name = None, name_list = None, last_name = None, last_n
             suggestibility_range[1] -= 3
         elif personality.base_personality_prefix == reserved_personality.personality_type_prefix:
             suggestibility_range[1] -= 5
-
-    if job is None:
-        job = get_random_job() if job_list is None else get_random_from_list(job_list)
 
     if custom_font is None:
         if custom_font_list is None:
