@@ -2105,7 +2105,7 @@ class Person(): #Everything that needs to be known about a person.
             if start_breeding_fetish_quest(self)==False:
                 self.event_triggers_dict["breeding_fetish_start"] = True
         # dealing with virgin hymen healing, 0-seal 1-bleeding/torn 2-normalized
-        if self.hymen==1 and (day - self.sex_record.get("Last Sex Day", -1)) == 3:
+        if self.hymen==1 and (day - self.sex_record.get("Last Vaginal Day", -1)) == 3:
             self.hymen=2
         # dealing with muscles relaxing and stretching back to normal levels
         # virgin is None: #0=virgin, 1=just the tip, 2=full penetration, 3-10 is degree of tightness
