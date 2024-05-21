@@ -367,7 +367,11 @@ label flirt_person(the_person): #Tier 1. Raises a character's sluttiness up to a
         $ the_person.call_dialogue("flirt_response_affair")
 
     elif the_person.is_at_job(prostitute_job):
-        if the_person.shows_off_her_ass:
+        if the_person.vagina_visible:
+            mc.name "You're looking extremely sexy today [the_person.title], I love the view of your beautiful pussy."
+        elif the_person.tits_visible:
+            mc.name "You're looking very sexy today [the_person.title], I love the view of your beautiful breasts."
+        elif the_person.shows_off_her_ass:
             mc.name "Hello [the_person.title], your outfit really shows off your nice ass."
         elif the_person.shows_off_her_tits:
             mc.name "Hello [the_person.title], your outfit really shows off your [the_person.tits_description]."
@@ -404,7 +408,11 @@ label flirt_person(the_person): #Tier 1. Raises a character's sluttiness up to a
 
     elif the_person.love <= 40 or the_person.opinion.kissing < -1: #20 to 40 or hates kissing
         # Mid Love
-        if the_person.shows_off_her_ass:
+        if the_person.vagina_visible:
+            mc.name "You're looking extremely sexy today [the_person.title], I love the view of your beautiful pussy."
+        elif the_person.tits_visible:
+            mc.name "You're looking very sexy today [the_person.title], I love the view of your beautiful breasts."
+        elif the_person.shows_off_her_ass:
             mc.name "You're looking hot today [the_person.title]. That [title] really shows off your cute butt."
         elif the_person.shows_off_her_tits:
             mc.name "You're looking tasty today [the_person.title]. That [title] really shows off your [the_person.tits_description]."
@@ -428,14 +436,20 @@ label flirt_person(the_person): #Tier 1. Raises a character's sluttiness up to a
     else:
         # High Love
         if the_person.outfit.outfit_slut_score > 50:
-            if the_person.shows_off_her_tits:
+            if the_person.vagina_visible:
+                mc.name "[the_person.title], you have a beautiful pussy, any chance you would let me play with it?"
+            elif the_person.tits_visible:
+                mc.name "[the_person.title], you have wonderful breasts, any chance you would let me play with it?"
+            elif the_person.shows_off_her_tits:
                 mc.name "[the_person.title], your [title] is really showing off your [the_person.tits_description]. What are my chances of getting you out of it?"
             elif the_person.shows_off_her_ass:
                 mc.name "[the_person.title], your [title] is really showing off your perky bottom. What are my chances of getting you out of it?"
             else:
                 mc.name "[the_person.title], your [title] is driving me crazy. What are my chances of getting you out of it?"
         elif the_person.outfit.underwear_slut_score > 25:
-            if the_person.shows_off_her_tits:
+            if the_person.vagina_visible:
+                mc.name "[the_person.title], your pussy looks very good right now, any chance you would let me play with it?"
+            elif the_person.shows_off_her_tits or the_person.tits_visible:
                 mc.name "[the_person.title], any chance you are going to let me play with those [the_person.tits_description]?"
             elif the_person.shows_off_her_ass:
                 mc.name "[the_person.title], any chance you are going to let me spank that beautiful butt?"
