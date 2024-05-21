@@ -120,7 +120,7 @@ house_background = Image("")
 
 # proxy methods for type system
 
-def make_character_unique(person: Person) -> bool:
+def make_character_unique(person: Person, home_hub: HomeHub) -> bool:
     return True
 def build_specific_action_list(person: Person, keep_talking = True) -> None:
     return
