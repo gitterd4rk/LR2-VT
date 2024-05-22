@@ -577,7 +577,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                                         pos(507, 166)
                                         idle "dislike"
                                         action NullAction()
-                                        tooltip "She "+NeedsCumFetish+" oral!"
+                                        tooltip "She "+VTcumfetishtt+" oral!"
             else:
                 $ VTcumfetishst = "knowlips"
                 $ VTcumfetishtt = "Does she like giving blow jobs?"
