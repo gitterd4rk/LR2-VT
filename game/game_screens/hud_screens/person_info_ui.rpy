@@ -406,7 +406,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
             idle VTcondomst
             action NullAction()
             tooltip VTcondomtt                    
-        if person.opinion.bareback_sex <0:
+        if person.opinion.bareback_sex <0 and person.sexy_opinions.get("bareback sex")[1]==True:
             imagebutton:
                 pos(396, 166)
                 idle "dislike"
@@ -464,13 +464,14 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
             pos(433, 166)
             idle VTpolyst
             action NullAction()
-            tooltip VTpolytt                    
-        if person.opinion.threesomes <0 or person.opinion.polyamory <0:
-            imagebutton:
-                pos(433, 166)
-                idle "dislike"
-                action NullAction()
-                tooltip VTpolytt
+            tooltip VTpolytt
+        if person.sexy_opinions.get("threesomes")[1]==True:
+            if person.opinion.threesomes <0 or person.opinion.polyamory <0:
+                imagebutton:
+                    pos(433, 166)
+                    idle "dislike"
+                    action NullAction()
+                    tooltip VTpolytt
 ##### Wants Creampies
         $ VTcreampiest = "knowpeach"
         $ VTcreampiett = "Don't know if she likes creampies, ask her?"
@@ -587,7 +588,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
             idle VTcumfetishst
             action NullAction()
             tooltip VTcumfetishtt                    
-        if person.opinion.giving_blowjobs < 0:
+        if person.opinion.giving_blowjobs < 0 and person.sexy_opinions.get("giving blowjobs")[1]==True:
             imagebutton:
                 pos(507, 166)
                 idle "dislike"
@@ -644,7 +645,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
             idle VTanalfetishst
             action NullAction()
             tooltip VTanalfetishtt                    
-        if person.opinion.anal_sex < 0:
+        if person.opinion.anal_sex < 0 and person.sexy_opinions.get("anal sex")[1]==True:
             imagebutton:
                 pos(544, 166)
                 idle "dislike"
@@ -711,7 +712,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
             idle VTbreedfetishst
             action NullAction()
             tooltip VTbreedfetishtt                    
-        if person.opinion.vaginal_sex < 0:
+        if person.opinion.vaginal_sex < 0 and person.sexy_opinions.get("vaginal sex")[1]==True:
             imagebutton:
                 pos(581, 166)
                 idle "dislike"
@@ -787,7 +788,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
             idle VTexhibitfetishst
             action NullAction()
             tooltip VTexhibitfetishtt                    
-        if person.opinion.public_sex < 0:
+        if person.opinion.public_sex < 0 and person.sexy_opinions.get("public sex")[1]==True:
             imagebutton:
                 pos(618, 166)
                 idle "dislike"
