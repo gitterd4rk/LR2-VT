@@ -149,7 +149,7 @@ from pylru import LRUCache
 
 # cache the last 15 generated displayables
 character_cache = LRUCache(15)
-portrait_cache = LRUCache(10)
+portrait_cache = LRUCache(20)
 
 class Person(): #Everything that needs to be known about a person.
     #Define "private" range limits, use static/class methods to retrieve from the Person class
