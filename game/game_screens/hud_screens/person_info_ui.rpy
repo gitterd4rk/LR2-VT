@@ -430,15 +430,15 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                         $ VTpolytt = "Open her mind up to more!"
                         if person.has_role(harem_role)==False:
                             if person.love <80:
-                                $ VTpolytt += "\nNeeds more loving to be added to your polycule!"
-                            else:
-                                $ VTpolytt += "\nShe is ready to be part of your polycule!"
-                            if person.opinion.polyamory <=2:
+                                $ VTpolytt += "\n{{image=question_mark_small}} Needs more loving to be added to your polycule!"
+                            if person.opinion.polyamory <2:
                                 if person.opinion.polyamory ==1:
-                                    $ VTpolytt += "\n She needs to love polyamorous more!"
+                                    $ VTpolytt += f"\n{{image=question_mark_small}} Needs to love polyamorous more!"
                                 else:
                                     if person.sexy_opinions.get("polyamorous")==None:
-                                        $ VTpolytt += "\n{{image=question_mark_small}} She needs to like polyamorous relationships."
+                                        $ VTpolytt += f"\n{{image=question_mark_small}} Needs to like polyamorous relationships."
+                            else:
+                                $ VTpolytt += "\nShe is ready to be part of your polycule!"
                         if person.has_anal_fetish==False:
                             $ VTpolytt += f"\n{{image=ahegaoanal_small}} Needs the Anal Fetish Unlocked." 
                         if person.has_cum_fetish==False:
@@ -453,6 +453,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                                 $ VTpolyst = "opentriad"
                                 $ VTpolytt = "She's indifferent to threesomes, so make her like it..."
                             else:
+                                $ VTpolyst = "opentriad"
                                 if person.opinion.threesomes == -2:
                                     $ VTpolytt = f"She hates threesomes!"
                                 if person.opinion.threesomes == -1:
@@ -568,19 +569,11 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                                     $ VTcumfetishst = "openmouth"
                                     $ VTcumfetishtt = "She's indifferent to oral, so make her like it..."
                                 else:
+                                    $ VTcumfetishst = "openmouth"
                                     if person.opinion.giving_blowjobs == -2:
                                         $ VTcumfetishtt += f"She hates oral!"
                                     if person.opinion.giving_blowjobs == -1:
                                         $ VTcumfetishtt += f"She dislikes oral!"
-                                    imagebutton:
-                                        pos(507, 166)
-                                        idle "openmouth"
-                                        action NullAction()
-                                    imagebutton:
-                                        pos(507, 166)
-                                        idle "dislike"
-                                        action NullAction()
-                                        tooltip "She "+VTcumfetishtt+" oral!"
             else:
                 $ VTcumfetishst = "knowlips"
                 $ VTcumfetishtt = "Does she like giving blow jobs?"
@@ -803,78 +796,62 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
 #0=virgin, 1=just the tip, 2=full penetration, 3-10 is degree of tightness
 ### Oral Virgin Flag
         $ VToralst = "truevirgin"
-        $ VToraltt = "Her lips seem to beckon you..."           
+        $ VToraltt = "Her lips seem to beckon you..."
+        $ VToralat = "talking"
         if person.oral_virgin == 0:
-            $ VToraltt = "looks at you with lust \n in her innocent hungry eyes"
+            $ VToralst = "truevirgin"
+            $ VToraltt = "She looks at you with lust \n in her innocent hungry eyes."
             imagebutton:
                 pos(678, 166)
                 idle VToralst
                 action NullAction()
                 tooltip VToraltt
-        else:
-            if person.oral_first == mc.name:
-                $ VToraltt = "starts to drool \n and undress you with her eyes"
-            else:
-                $ VToraltt = "looks at you with savage lust in her eyes"
         #the interactive icons during sex stuff
         if 'position_choice' in globals():
             if hasattr(position_choice, 'skill_tag'):
                 if position_choice.skill_tag == 'Oral':
                     if mc.recently_orgasmed == True and person.oral_cum >=1:
-                        imagebutton:
-                            pos(678, 166)
-                            idle "ahegaomouth"
-                            action NullAction()
-                            tooltip "You flood her belly with your cum."
+                        $ VToralat = "cuminmouth"
+                        $ VToralst = "ahegaomouth"
+                        $ VToraltt = "You flood her belly with your cum."
                     else:
-                        imagebutton:
-                            pos(678, 166)
-                            idle "openmouth"
-                            action NullAction()
-                            tooltip "You fuck her mouth with your cock."
+                        $ VToralat = "sucking"
+                        $ VToralst = "openmouth"
+                        $ VToraltt = "You fuck her mouth with your cock."
                 else:
                     if hasattr(position_choice, 'name'):
                         if position_choice.name == 'Kissing':
-                            imagebutton:
-                                pos(678, 166)
-                                idle "pinklips"
-                                action NullAction()
-                                tooltip "In the throes of kissing you."
+                            $ VToralat = "kissing"
+                            $ VToralst = "pinklips"
+                            $ VToraltt = "In the throes of kissing you."
 
-        if person.arousal_perc >= 59 and person.oral_cum<=0:
-            imagebutton:
-                pos(678, 166)
-                idle "ahegaoface"
-                action NullAction()
-                tooltip "She "+VToraltt+"."
+        if person.arousal_perc >= 59 and person.oral_cum<=0 and VToralat=="talking":
+            $ VToralst = "ahegaoface"
+            if person.oral_first == mc.name:
+                $ VToraltt = "She starts to drool \n and undress you with her eyes."
+            else:
+                $ VToraltt = "She looks at you with savage lust in her eyes."
         else:
             if person.oral_cum >0:
                 if person.oral_cum == 1:
-                        imagebutton:
-                            pos(678, 166)
-                            idle "ahegaomouth"
-                            action NullAction()
-                            tooltip "She has a dose of your protein in her belly."
+                        $ VToralst = "ahegaomouth"
+                        $ VToraltt = "She has a dose of your protein in her belly."
                 else:
-                    imagebutton:
-                        pos(678, 166)
-                        idle "ahegaoface"
-                        action NullAction()
-                        tooltip "Has "+ str(person.oral_cum) +" doses of your cum \n swimming in her belly."
+                    $ VToralst = "ahegaoface"
+                    $ VToraltt = "Has "+ str(person.oral_cum) +" doses of your cum \n swimming in her belly."
             else:
                 if person.oral_first == mc.name:
-                    imagebutton:
-                        pos(678, 166)
-                        idle "claimedmouth"
-                        action NullAction()
-                        tooltip "You Claimed this Pie Hole!"
+                    $ VToralst = "claimedmouth"
+                    $ VToraltt = "You Claimed this Pie Hole!"
                 else:
                     if person.oral_first !=None and person.oral_virgin>0:
-                        imagebutton:
-                            pos(678, 166)
-                            idle "knowlips"
-                            action NullAction()
-                            tooltip "Someone else had her lips before you... CLAIM IT!"
+                        $ VToralst = "knowlips"
+                        $ VToraltt = "Someone else had her lips before you... CLAIM IT!"
+        imagebutton:
+            pos(678, 166)
+            idle VToralst
+            action NullAction()
+            tooltip VToraltt
 ### Anal Virgin Flag
         $ AnalArousal = ""            
         if person.anal_virgin == 0:
