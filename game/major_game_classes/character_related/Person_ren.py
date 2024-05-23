@@ -22,7 +22,7 @@ from game.helper_functions.play_sounds_ren import play_female_orgasm, play_spank
 from game.helper_functions.random_generation_functions_ren import make_person
 from game.helper_functions.webcolors_usage_ren import closest_eye_color, closest_hair_colour
 from game._image_definitions_ren import portrait_mask_image
-from game.clothing_lists_ren import position_size_dict, hair_styles, pube_styles, mouth_cum, creampie_cum, face_cum, tits_cum, stomach_cum, ass_cum, braided_bun, messy_short_hair, shaved_side_hair, short_hair, windswept_hair, messy_ponytail, twintail, ponytail, long_hair, messy_hair, shaved_pubes, landing_strip_pubes, default_pubes, bald_hair, no_tan, white_skin, tan_skin, black_skin, shoes_list, socks_list, tights_list, bath_robe, apron
+from game.clothing_lists_ren import position_size_dict, hair_styles, pube_styles, mouth_cum, creampie_cum, face_cum, tits_cum, stomach_cum, ass_cum, braided_bun, messy_short_hair, shaved_side_hair, short_hair, windswept_hair, messy_ponytail, twintail, ponytail, long_hair, messy_hair, shaved_pubes, landing_strip_pubes, default_pubes, bald_hair, no_tan, white_skin, tan_skin, black_skin, bath_robe, apron
 from game.main_character.perks.Perks_ren import perk_system
 from game.main_character.mc_serums._mc_serum_definitions_ren import mc_serum_aura_obedience, mc_serum_aura_fertility
 from game.main_character.MainCharacter_ren import mc
@@ -37,7 +37,7 @@ from game.sex_positions._position_definitions_ren import kissing, spanking
 from game.business_policies.clothing_policies_ren import strict_uniform_policy, casual_friday_uniform_policy, dress_code_policy, creative_colored_uniform_policy
 from game.business_policies.organisation_policies_ren import office_punishment
 from game.business_policies.special_policies_ren import genetic_manipulation_policy
-from game.personality_types._personality_definitions_ren import relaxed_personality
+from game.personality_types._personality_definitions_ren import relaxed_personality, alpha_personality
 from game.major_game_classes.clothing_related.zip_manager_ren import emotion_images_dict
 from game.major_game_classes.business_related.Infraction_ren import Infraction
 from game.major_game_classes.serum_related.SerumDesign_ren import SerumDesign
@@ -77,7 +77,6 @@ TIER_3_TIME_DELAY = 20
 
 global report_log
 report_log: dict[str, int]
-unique_character_list: list[Person] = []
 list_of_people: list[Person] = []
 list_of_patreon_characters: list[Person] = []
 list_of_instantiation_functions: list[Callable[[], None]]
@@ -107,11 +106,9 @@ myra: Person
 city_rep: Person
 iris: Person
 
-ShaderPerson = renpy.displayable
 day = 0
 time_of_day = 0
 town_relationships = RelationshipArray()
-alpha_personality = Personality(None)
 
 character_right = None
 clothing_fade = None
