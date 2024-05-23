@@ -189,7 +189,7 @@ label small_talk_person(the_person, apply_energy_cost = True, is_phone = False):
         if apply_energy_cost:
             mc.change_energy(-15)
         the_person.event_triggers_dict["chatted"] = the_person.event_triggers_dict.get("chatted", 0) - 1
-        day_part = time_of_day_string(time_of_day)
+        day_part = time_of_day_string()
         name = renpy.random.choice([the_person.title, the_person.fname])
         renpy.say(mc.name, renpy.random.choice([
             "So [name], what's been on your mind recently?",
