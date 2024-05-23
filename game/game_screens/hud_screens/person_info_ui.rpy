@@ -347,7 +347,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                 $ VTbctt = "She is not on birth control."
         else:
             $ VTbcst = "knowbirthcontrol"
-            $ VTbctt = "Don't know if she is on birth control... maybe ask?"
+            $ VTbctt = "Is she is on birth control?"
 
         imagebutton:
             pos(359, 166)
