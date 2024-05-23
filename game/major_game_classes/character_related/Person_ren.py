@@ -1419,7 +1419,7 @@ class Person(): #Everything that needs to be known about a person.
             return self.create_formatted_title("???")
         if self.has_job(prostitute_job):    # always use her stage name
             return self.title
-        if "talking_person" not in globals() and self.is_family: # always use their title when MC is talking
+        if ("talking_person" not in globals() or talking_person is None) and self.is_family: # always use their title when MC is talking
             return self.title
 
         name = self.create_formatted_title(self.name)
@@ -2927,6 +2927,7 @@ class Person(): #Everything that needs to be known about a person.
                     self.anal_virgin +=1
                     self.anal_first = mc.name
                 elif self.anal_virgin <=9: self.anal_virgin +=1
+
         # Record the total number of orgasms for the girl
         self.sex_record["Orgasms"] = self.sex_record.get("Orgasms", 0) + report_log.get("girl orgasms", 0)
         # Record number of times public sex
