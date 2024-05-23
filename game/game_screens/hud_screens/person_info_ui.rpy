@@ -406,12 +406,13 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
             idle VTcondomst
             action NullAction()
             tooltip VTcondomtt                    
-        if person.opinion.bareback_sex <0 and person.sexy_opinions.get("bareback sex")[1]==True:
-            imagebutton:
-                pos(396, 166)
-                idle "dislike"
-                action NullAction()
-                tooltip VTcondomtt
+        if person.sexy_opinions.get("bareback sex")!=None:
+            if person.opinion.bareback_sex <0 and person.sexy_opinions.get("bareback sex")[1]==True:
+                imagebutton:
+                    pos(396, 166)
+                    idle "dislike"
+                    action NullAction()
+                    tooltip VTcondomtt
 ###### Threesome Flag - note polyamorous added
         $ VTpolyst = "knowthreesome"
         $ VTpolytt = "Does she like threesomes?"
@@ -465,13 +466,14 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
             idle VTpolyst
             action NullAction()
             tooltip VTpolytt
-        if person.sexy_opinions.get("threesomes")[1]==True:
-            if person.opinion.threesomes <0 or person.opinion.polyamory <0:
-                imagebutton:
-                    pos(433, 166)
-                    idle "dislike"
-                    action NullAction()
-                    tooltip VTpolytt
+        if person.sexy_opinions.get("threesomes")!=None:
+            if person.sexy_opinions.get("threesomes")[1]==True:
+                if person.opinion.threesomes <0 or person.opinion.polyamory <0:
+                    imagebutton:
+                        pos(433, 166)
+                        idle "dislike"
+                        action NullAction()
+                        tooltip VTpolytt
 ##### Wants Creampies
         $ VTcreampiest = "knowpeach"
         $ VTcreampiett = "Don't know if she likes creampies, ask her?"
@@ -587,13 +589,14 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
             pos(507, 166)
             idle VTcumfetishst
             action NullAction()
-            tooltip VTcumfetishtt                    
-        if person.opinion.giving_blowjobs < 0 and person.sexy_opinions.get("giving blowjobs")[1]==True:
-            imagebutton:
-                pos(507, 166)
-                idle "dislike"
-                action NullAction()
-                tooltip VTcumfetishtt
+            tooltip VTcumfetishtt
+        if person.sexy_opinions.get("giving blowjobs")!=None:
+            if person.opinion.giving_blowjobs < 0 and person.sexy_opinions.get("giving blowjobs")[1]==True:
+                imagebutton:
+                    pos(507, 166)
+                    idle "dislike"
+                    action NullAction()
+                    tooltip VTcumfetishtt
 ###### Anal Fetish anal_sex_skill >= 5 .anal_sex_count > 19 or self.anal_creampie_count > 19
         $ VTanalfetishst = "knowpeach"
         $ VTanalfetishtt = "What is her thoughts on anal sex?"
@@ -644,13 +647,14 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
             pos(544, 166)
             idle VTanalfetishst
             action NullAction()
-            tooltip VTanalfetishtt                    
-        if person.opinion.anal_sex < 0 and person.sexy_opinions.get("anal sex")[1]==True:
-            imagebutton:
-                pos(544, 166)
-                idle "dislike"
-                action NullAction()
-                tooltip VTanalfetishtt
+            tooltip VTanalfetishtt
+        if person.sexy_opinions.get("anal sex")!=None:
+            if person.opinion.anal_sex < 0 and person.sexy_opinions.get("anal sex")[1]==True:
+                imagebutton:
+                    pos(544, 166)
+                    idle "dislike"
+                    action NullAction()
+                    tooltip VTanalfetishtt
 ###### Breeding Fetish
         $ VTbreedfetishst = "knowpeach"
         $ VTbreedfetishtt = "Does she like vaginal sex?"
@@ -711,13 +715,14 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
             pos(581, 166)
             idle VTbreedfetishst
             action NullAction()
-            tooltip VTbreedfetishtt                    
-        if person.opinion.vaginal_sex < 0 and person.sexy_opinions.get("vaginal sex")[1]==True:
-            imagebutton:
-                pos(581, 166)
-                idle "dislike"
-                action NullAction()
-                tooltip VTbreedfetishtt
+            tooltip VTbreedfetishtt
+        if person.sexy_opinions.get("vaginal sex")!=None:
+            if person.opinion.vaginal_sex < 0 and person.sexy_opinions.get("vaginal sex")[1]==True:
+                imagebutton:
+                    pos(581, 166)
+                    idle "dislike"
+                    action NullAction()
+                    tooltip VTbreedfetishtt
 ######## Exhibitionist Fetish
         $ VTexhibitfetishst = "knowbody"
         $ VTexhibitfetishtt = "Does she like public sex?"
@@ -765,7 +770,6 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                                     $ VTexhibitfetishtt += f"\n{{image=question_mark_small}} Need to know her opinion on skimpy uniforms."
                                 if person.known_opinion("public sex")==False:
                                     $ VTexhibitfetishtt += f"\n{{image=question_mark_small}} Need to know if she likes public sex."
-                                 
                                 if person.opinion.skimpy_uniforms <2:
                                     $ VTexhibitfetishtt += f"\n{{image=question_mark_small}} Needs to be more comfortable in skimpy uniforms."
                             else:
@@ -787,13 +791,14 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
             pos(618, 166)
             idle VTexhibitfetishst
             action NullAction()
-            tooltip VTexhibitfetishtt                    
-        if person.opinion.public_sex < 0 and person.sexy_opinions.get("public sex")[1]==True:
-            imagebutton:
-                pos(618, 166)
-                idle "dislike"
-                action NullAction()
-                tooltip VTexhibitfetishtt
+            tooltip VTexhibitfetishtt
+        if person.sexy_opinions.get("public sex")!=None:
+            if person.opinion.public_sex < 0 and person.sexy_opinions.get("public sex")[1]==True:
+                imagebutton:
+                    pos(618, 166)
+                    idle "dislike"
+                    action NullAction()
+                    tooltip VTexhibitfetishtt
 #hymen is 0 = sealed, 1=recently torn bleeding, 2=normal - serum to regenerate vaginal and hymen
 #0=virgin, 1=just the tip, 2=full penetration, 3-10 is degree of tightness
 ### Oral Virgin Flag
