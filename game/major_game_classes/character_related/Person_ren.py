@@ -22,7 +22,7 @@ from game.helper_functions.play_sounds_ren import play_female_orgasm, play_spank
 from game.helper_functions.random_generation_functions_ren import make_person
 from game.helper_functions.webcolors_usage_ren import closest_eye_color, closest_hair_colour
 from game._image_definitions_ren import portrait_mask_image
-from game.clothing_lists_ren import position_size_dict, hair_styles, pube_styles, mouth_cum, creampie_cum, face_cum, tits_cum, stomach_cum, ass_cum, braided_bun, messy_short_hair, shaved_side_hair, short_hair, windswept_hair, messy_ponytail, twintail, ponytail, long_hair, messy_hair, shaved_pubes, landing_strip_pubes, default_pubes, bald_hair, no_tan, white_skin, tan_skin, black_skin, shoes_list, socks_list, tights_list, bath_robe, apron
+from game.clothing_lists_ren import position_size_dict, hair_styles, pube_styles, mouth_cum, creampie_cum, face_cum, tits_cum, stomach_cum, ass_cum, braided_bun, messy_short_hair, shaved_side_hair, short_hair, windswept_hair, messy_ponytail, twintail, ponytail, long_hair, messy_hair, shaved_pubes, landing_strip_pubes, default_pubes, bald_hair, no_tan, white_skin, tan_skin, black_skin, bath_robe, apron
 from game.main_character.perks.Perks_ren import perk_system
 from game.main_character.mc_serums._mc_serum_definitions_ren import mc_serum_aura_obedience, mc_serum_aura_fertility
 from game.main_character.MainCharacter_ren import mc
@@ -37,7 +37,7 @@ from game.sex_positions._position_definitions_ren import kissing, spanking
 from game.business_policies.clothing_policies_ren import strict_uniform_policy, casual_friday_uniform_policy, dress_code_policy, creative_colored_uniform_policy
 from game.business_policies.organisation_policies_ren import office_punishment
 from game.business_policies.special_policies_ren import genetic_manipulation_policy
-from game.personality_types._personality_definitions_ren import relaxed_personality
+from game.personality_types._personality_definitions_ren import relaxed_personality, alpha_personality
 from game.major_game_classes.clothing_related.zip_manager_ren import emotion_images_dict
 from game.major_game_classes.business_related.Infraction_ren import Infraction
 from game.major_game_classes.serum_related.SerumDesign_ren import SerumDesign
@@ -77,7 +77,6 @@ TIER_3_TIME_DELAY = 20
 
 global report_log
 report_log: dict[str, int]
-unique_character_list: list[Person] = []
 list_of_people: list[Person] = []
 list_of_patreon_characters: list[Person] = []
 list_of_instantiation_functions: list[Callable[[], None]]
@@ -107,11 +106,9 @@ myra: Person
 city_rep: Person
 iris: Person
 
-ShaderPerson = renpy.displayable
 day = 0
 time_of_day = 0
 town_relationships = RelationshipArray()
-alpha_personality = Personality(None)
 
 character_right = None
 clothing_fade = None
@@ -1696,17 +1693,17 @@ class Person(): #Everything that needs to be known about a person.
         descriptor = "tits"
 
         if rank == 0:
-            adjective = renpy.random.choice(["flat", "minute", "tiny"])
-            descriptor = renpy.random.choice(["titties", "tits", "nipples"])
+            adjective = renpy.random.choice(("flat", "minute", "tiny"))
+            descriptor = renpy.random.choice(("titties", "tits", "nipples"))
         elif rank in (1, 2, 3):
-            adjective = renpy.random.choice(["firm", "perky", "small"])
-            descriptor = renpy.random.choice(["breasts", "tits", "boobs"])
+            adjective = renpy.random.choice(("firm", "perky", "small"))
+            descriptor = renpy.random.choice(("breasts", "tits", "boobs"))
         elif rank in (4, 5, 6):
-            adjective = renpy.random.choice(["shapely", "large", "big", "generous"])
-            descriptor = renpy.random.choice(["breasts", "tits", "bosoms"])
+            adjective = renpy.random.choice(("shapely", "large", "big", "generous"))
+            descriptor = renpy.random.choice(("breasts", "tits", "bosoms"))
         elif rank in (7, 8, 9):
-            adjective = renpy.random.choice(["large", "voluptuous", "colossal", "huge"])
-            descriptor = renpy.random.choice(["breasts", "tits", "jugs", "melons"])
+            adjective = renpy.random.choice(("large", "voluptuous", "colossal", "huge"))
+            descriptor = renpy.random.choice(("breasts", "tits", "jugs", "melons"))
 
         return f"{adjective} {descriptor}"
 
@@ -1728,19 +1725,10 @@ class Person(): #Everything that needs to be known about a person.
             if the_opinion_key:
                 self.sexy_opinions[the_opinion_key] = opinion_list
 
-        self.sex_record["Handjobs"] = 0
-        self.sex_record["Blowjobs"] = 0
-        self.sex_record["Cunnilingus"] = 0
-        self.sex_record["Tit Fucks"] = 0
-        self.sex_record["Vaginal Sex"] = 0
-        self.sex_record["Anal Sex"] = 0
-        self.sex_record["Cum Facials"] = 0
-        self.sex_record["Cum in Mouth"] = 0
-        self.sex_record["Cum Covered"] = 0
-        self.sex_record["Vaginal Creampies"] = 0
-        self.sex_record["Anal Creampies"] = 0
-        self.sex_record["Fingered"] = 0
-        self.sex_record["Kissing"] = 0
+        self.sex_record = {k: 0 for k in
+            ("Handjobs", "Blowjobs", "Cunnilingus", "Tit Fucks", "Vaginal Sex", "Anal Sex",
+             "Cum Facials", "Cum in Mouth", "Cum Covered", "Vaginal Creampies", "Anal Creampies",
+             "Fingered", "Kissing")}
 
     def generate_home(self, set_home_time = True, force_new_home = False) -> Room: #Creates a home location for this person and adds it to the master list of locations so their turns are processed.
         # generate new home location if we don't have one
@@ -2087,23 +2075,24 @@ class Person(): #Everything that needs to be known about a person.
             job.reset()
 
         # auto-develop fetishes without serum
-        if (self.has_anal_fetish==False and self.anal_sex_skill >= 5
+        if (not self.has_anal_fetish and self.anal_sex_skill >= 5
                 and self.opinion.anal_sex >= 2 and self.opinion.anal_creampies >= 2
                 and (self.anal_sex_count > 19 or self.anal_creampie_count > 19)):
-            if start_anal_fetish_quest(self)==False:
+            if start_anal_fetish_quest(self):
                 self.event_triggers_dict["anal_fetish_start"] = True
 
-        if (self.has_cum_fetish==False and self.oral_sex_skill >= 5
+        if (not self.has_cum_fetish and self.oral_sex_skill >= 5
                 and self.opinion.giving_blowjobs >= 2 and (self.opinion.drinking_cum >= 2 or self.opinion.cum_facials >= 2)
                 and self.cum_exposure_count > 19):
-            if start_cum_fetish_quest(self)==False:
+            if start_cum_fetish_quest(self):
                 self.event_triggers_dict["cum_fetish_start"] = True
 
-        if (self.has_breeding_fetish==False and self.vaginal_sex_skill >= 5
+        if (not self.has_breeding_fetish and self.vaginal_sex_skill >= 5
                 and self.opinion.vaginal_sex >= 2 and self.opinion.creampies >= 2
                 and self.vaginal_creampie_count > 19):
-            if start_breeding_fetish_quest(self)==False:
+            if start_breeding_fetish_quest(self):
                 self.event_triggers_dict["breeding_fetish_start"] = True
+
         # dealing with virgin hymen healing, 0-seal 1-bleeding/torn 2-normalized
         if self.hymen==1 and (day - self.sex_record.get("Last Vaginal Day", -1)) == 3:
             self.hymen=2
