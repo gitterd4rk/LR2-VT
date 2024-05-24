@@ -1160,11 +1160,6 @@ class Person(): #Everything that needs to be known about a person.
         portrait_say = None
         talking_person = None
 
-    def __lt__(self, other):
-        if other is None:
-            return True
-        return self.__hash__() < other.__hash__()
-
     def __hash__(self) -> int:
         return self.identifier
 
@@ -1458,7 +1453,7 @@ class Person(): #Everything that needs to be known about a person.
 
     @property
     def is_family(self) -> bool:
-        return self in [mom, lily, aunt, cousin]
+        return self in (mom, lily, aunt, cousin)
 
     @property
     def is_employee(self) -> bool:
@@ -1522,19 +1517,20 @@ class Person(): #Everything that needs to be known about a person.
 
     @property
     def is_dominant(self) -> bool:
-        if self.personality == alpha_personality and self.obedience < 250:
+        if self.personality == alpha_personality and self.obedience < (240 - ((2 + self.opinion.being_submissive) * 10)):
             return True
-        return self.opinion.taking_control > 0 and \
-            self.opinion.taking_control >= self.opinion.being_submissive
+        return (self.opinion.taking_control > 1
+                or self.opinion.taking_control > self.opinion.being_submissive)
 
     @property
     def is_submissive(self) -> bool:
         if self.is_slave:
             return True
-        if self.personality == alpha_personality and self.obedience < 250:
+        if self.personality == alpha_personality and self.obedience < (200 - ((2 + self.opinion.being_submissive) * 10)):
             return False
-        return self.opinion.being_submissive > 0 and \
-            self.opinion.taking_control <= self.opinion.being_submissive
+        return (self.opinion.being_submissive > 1
+                or self.opinion.taking_control < self.opinion.being_submissive
+                or self.obedience > (200 - ((2 + self.opinion.being_submissive) * 10)))
 
     @property
     def is_slave(self) -> bool:
