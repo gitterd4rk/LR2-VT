@@ -194,11 +194,6 @@ class MenuItem():
         self.person_preview_args = person_preview_args
         self.return_value = return_value
 
-    def __lt__(self, other):
-        if other is None:
-            return True
-        return self.__hash__() < other.__hash__()
-
     def __hash__(self) -> int:
         return hash((self.title, self.display_key))
 

@@ -77,6 +77,7 @@ init -10:
     image bg science_menu_background = science_menu_background_image
     image bg paper_menu_background = paper_background_image
 
+    image information_mark = "[information_image.filename]"
     image serum_vial = "[vial_image.filename]"
     image serum_vial2 = "[vial2_image.filename]"
     image serum_vial3 = "[vial3_image.filename]"
@@ -89,6 +90,7 @@ init -10:
     image doggy_style_marker = "[doggy_style_image.filename]"
     image virgin_image_marker = "[virgin_image.filename]"
     image birthcontrol = "[bc_image.filename]"
+    image bc_cum = "[bc_cum_image.filename]"
     image nobirthcontrol = "[nobc_image.filename]"
     image beezee = "[beezee_image.filename]"
     image knowbirthcontrol = "[knowbc_image.filename]"
@@ -132,6 +134,9 @@ init -10:
 
     image ahegaoex = "[ahegaoex_image.filename]"
     image nudebody = "[nudebody_image.filename]"
+    image bodybra = "[bodybra_image.filename]"
+    image bodypanties = "[bodypanties_image.filename]"
+    image bodyskimpy = "[bodyskimpy_image.filename]"
     image underwear = "[underwear_image.filename]"
     image bodyconcealed = "[bodyconcealed_image.filename]"
     image knowbody = "[knowbody_image.filename]"

@@ -1,5 +1,6 @@
 # LR2-VT
 🍒🍒🍒🍒    LR2-VT    🍒🍒🍒🍒 
+
 💮 Adds a visual virginity tracker for those with the virgin/dom kinks.  Serums added to regrow the hymen or reset the virginities by stimulation and regrowth.
 
 🔥 It is a PATCH, not a mod! 
@@ -18,7 +19,7 @@
 
 🔥 Lab Rats2 Reformulate: v2024.06-code-beta  Ren'Py 8.2.1
 
-🔥 lr2mods-develop - May 23, 2024 1:37 PM EDT -https://discord.com/channels/564870606382956576/571557121716387840/1243256491859775651
+🔥 lr2mods-develop - May 25, 2024 8:06 AM EDT -https://discord.com/channels/564870606382956576/571557121716387840/1243898101954252840
 
 💮 Vanilla files modified: 12 files
 
