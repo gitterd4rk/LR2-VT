@@ -102,6 +102,7 @@ init -10:
     image girlfriend = "[girlfriend_image.filename]"
 
     image hadsextoday = "[hadsextoday_image.filename]"
+    image pregnant = "[pregnant_image.filename]"
 
     image ahegaocondom = "[ahegaocondom_image.filename]"
     image wearcondom = "[wearcondom_image.filename]"
