@@ -132,7 +132,7 @@ def get_location_tooltip(location: Room) -> str:
             info.append("{image=feeding_bottle_token_small}")
         if person.serum_effects:
             info.append("{image=vial_token_small}")
-        if person.infractions and person.is_at_work:
+        if person.infractions and person.is_at_office:
             info.append("{image=infraction_token_small}")
         if person.trance_training_available:
             if person.has_exact_role(very_heavy_trance_role):
