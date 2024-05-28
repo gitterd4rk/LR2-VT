@@ -338,57 +338,72 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
         $ VTbcat = "talking"
         $ VTbcst = "knowbirthcontrol"
         $ VTbctt = "Is she on birth control?"
+        $ VTpro = ""
         if person.bc_status_known:
             if person.on_birth_control:
                 $ VTbcst = "birthcontrol"
                 $ VTbctt = "She is on birth control."
+                $ VTpro = " protected"
             else:
                 $ VTbcst = "nobirthcontrol"
                 $ VTbctt = "She is not on birth control."
+                $ VTpro = " defenseless"
         else:
             $ VTbcst = "knowbirthcontrol"
             $ VTbctt = "Is she is on birth control?"
 
+       
+        $ VTbreedfertile = ""
+        if person.bc_status_known and person.is_highly_fertile and perk_system.has_ability_perk("Ovulation Cycle Perception"):
+            $ VTbreedfertile = " highly fertile"
         #the interactive icons during sex stuff
         if 'position_choice' in globals():
-            if hasattr(position_choice, 'skill_tag'):
-                $ VTbcat = "sexualized"
-
-        imagebutton:
-            pos(359, 166)
-            idle VTbcst
-            action NullAction()
-            tooltip VTbctt
+            #if hasattr(position_choice, 'skill_tag'):
+            $ VTbcat = "sexualized"
+         #PREGNANCY HAXX
+        if person.knows_pregnant:
+                $ VTbcst = "pregnant"
+                $ VTbctt = "She is pregnant."
+                $ VTpro = ""
+                $ VTbreedfertile = "pregnant"
         if VTbcat=="sexualized":
+            imagebutton:
+                pos(359, 166)
+                idle VTbcst
+                action NullAction()
+                tooltip VTbctt
             if person.vaginal_cum >0:
                 $ VTbcst = "bc_cum"
                 if person.vaginal_cum ==1:
-                    $ VTbctt = "Has your cum swimming in her"
+                    $ VTbctt += f"\n{{image=beezee_token_small}} Has your cum swimming in her"+VTbreedfertile+VTpro+" womb."
                 if person.vaginal_cum >1:
-                    $ VTbctt = "Has "+ str(person.vaginal_cum) +" doses of your cum \n swimming in her"
-                if person.bc_status_known and person.is_highly_fertile and perk_system.has_ability_perk("Ovulation Cycle Perception"):
-                    $ VTbctt += " highly fertile"
-                $ VTbctt += " womb."
-                imagebutton:
-                    pos(359, 166)
-                    idle VTbcst
-                    action NullAction()
-                    tooltip VTbctt
+                    $ VTbctt += f"{{image=beezee_token_small}} Has "+ str(person.vaginal_cum) +" doses of your cum \n swimming in her"+VTbreedfertile+VTpro+" womb."
+            imagebutton:
+                pos(359, 166)
+                idle VTbcst
+                action NullAction()
+                tooltip VTbctt
         if VTbcat=="talking":
+            imagebutton:
+                pos(359, 166)
+                idle VTbcst
+                action NullAction()
+                tooltip VTbctt
             if person.bc_status_known and person.is_highly_fertile and perk_system.has_ability_perk("Ovulation Cycle Perception"):
+                $ VTbctt += "She is not on birth control and highly fertile."
                 imagebutton:
                     pos(359, 166)
                     idle "beezee"
                     action NullAction()
-                    tooltip "She is not on birth control and highly fertile."
+                    tooltip VTbctt
 ####### Wants Condom
         $ VTcondomat = "talking"
         $ VTcondommc = "condom"
         $ VTcondomst = "knowcondom"
-        $ VTcondomtt = "Does she like bareback sex?"
+        $ VTcondomtt = f"{{image=question_mark_small}} Does she like bareback sex?"
         if person.sexy_opinions.get("bareback sex")==None:
             $ VTcondomst = "knowcondom"
-            $ VTcondomtt = "Does she like bareback sex?"
+            $ VTcondomtt = f"{{image=question_mark_small}} Does she like bareback sex?"
         else:
             if person.sexy_opinions.get("bareback sex")[1]==True:
                 if person.opinion.bareback_sex >= 2 and person.wants_creampie and person.has_cum_fetish and person.has_anal_fetish and person.has_breeding_fetish and person.wants_condom()==False:
@@ -422,7 +437,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                                     $ VTcondomtt = f"She dislikes raw sex!"
             else:
                 $ VTcondomst = "knowcondom"
-                $ VTcondomtt = "Does she like bareback sex?"
+                $ VTcondomtt = f"{{image=question_mark_small}} Does she like bareback sex?"
 
         #the interactive icons during sex stuff
         if 'position_choice' in globals():
@@ -432,7 +447,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                 $ VTcondomtt = "You are wearing a condom"
                 if mc.condom == False:
                     $ VTcondommc = "condomoff"
-                    $ VTcondomtt = "You are not wearing a condom."
+                    $ VTcondomtt = "You are natural."
 
         if VTcondomat=="sexualized":
             imagebutton:
@@ -445,7 +460,8 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                     pos(396, 166)
                     idle "dislike"
                     action NullAction()
-                    tooltip "You are not wearing a condom."
+                    tooltip "You are natural."
+
         if VTcondomat=="talking":
             imagebutton:
                 pos(396, 166)
@@ -462,10 +478,10 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
 ###### Threesome Flag - note polyamorous added
         $ VTpolyat = "talking"
         $ VTpolyst = "knowthreesome"
-        $ VTpolytt = "Does she like threesomes?"
+        $ VTpolytt = f"{{image=question_mark_small}} Does she like threesomes?"
         if person.sexy_opinions.get("threesomes")==None:
             $ VTpolyst = "knowthreesome"
-            $ VTpolytt = "Does she like threesomes?"
+            $ VTpolytt = f"{{image=question_mark_small}} Does she like threesomes?"
         else:
             if person.sexy_opinions.get("threesomes")[1]==True:
                 if person.opinion.threesomes >=2 and person.has_cum_fetish and person.has_anal_fetish and person.opinion.polyamory >=2:
@@ -507,7 +523,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                                     $ VTpolytt = f"She dislikes threesomes!"
             else:
                 $ VTpolyst = "knowthreesome"
-                $ VTpolytt = "Does she like threesomes?"
+                $ VTpolytt = f"{{image=question_mark_small}} Does she like threesomes?"
 
         #the interactive icons during sex stuff
         if 'position_choice' in globals():
@@ -529,18 +545,19 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                 idle VTpolyst
                 action NullAction()
                 tooltip VTpolytt
-            if person.sexy_opinions.get("threesomes", (0, False))[1]:
-                if person.sexy_opinions.get("threesomes")[1]==True:
-                    if person.opinion.threesomes <0 or person.opinion.polyamory <0:
-                        imagebutton:
-                            pos(433, 166)
-                            idle "dislike"
-                            action NullAction()
-                            tooltip VTpolytt
+        if person.sexy_opinions.get("threesomes", (0, False))[1]:
+            if person.sexy_opinions.get("threesomes")[1]==True:
+                if person.opinion.threesomes <0 or person.opinion.polyamory <0:
+                    imagebutton:
+                        pos(433, 166)
+                        idle "dislike"
+                        action NullAction()
+                        tooltip VTpolytt
 ##### Wants Creampies
         $ VTcreampieat = "talking"
         $ VTcreampiest = "knowpeach"
-        $ VTcreampiett = "Does she likes creampies?"
+        $ VTcreampiett = f"{{image=question_mark_small}} Does she likes creampies?"
+        $ VTcreampieck = ""
         if person.wants_creampie and person.known_opinion("creampies") and person.known_opinion("anal_creampies") and (person.has_anal_fetish and person.has_breeding_fetish) and (person.opinion.anal_creampies >= 2 and person.known_opinion("anal creampies")) and (person.opinion.creampies >= 2 and person.known_opinion("creampies")):
             $ VTcreampiest = "ahegaopeach"
             $ VTcreampiett = "She wants to be filled!"
@@ -569,61 +586,64 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                         $ VTcreampiest = "yespeach"
                         $ VTcreampiett = "She hates creampies!"
                         if (person.known_opinion("anal creampies") and person.opinion.anal_creampies < 1):
-                            $ VTcreampiett = f"\nShe hates anal creampies!"
+                            $ VTcreampiett = f"She hates anal creampies!"
                         if (person.known_opinion("creampies") and person.opinion.creampies <1):
                             $ VTcreampiett = f"She hates vaginal creampies!"
                         if (person.known_opinion("anal creampies") and person.opinion.anal_creampies < 1) and (person.known_opinion("creampies") and person.opinion.creampies <1):
                             $ VTcreampiett = f"She hates creampies!"
                 else:
                     $ VTcreampiest = "knowpeach"
-                    $ VTcreampiett = "Does she likes creampies?"
+                    $ VTcreampiett = f"{{image=question_mark_small}} Does she likes creampies?"
 
         #the interactive icons during sex stuff
         if 'position_choice' in globals():
             if hasattr(position_choice, 'skill_tag'):
                 $ VTcreampieat = "sexualized"
-                if person.vaginal_cum ==1:
-                    $ VTcreampiest = "openpeach"
-                if person.vaginal_cum >1:
-                    $ VTcreampiest = "openpeach"
-                if person.anal_cum ==1:
-                    $ VTcreampiest = "handass"
-                if person.anal_cum >1:
-                    $ VTcreampiest = "handass"
-        #cumidentifiers
-        if person.vaginal_cum ==1:
-            $ VTcreampiett += f"\n{{image=ahegaovag_small}}Has your cum swimming in her womb."
-        if person.vaginal_cum >1:
-            $ VTcreampiett += f"\n{{image=ahegaovag_small}}Has "+ str(person.vaginal_cum) +" doses of your cum \n swimming in her womb."
-        if person.anal_cum ==1:
-            $ VTcreampiett += f"\n{{image=ahegaoanal_small}}Has your cum swimming in her bowels."
-        if person.anal_cum >1:
-            $ VTcreampiett += f"\n{{image=ahegaoanal_small}}Has "+ str(person.anal_cum) +" doses of your cum \n swimming in her bowels."
-        imagebutton:
-            pos(470, 166)
-            idle VTcreampiest
-            action NullAction()
-            tooltip VTcreampiett                    
+
+        if VTcreampieat=="sexualized":
+            if person.vaginal_cum ==1:
+                $ VTcreampiest = "openvag"
+                $ VTcreampiett += f"\n{{image=beezee_token_small}} Has your cum swimming in her"+VTbreedfertile+VTpro+" womb."
+            if person.vaginal_cum >1:
+                $ VTcreampiest = "ahegaovag"
+                $ VTcreampiett += f"\n{{image=beezee_token_small}} Has "+ str(person.vaginal_cum) +" doses of your cum \n swimming in her"+VTbreedfertile+VTpro+" womb."
+            if person.anal_cum ==1:
+                $ VTcreampiest = "handass"
+                $ VTcreampiett += f"\n{{image=ahegaoanal_small}} Has your cum swimming in her bowels."
+            if person.anal_cum >1:
+                $ VTcreampiest = "ahegaoanal"
+                $ VTcreampiett += f"\n{{image=ahegaoanal_small}} Has "+ str(person.anal_cum) +" doses of your cum \n swimming in her bowels."
+            imagebutton:
+                pos(470, 166)
+                idle VTcreampiest
+                action NullAction()
+                tooltip VTcreampiett                    
+
         if VTcreampieat=="talking":
+            imagebutton:
+                pos(470, 166)
+                idle VTcreampiest
+                action NullAction()
+                tooltip VTcreampiett
             if person.anal_cum >1 or person.vaginal_cum >1:
                 imagebutton:
                     pos(470, 166)
                     idle "bc_cum"
                     action NullAction()
                     tooltip VTcreampiett
-            if (person.known_opinion("anal creampies") and person.opinion.anal_creampies < 0) or (person.known_opinion("creampies") and person.opinion.creampies <0):
-                imagebutton:
-                    pos(470, 166)
-                    idle "dislike"
-                    action NullAction()
-                    tooltip VTcreampiett
+        if (person.known_opinion("anal creampies") and person.opinion.anal_creampies < 0) or (person.known_opinion("creampies") and person.opinion.creampies <0):
+            imagebutton:
+                pos(470, 166)
+                idle "dislike"
+                action NullAction()
+                tooltip VTcreampiett
 ###### Cum Fetish
         $ VTcumfetishat = "talking"
         $ VTcumfetishst = "knowlips"
         $ VTcumfetishtt = "Does she like giving blow jobs?"
         if person.sexy_opinions.get("giving blowjobs")==None:
             $ VTcumfetishst = "knowlips"
-            $ VTcumfetishtt = "Does she like giving blow jobs?"
+            $ VTcumfetishtt = f"{{image=question_mark_small}} Does she like giving blow jobs?"
         else:
             if person.sexy_opinions.get("giving blowjobs")[1]==True:
                 if person.has_cum_fetish:
@@ -669,23 +689,20 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                                         $ VTcumfetishtt = f"She dislikes oral!"
             else:
                 $ VTcumfetishst = "knowlips"
-                $ VTcumfetishtt = "Does she like giving blow jobs?"
+                $ VTcumfetishtt = f"{{image=question_mark_small}} Does she like giving blow jobs?"
 
         #the interactive icons during sex stuff
         if 'position_choice' in globals():
-            if hasattr(position_choice, 'skill_tag'):
-                $ VTcumfetishat = "sexualized"
-                if person.oral_cum ==1:
-                    $ VTcumfetishst = "bitelip"
-                if person.oral_cum >1:
-                    $ VTcumfetishst = "ahegaomouth"
+            $ VTcumfetishat = "sexualized"
+            if person.oral_cum ==1:
+                $ VTcumfetishst = "bitelip"
+            if person.oral_cum >1:
+                $ VTcumfetishst = "ahegaomouth"
 
         if VTcumfetishat=="sexualized":
             if person.oral_cum ==1:
-                #$ VTcumfetishst = "pinklips"
                 $ VTcumfetishtt += f"\n{{image=ahegaomouth_small}}Has your cum digesting in her stomach."
             if person.oral_cum >1:
-                #$ VTcumfetishst = "ahegaomouth"
                 $ VTcumfetishtt += f"\n{{image=ahegaomouth_small}}Has "+ str(person.oral_cum) +" doses of your cum \n swimming in her stomach."
             imagebutton:
                 pos(507, 166)
@@ -724,7 +741,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
         $ VTanalfetishtt = "Her thoughts on anal sex?"
         if person.sexy_opinions.get("anal sex")==None:
             $ VTanalfetishst = "knowpeach"
-            $ VTanalfetishtt = "Her thoughts on anal sex?"
+            $ VTanalfetishtt = f"{{image=question_mark_small}} Her thoughts on anal sex?"
         else:
             if person.sexy_opinions.get("anal sex")[1]==True:
                 if person.has_anal_fetish:
@@ -763,16 +780,16 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                                     $ VTanalfetishtt = f"She dislikes anal!"
             else:
                 $ VTanalfetishst = "knowpeach"
-                $ VTanalfetishtt = "Her thoughts on anal sex?"
+                $ VTanalfetishtt = f"{{image=question_mark_small}} Her thoughts on anal sex?"
 
         #the interactive icons during sex stuff
         if 'position_choice' in globals():
-            if hasattr(position_choice, 'skill_tag'):
-                $ VTanalfetishat = "sexualized"
-                if person.anal_cum ==1:
-                    $ VTanalfetishst = "handass"
-                if person.anal_cum >1:
-                    $ VTanalfetishst = "handass"
+           # if hasattr(position_choice, 'skill_tag'):
+            $ VTanalfetishat = "sexualized"
+            if person.anal_cum ==1:
+                $ VTanalfetishst = "handass"
+            if person.anal_cum >3:
+                $ VTanalfetishst = "ahegaoanal"
 
         if VTcumfetishat=="sexualized":
             if person.anal_cum ==1:
@@ -805,10 +822,8 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
 ###### Breeding Fetish
         $ VTbreedfetishat = "talking"
         $ VTbreedfetishst = "knowpeach"
-        $ VTbreedfetishtt = "Her thoughts on vaginal sex?"
-        $ VTbreedfertile = ""
-        if person.bc_status_known and person.is_highly_fertile and perk_system.has_ability_perk("Ovulation Cycle Perception"):
-            $ VTbreedfertile = " highly fertile"
+        $ VTbreedfetishtt = f"{{image=question_mark_small}} Her thoughts on vaginal sex?"
+        
         $ dayslastsex = 0
         $ daysince = ""
         if person.has_event_day("last_insemination") and person.days_since_event("last_insemination") < 4:
@@ -820,7 +835,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                     $ daysince = "\nYour sperm in me for "+str(dayslastsex)+" more days!\n Such warm butterflies!"
         if person.sexy_opinions.get("vaginal sex")==None:
             $ VTbreedfetishst = "knowpeach"
-            $ VTbreedfetishtt = "Her thoughts on vaginal sex?"
+            $ VTbreedfetishtt = f"{{image=question_mark_small}} Her thoughts on vaginal sex?"
         else:
             if person.sexy_opinions.get("vaginal sex")[1]==True:
                 if person.has_breeding_fetish:
@@ -868,31 +883,31 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                                         $ VTbreedfetishtt = f"She dislikes vaginal sex!"
             else:
                 $ VTbreedfetishst = "knowpeach"
-                $ VTbreedfetishtt = "Her thoughts on vaginal sex?"
+                $ VTbreedfetishtt = f"{{image=question_mark_small}} Her thoughts on vaginal sex?"
 
         #the interactive icons during sex stuff
         if 'position_choice' in globals():
             if hasattr(position_choice, 'skill_tag'):
                 $ VTbreedfetishat = "sexualized"
-                if person.vaginal_cum ==1:
-                    $ VTbreedfetishst = "openvag"
-                if person.vaginal_cum >1:
-                    $ VTbreedfetishst = "openvag"
 
         if VTbreedfetishat=="sexualized":
             if person.vaginal_cum >0:
                 if person.vaginal_cum == 1:
-                    if person.hymen ==1 or person.hymen ==2:
+                    if person.hymen <=1:
                         $ VTbreedfetishst = "vaghymen"
-                        $ VTbreedfetishtt += "\nYou marked her fresh"+VTbreedfertile+" womb with your seed. \n You have claimed her."
+                        $ VTbreedfetishtt = f"{{image=beezee_token_small}} You marked her fresh"+VTbreedfertile+VTpro+" womb with your seed. \n You have claimed her."
                     else:
-                        $ VTbreedfetishtt = "She has your seed in her"+VTbreedfertile+" womb."
+                        $ VTbreedfetishtt = f"{{image=beezee_token_small}} She has your seed in her"+VTbreedfertile+VTpro+" womb."
                 else:
-                    if person.hymen ==1 or person.hymen ==2:
+                    if person.hymen <=1:
                         $ VTbreedfetishst = "vaghymen"
-                        $ VTbreedfetishtt += "\nYou marked her fresh"+VTbreedfertile+" womb with "+str(person.vaginal_cum)+ " doses of your seed. \n You have fully claimed her."
+                        $ VTbreedfetishtt = f"{{image=beezee_token_small}} You marked her fresh"+VTbreedfertile+VTpro+" womb with "+str(person.vaginal_cum)+ " doses of your seed. \n You have fully claimed her."
                     else:
-                        $ VTbreedfetishtt += "\nHas "+ str(person.vaginal_cum) +" doses of your cum \n swimming in her"+VTbreedfertile+" womb."+daysince
+                        if person.vaginal_cum <3:
+                            $ VTbreedfetishst = "openvag"
+                        else:
+                            $ VTbreedfetishst = "ahegaovag"
+                        $ VTbreedfetishtt = f"{{image=beezee_token_small}} Has "+ str(person.vaginal_cum) +" doses of your cum \n swimming in her"+VTbreedfertile+VTpro+" womb."+daysince
             imagebutton:
                 pos(581, 166)
                 idle VTbreedfetishst
@@ -902,17 +917,17 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
         if VTbreedfetishat=="talking":
             if person.vaginal_cum >0:
                 if person.vaginal_cum == 1:
-                    if person.hymen ==1 or person.hymen ==2:
+                    if person.hymen <=1:
                         $ VTbreedfetishst = "vaghymen"
-                        $ VTbreedfetishtt += "\nYou marked her fresh"+VTbreedfertile+" womb with your seed. \n You have claimed her."
+                        $ VTbreedfetishtt += f"\n{{image=beezee_token_small}} You marked her fresh"+VTbreedfertile+VTpro+" womb with your seed. \n You have claimed her."
                     else:
-                        $ VTbreedfetishtt = "She has your seed in her"+VTbreedfertile+" womb."
+                        $ VTbreedfetishtt += f"\n{{image=beezee_token_small}} She has your seed in her"+VTbreedfertile+VTpro+" womb."
                 else:
-                    if person.hymen ==1 or person.hymen ==2:
+                    if person.hymen <=1:
                         $ VTbreedfetishst = "vaghymen"
-                        $ VTbreedfetishtt += "\nYou marked her fresh"+VTbreedfertile+" womb with "+str(person.vaginal_cum)+ " doses of your seed. \n You have fully claimed her."
+                        $ VTbreedfetishtt += f"\n{{image=beezee_token_small}} You marked her fresh"+VTbreedfertile+VTpro+" womb with "+str(person.vaginal_cum)+ " doses of your seed. \n You have fully claimed her."
                     else:
-                        $ VTbreedfetishtt += "\nHas "+ str(person.vaginal_cum) +" doses of your cum \n swimming in her"+VTbreedfertile+" womb."+daysince
+                        $ VTbreedfetishtt += f"\n{{image=beezee_token_small}} Has "+ str(person.vaginal_cum) +" doses of your cum \n swimming in her"+VTbreedfertile+VTpro+" womb."+daysince
             imagebutton:
                 pos(581, 166)
                 idle VTbreedfetishst
@@ -935,10 +950,10 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
 ######## Exhibitionist Fetish
         $ VTexhibitfetishat = "talking"
         $ VTexhibitfetishst = "knowbody"
-        $ VTexhibitfetishtt = "Does she like public sex?"
+        $ VTexhibitfetishtt = f"{{image=question_mark_small}} Does she like public sex?"
         if person.sexy_opinions.get("public sex")==None:
             $ VTexhibitfetishst = "knowbody"
-            $ VTexhibitfetishtt = "Does she like public sex?"
+            $ VTexhibitfetishtt = f"{{image=question_mark_small}} Does she like public sex?"
         else:
             if person.sexy_opinions.get("public sex")[1]==True:
                 if person.opinion.public_sex >=2 and person.opinion.not_wearing_underwear >= 2 and person.opinion.not_wearing_anything >= 2  and person.known_opinion("not wearing underwear") and person.known_opinion("not wearing anything") and person.opinion.showing_her_ass >= 2 and person.opinion.showing_her_tits >= 2  and person.known_opinion("showing her ass") and person.known_opinion("showing her tits") and person.opinion.skimpy_outfits >= 2 and person.opinion.skimpy_uniforms >= 2 and person.known_opinion("skimpy outfits") and person.known_opinion("skimpy uniforms"):
@@ -995,32 +1010,38 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                                         $ VTexhibitfetishtt = f"She dislikes public sex!"
             else:
                 $ VTexhibitfetishst = "knowbody"
-                $ VTexhibitfetishtt = "Does she like public sex?"
-
+                $ VTexhibitfetishtt = f"{{image=question_mark_small}} Does she like public sex?"
         #the interactive icons during sex stuff
         if 'position_choice' in globals():
-            if hasattr(position_choice, 'skill_tag'):
-                $ VTexhibitfetishat = "sexualized"
-                $ VTexhibitfetishst = "bodyskimpy"
-                $ VTexhibitfetishtt = "She is fully clothed."
+            $ VTexhibitfetishat = "sexualized"
+            if person.vagina_available or person.tits_available:
                 if person.vagina_available and person.tits_available:
                     $ VTexhibitfetishst = "nudebody"
                     $ VTexhibitfetishtt = "You can see her tits and pussy."
                     if person.arousal_perc >= 59:
-                            $ VTexhibitfetishtt = "You can see her tits and wet hot pussy."
+                            $ VTexhibitfetishtt += "\nYou can see her tits and wet hot juicy pussy."
                     if person.vaginal_cum >0:
-                            $ VTexhibitfetishtt = "You can see your cum oozing from her pussy."
+                        if person.vaginal_cum >3:
+                            $ VTexhibitfetishtt += "\nYou can see your cum oozing from her pussy."
+                        else:
+                            $ VTexhibitfetishtt += "\nYou can see your cum starting to drip from her pussy."
                 else:
-                    if person.vagina_available:
-                        $ VTexhibitfetishst = "bodybra"
-                        $ VTexhibitfetishtt = "You can see her pussy."
-                        if person.arousal_perc >= 59:
-                            $ VTexhibitfetishtt = "You can see her wet hot pussy."
-                        if person.vaginal_cum >0:
-                            $ VTexhibitfetishtt = "You can see your cum oozing from her pussy."
                     if person.tits_available:
                         $ VTexhibitfetishst = "bodypanties"
-                        $ VTexhibitfetishtt = "You can see her tits."
+                        $ VTexhibitfetishtt += "\nYou can see her tits."
+                    if person.vagina_available:
+                        $ VTexhibitfetishst = "bodybra"
+                        $ VTexhibitfetishtt += "\nYou can see her pussy."
+                        if person.arousal_perc >= 59:
+                            $ VTexhibitfetishtt += "\nYou can see her wet hot juicy pussy."
+                        if person.vaginal_cum >0:
+                            if person.vaginal_cum >3:
+                                $ VTexhibitfetishtt += "\nYou can see your cum oozing from her pussy."
+                            else:
+                                $ VTexhibitfetishtt += "\nYou can see your cum starting to drip from her pussy."
+            else:
+                $ VTexhibitfetishst = "bodyskimpy"
+                $ VTexhibitfetishtt = "She is fully clothed."
 
         if VTexhibitfetishat=="sexualized":
             imagebutton:
@@ -1034,13 +1055,13 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                 idle VTexhibitfetishst
                 action NullAction()
                 tooltip VTexhibitfetishtt
-            if person.sexy_opinions.get("public sex", (0, False))[1]:
-                if person.opinion.public_sex < 0 and person.sexy_opinions.get("public sex")[1]==True:
-                    imagebutton:
-                        pos(618, 166)
-                        idle "dislike"
-                        action NullAction()
-                        tooltip VTexhibitfetishtt
+        if person.sexy_opinions.get("public sex", (0, False))[1]:
+            if person.opinion.public_sex < 0 and person.sexy_opinions.get("public sex")[1]==True:
+                imagebutton:
+                    pos(618, 166)
+                    idle "dislike"
+                    action NullAction()
+                    tooltip VTexhibitfetishtt
 #hymen is 0 = sealed, 1=recently torn bleeding, 2=normal - serum to regenerate vaginal and hymen
 #0=virgin, 1=just the tip, 2=full penetration, 3-10 is degree of tightness
 ### Oral Virgin Flag
@@ -1057,36 +1078,86 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                 tooltip VToraltt
         #the interactive icons during sex stuff
         if 'position_choice' in globals():
-            if hasattr(position_choice, 'name'):
-                $ VToralat = "sexualized"
-                if position_choice.name == 'Blowjob' or position_choice.name == 'Deepthroat' or position_choice.name == 'Sixty-Nine' or position_choice.name == 'Skull Fuck':
-                    $ VToralst = "openmouth"
-                    $ VToraltt = "You fuck her mouth with your cock."
+            if hasattr(position_choice, 'skill_tag'):
+                if position_choice.skill_tag == 'Oral':
+                    if position_choice.name == 'Blowjob':
+                        $ VToralat = "sexualized"
+                        $ VToralst = "openmouth"
+                        $ VToraltt = "She sucks your cock."
+                    if position_choice.name == "Deepthroat":
+                        $ VToralat = "sexualized"
+                        $ VToralst = "openmouth"
+                        $ VToraltt = "You deeply fuck her throat with your cock."
+                    if position_choice.name == "Skull Fuck":
+                        $ VToralat = "sexualized"
+                        $ VToralst = "openmouth"
+                        $ VToraltt = "You grab her head and skull fuck her with your cock."
                     if 'climax_type' in globals():
-                        if climax_type == "mouth":
+                        if climax_type == "mouth" or climax_type == "throat":
+                            $ VToralat = "sexualized"
                             $ VToralst = "ahegaomouth"
-                            $ VToraltt = "You flood her belly with your cum."
+                            if mc.condom == False:
+                                $ VToraltt = "You flood her mouth full of your cum."
+                            else:
+                                $ VToraltt = "You fill the condom as her tongue wraps around you."
+                        if climax_type == "throat":
+                            $ VToralat = "sexualized"
+                            $ VToralst = "ahegaomouth"
+                            if mc.condom == False:
+                                $ VToraltt = "You flood her belly with your cum."
+                            else:
+                                $ VToraltt = "You fill the condom as her throat squeezes you."
                         if climax_type == "face":
+                            $ VToralat = "sexualized"
                             $ VToralst = "ahegaomouth"
                             $ VToraltt = "You shoot your load all over her face."
-                else:
+                        if climax_type =="body":
+                            $ VToralat = "sexualized"
+                            $ VToralst = "openmouth"
+                            $ VToraltt = "You blow your load all over her body."
+                elif position_choice.skill_tag == 'Foreplay':   
                     if position_choice.name == 'Kissing':
+                        $ VToralat = "sexualized"
                         $ VToralst = "pinklips"
                         $ VToraltt = "In the throes of kissing you."
+                else:
+                    $ VToralat = "sexualized"
+                    if person.oral_cum >0:
+                        if person.oral_cum == 1:
+                            if person.arousal_perc >= 59:
+                                $ VToralst = "ahegaoface"
+                                $ VToraltt = "She seems lost in her bliss and panting. \n{{image=ahegaomouth_small}}She has a dose of your protein in her belly."
+                            else:
+                                $ VToralst = "bitelip"
+                                $ VToraltt = "She looks at you with lust \n in her innocent hungry eyes. \n{{image=ahegaomouth_small}}She has a dose of your protein in her belly."
+                        else:
+                            if person.oral_cum >3:
+                                if person.arousal_perc >= 59:
+                                    $ VToralst = "ahegaoface"
+                                    $ VToraltt = f"*Hunger in her eyes wants more cum*\n{{image=ahegaomouth_small}} She has "+ str(person.oral_cum) +" doses of your cum \n swimming in her stomach, causing a bit of a bulge."
+                                else:
+                                    $ VToralst = "ahegaomouth"
+                                    $ VToraltt = f"{{image=ahegaomouth_small}} She has "+ str(person.oral_cum) +" doses of your cum \n swimming in the slight bulge of her belly."
+                            else:
+                                if person.arousal_perc >= 59:
+                                    $ VToralst = "ahegaoface"
+                                    $ VToraltt = f"*She hungrily gazes at you for more cum.*\n{{image=ahegaomouth_small}} She has "+ str(person.oral_cum) +" doses of your cum \n swimming in her belly."
+                                else:
+                                    $ VToralst = "bitelip"
+                                    $ VToraltt = f"{{image=ahegaomouth_small}}Has "+ str(person.oral_cum) +" doses of your cum \nswimming in her belly."
+                    else:
+                        $ VToralst = "bitelip"
+                        if person.oral_virgin == 0:
+                            $ VToraltt = "She plays with her innocent hungry fresh pussy.\nShe bites her lip coyly."
+                        else:
+                            if person.oral_first == mc.name:
+                                $ VToraltt = "She locks eyes with you and bite her lip sexily."
+                            else:
+                                $ VToraltt = "She pants and breathes heavily and bites her lip."
+                        if person.energy <20 and person.had_sex_today:
+                            $ VToraltt += "She seems lost in her bliss and panting."
 
         if VToralat=="sexualized":
-            if person.oral_first == mc.name:
-                $ VToralst = "claimedmouth"
-                $ VToraltt = "You Claimed this Pie Hole!"
-            else:
-                if person.oral_first !=None and person.oral_virgin>0:
-                    $ VToralst = "knowlips"
-                    $ VToraltt = "Someone else had her lips before you... CLAIM IT!"
-            if person.oral_cum >0:
-                    if person.oral_cum == 1:
-                        $ VToraltt += f"\n{{image=ahegaomouth_small}}She has a dose of your protein in her belly."
-                    else:
-                        $ VToraltt += f"\n{{image=ahegaomouth_small}}Has "+ str(person.oral_cum) +" doses of your cum \n swimming in her belly."
             imagebutton:
                 pos(678, 166)
                 idle VToralst
@@ -1094,26 +1165,42 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                 tooltip VToraltt
 
         if VToralat=="talking":
-            if person.oral_first == mc.name:
-                $ VToralst = "claimedmouth"
-                $ VToraltt = "You Claimed this Pie Hole!"
-            else:
-                if person.oral_first !=None and person.oral_virgin>0:
-                    $ VToralst = "knowlips"
-                    $ VToraltt = "Someone else had her lips before you... CLAIM IT!"
-            if person.arousal_perc >= 59 and person.oral_cum<=0:
-                $ VToralst = "ahegaoface"
-                if person.oral_first == mc.name:
-                    $ VToraltt = "She starts to drool \n and undress you with her eyes."
-                else:
-                    $ VToraltt = "She looks at you with savage lust in her eyes."
-            else:
-                if person.oral_cum >0:
-                    if person.oral_cum == 1:
-                        $ VToraltt += f"\n{{image=ahegaomouth_small}}She has a dose of your protein in her belly."
+            if person.arousal_perc >= 59:
+                if person.oral_cum ==0:
+                    $ VToralst = "ahegaoface"
+                    if person.oral_virgin == 0:
+                        $ VToraltt = "She looks at you with lust \n in her innocent hungry eyes."
                     else:
-                        $ VToraltt += f"\n{{image=ahegaomouth_small}}Has "+ str(person.oral_cum) +" doses of your cum \n swimming in her belly."
-           
+                        if person.oral_first == mc.name:
+                            $ VToraltt = "She starts to drool \n and undress you with her eyes."
+                        else:
+                            $ VToraltt = "She looks at you with savage lust in her eyes."
+                    if person.energy <20 and person.had_sex_today:
+                        $ VToraltt = "She seems lost in her bliss and panting."
+                if person.oral_cum >0:
+                    $ VToralst = "ahegaoface"
+                    if person.energy <20 and person.had_sex_today:
+                        $ VToraltt = "She seems lost in her bliss and panting."
+                    else:
+                        $ VToraltt = "She hungrily gazes as you for more cum."
+                    if person.oral_cum == 1:
+                        $ VToraltt += f"\n{{image=ahegaomouth_small}} She has a dose of your protein in her belly."
+                    else:
+                        $ VToraltt += f"\n{{image=ahegaomouth_small}} Has "+ str(person.oral_cum) +" doses of your cum \n swimming in her belly."
+            else:
+                if person.oral_first == mc.name:
+                    $ VToralst = "claimedmouth"
+                    $ VToraltt = "You Claimed this Pie Hole!"
+                else:
+                    if person.oral_first !=None and person.oral_virgin>0:
+                        $ VToralst = "knowlips"
+                        $ VToraltt = "Someone else had her lips before you... CLAIM IT!"
+                if person.oral_cum >0:
+                    $ VToralst = "bitelip"
+                    if person.oral_cum == 1:
+                        $ VToraltt += f"\n{{image=ahegaomouth_small}} She has a dose of your protein in her belly."
+                    else:
+                        $ VToraltt += f"\n{{image=ahegaomouth_small}} Has "+ str(person.oral_cum) +" doses of your cum \n swimming in her belly."
             imagebutton:
                 pos(678, 166)
                 idle VToralst
@@ -1133,81 +1220,109 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                 tooltip VTanaltt
         #the interactive icons during sex stuff
         if 'position_choice' in globals():
+            # $ VTanalat ="sexualized"
+            # $ VTanalst = "yesanal"
+            # $ VTanaltt = "She flexes her anal muscles."
             if hasattr(position_choice, 'skill_tag'):
-                $ VTanalat=="sexualized"
                 if position_choice.skill_tag == 'Anal':
-                    if mc.recently_orgasmed == True and person.anal_cum >= 1:
-                        $ VTanalst = "ahegaopeach"
-                        $ VTanaltt = "You flood her bowels with your seed."
+                    if 'climax_type' in globals():
+                        if climax_type == "anal":
+                                if mc.condom == False:
+                                    $ VTanalst = "handass"
+                                    $ VTanaltt = "You flood her bowels with your seed!"
+                                    if person.anal_cum >=1:
+                                        $ VTanalst = "ahegaopeach"
+                                else:
+                                    $ VTanalst = "yesanal"
+                                    $ VTanaltt = "You fill the condom with your seed, as she pulses around you!"
+                        if climax_type =="body":
+                            $ VTanalst = "yesanal"
+                            $ VTanaltt = "You blow your load all over her body."
                     else:
                         $ VTanalst = "yesanal"
                         $ VTanaltt = "You fuck her ass with your cock."
-                if 'climax_type' in globals():
-                    if climax_type == "anal":
-                            $ VTvaginalst = "ahegaopeach"
-                            $ VTvaginaltt = "You flood her bowels with your seed!"
-                            if person.vaginal_cum >=1:
-                                $ VTvaginalst = "ahegaovag"
-                    if climax_type =="body":
-                        $ VTvaginalst = "yesanal"
-                        $ VTvaginaltt = "You blow your load all over her body."
-        if VTanalat=="sexualized":
-            if person.anal_first == mc.name:
-                    $ VTanalst = "claimedass"
-                    $ VTanaltt = "You Claimed this Ass!"
-            else:
-                if person.anal_first !=None and person.anal_virgin>0:
-                    $ VTanalst = "knowpeach"
-                    $ VTanaltt = "Someone else had this ass before you... CLAIM IT!"
-            if person.arousal_perc >= 59 and person.anal_cum<=0:
-                $ VTanalst = "yesanal"
-                if person.anal_first == mc.name:
-                    $ VTanaltt += "\nHer ass sways, hypnotizing you while \nshe rubs it!"
                 else:
-                    $ VTanaltt += "\nHer ass sways and she spreads her ass for you.\nCome take me!"
-                if person.anal_virgin >=4:
-                    $ VTanaltt += "\nHer ass sways and she spreads her gaping asshole for you.\nCome take me!"
-            else:
-                if person.anal_cum >0:
-                    if person.anal_cum == 1:
-                        $ VTanalst = "handass"
-                        $ VTanaltt += "\nYou painted her bowels with your cum."
+                    $ VTanalat = "sexualized"
+                    if person.anal_cum >0:
+                        if person.anal_cum == 1:
+                            if person.arousal_perc >= 59:
+                                $ VTanalst = "handass"
+                                $ VTanaltt = f"She seems lost in her bliss and panting. \n{{image=ahegaoanal_small}}She has a dose of your protein in her bowels."
+                            else:
+                                $ VTanalst = "handass"
+                                $ VTanaltt = f"She looks at you with lust \n in her innocent hungry eyes. \n{{image=ahegaoanal_small}}She has a dose of your protein in her bowels."
+                        else:
+                            if person.anal_cum >3:
+                                if person.arousal_perc >= 59:
+                                    $ VTanalst = "ahegaopeach"
+                                    $ VTanaltt = f"*Hunger in her eyes wants more cum*\n{{image=ahegaoanal_small}} She has "+ str(person.anal_cum) +" doses of your cum \n swimming in her bowels, causing her belly a bit of a bulge."
+                                else:
+                                    $ VTanalst = "ahegaomouth"
+                                    $ VTanaltt = f"{{image=ahegaoanal_small}} She has "+ str(person.anal_cum) +" doses of your cum \n swimming in the slight bulge of her belly."
+                            else:
+                                if person.arousal_perc >= 59:
+                                    $ VTanalst = "ahegaopeach"
+                                    $ VTanaltt = f"*She hungrily gazes at you for more cum.*\n{{image=ahegaomouth_small}} She has "+ str(person.anal_cum) +" doses of your cum \n swimming in her belly."
+                                else:
+                                    $ VTanalst = "handass"
+                                    $ VTanaltt = f"{{image=ahegaoanal_small}}Has "+ str(person.anal_cum) +" doses of your cum \n swimming in her belly."
                     else:
-                        $ VTanalst = "ahegaopeach"
-                        $ VTanaltt += "\nHas "+ str(person.anal_cum) +" doses of your cum \n coating her bowels."
-                
+                        $ VTanalst = "yespeach"
+                        if person.anal_virgin == 0:
+                            $ VTanaltt = "Her ass sways so ripely, ready for the taking!"
+                        else:
+                            if person.anal_first == mc.name:
+                                $ VTanaltt = "Her ass sways, hypnotizing you..\nThen she slaps it!"
+                            else:
+                                $ VTanaltt = "Her ass sways and she spreads her ass for you.\nCome take me!"
+                                if person.anal_virgin >=4:
+                                    $ VTanaltt = "Her ass sways and she spreads her gaping asshole for you.\nCome take me!"
+                        if person.energy <20 and person.had_sex_today:
+                            $ VTanaltt += "She seems lost in her bliss and panting."
+
+        if VTanalat=="sexualized":
             imagebutton:
                 pos(715, 166)
                 idle VTanalst
                 action NullAction()
                 tooltip VTanaltt
-        
-        
+
         if VTanalat=="talking":
-            if person.anal_first == mc.name:
-                    $ VTanalst = "claimedass"
-                    $ VTanaltt += "You Claimed this Ass!"
-            else:
-                if person.anal_first !=None and person.anal_virgin>0:
-                    $ VTanalst = "knowpeach"
-                    $ VTanaltt = "Someone else had this ass before you... CLAIM IT!"
-            if person.arousal_perc >= 59 and person.anal_cum<=0:
-                $ VTanalst = "yesanal"
-                if person.anal_first == mc.name:
-                    $ VTanaltt += "\nHer ass sways, hypnotizing you while \nshe rubs it!"
-                else:
-                    $ VTanaltt += "\nHer ass sways and she spreads her ass for you.\nCome take me!"
-                if person.anal_virgin >=4:
-                    $ VTanaltt += "\nHer ass sways and she spreads her gaping asshole for you.\nCome take me!"
-            else:
+            if person.arousal_perc >= 59:
+                if person.anal_cum ==0:
+                    $ VTanalst = "yespeach"
+                    if person.anal_virgin == 0:
+                        $ VTanaltt = "Her ass sways so ripely, ready for the taking!"
+                    else:
+                        if person.anal_first == mc.name:
+                            $ VTanaltt = "Her ass sways, hypnotizing you while \nshe rubs it!"
+                        else:
+                            $ VTanaltt = "Her ass sways and she spreads her ass for you.\nCome take me!"
+                            if person.anal_virgin >=4:
+                                $ VTanaltt = "Her ass sways and she spreads her gaping asshole for you.\nCome take me!"
                 if person.anal_cum >0:
                     if person.anal_cum == 1:
                         $ VTanalst = "handass"
-                        $ VTanaltt += "\nYou painted her bowels with your cum."
+                        $ VTanaltt += f"\n{{image=ahegaoanal_small}} You painted her bowels with your cum."
                     else:
                         $ VTanalst = "ahegaopeach"
-                        $ VTanaltt += "\nHas "+ str(person.anal_cum) +" doses of your cum \n coating her bowels."
-                
+                        $ VTanaltt += f"\n{{image=ahegaoanal_small}} Has "+ str(person.anal_cum) +" doses of your cum \n coating her bowels."
+            else:
+                if person.anal_first == mc.name:
+                    $ VTanalst = "claimedass"
+                    $ VTanaltt = "You Claimed this Ass!"
+                else:
+                    if person.anal_first !=None and person.anal_virgin>0:
+                        $ VTanalst = "knowpeach"
+                        $ VTanaltt = "Someone else had her ass before you... RECLAIM IT!"
+                if person.anal_cum >0:
+                    $ VTanalst = "bitelip"
+                    if person.anal_cum == 1:
+                        $ VTanalst = "handass"
+                        $ VTanaltt += f"\n{{image=ahegaoanal_small}} You have painted her bowels with your cum."
+                    else:
+                        $ VTanalst = "ahegaopeach"
+                        $ VTanaltt += f"\n{{image=ahegaoanal_small}} Has "+ str(person.anal_cum) +" doses of your cum \n coating her bowels."
             imagebutton:
                 pos(715, 166)
                 idle VTanalst
@@ -1227,47 +1342,78 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                 tooltip VTvaginaltt
         #the interactive icons during sex stuff
         if 'position_choice' in globals():
-            $ VTvaginalat = "sexualized"
             if hasattr(position_choice, 'skill_tag'):
                 if position_choice.skill_tag == 'Vaginal':
                     if 'climax_type' in globals():
                         if climax_type == "pussy":
-                            if person.hymen ==1:
-                                $ VTvaginalst = "vaghymen"
-                                $ VTvaginaltt = "You mark her fresh"+VTbreedfertile+" womb with your virile seed! \n Her virinity mixes with your cum.\nYou have claimed her."
+                            if mc.condom == False:
+                                if person.hymen ==1:
+                                    $ VTvaginalat = "sexualized"
+                                    $ VTvaginalst = "vaghymen"
+                                    $ VTvaginaltt = "You mark her fresh"+VTbreedfertile+VTpro+" womb with your virile seed! \n Her virinity mixes with your cum!\nYou have claimed her!"
+                                else:
+                                    $ VTvaginalat = "sexualized"
+                                    $ VTvaginalst = "openvag"
+                                    $ VTvaginaltt = "You flood her"+VTbreedfertile+VTpro+" womb with your seed!"
+                                    if person.vaginal_cum >=1:
+                                        $ VTvaginalst = "ahegaovag"
                             else:
-                                $ VTvaginalst = "openvag"
-                                $ VTvaginaltt = "You flood her"+VTbreedfertile+" womb with your seed!"
-                                if person.vaginal_cum >=1:
-                                    $ VTvaginalst = "ahegaovag"
+                                if person.hymen ==1:
+                                    $ VTvaginalat = "sexualized"
+                                    $ VTvaginalst = "spreadvag"
+                                    $ VTvaginaltt = "You fill the condom in her freshly fucked pussy with your cum!\nYou have claimed her!"
+                                else:
+                                    $ VTvaginalat = "sexualized"
+                                    $ VTvaginalst = "spreadvag"
+                                    $ VTvaginaltt = "You push deep and fill the condom with your seed!"
                         if climax_type =="body":
+                            $ VTvaginalat = "sexualized"
                             $ VTvaginalst = "spreadvag"
                             $ VTvaginaltt = "You blow your load all over her body."
                     else:
+                        $ VTvaginalat = "sexualized"
                         $ VTvaginalst = "spreadvag"
-                        $ VTvaginaltt = "You fuck her juicy"+VTbreedfertile+" pussy with your cock."
+                        $ VTvaginaltt = "You fuck her juicy"+VTbreedfertile+VTpro+" pussy with your cock."
+                else:
+                    $ VTvaginalat ="sexualized"
+                    if person.vaginal_cum >0:
+                        if person.vaginal_cum == 1:
+                            if person.hymen <=1:
+                                $ VTvaginalst = "vaghymen"
+                                $ VTvaginaltt = f"{{image=beezee_token_small}} You marked her fresh"+VTbreedfertile+VTpro+" womb with your seed. \n You have claimed her."
+                            else:
+                                $ VTvaginalst = "openvag"
+                                $ VTvaginaltt = f"{{image=beezee_token_small}} She has your seed in her"+VTbreedfertile+VTpro+" womb."
+                        else:
+                            if person.hymen <=1:
+                                if person.vaginal_cum >3:
+                                    $ VTvaginalst = "ahegaovag"
+                                    $ VTvaginaltt = f"{{image=beezee_token_small}} Her freshly fucked"+VTbreedfertile+VTpro+" womb can barely contain your "+str(person.vaginal_cum)+ " doses of your seed. \n It is already oozing out."
+                                else:
+                                    $ VTvaginalst = "vaghymen"
+                                    $ VTvaginaltt = f"{{image=beezee_token_small}} You marked her fresh"+VTbreedfertile+VTpro+" womb with "+str(person.vaginal_cum)+ " doses of your seed. \n You have fully claimed her."
+                            else:
+                                if person.vaginal_cum >3:
+                                    $ VTvaginalst = "ahegaovag"
+                                    $ VTvaginaltt = f"{{image=beezee_token_small}} Her pussy can barely contain the "+ str(person.vaginal_cum) +" doses of your cum \n swimming in her"+VTbreedfertile+VTpro+" womb and is already oozing out."+daysince
+                                else:
+                                    $ VTvaginalst = "openvag"
+                                    $ VTvaginaltt = f"{{image=beezee_token_small}} Has "+ str(person.vaginal_cum) +" doses of your cum \n swimming in her"+VTbreedfertile+VTpro+" womb."+daysince
+                        if person.arousal_perc >= 59:
+                            $ VTvaginaltt += f"\n*You can really smell her arousal*"
+                    else:
+                        $ VTvaginalst = "spreadvag"
+                        if person.vaginal_virgin == 0:
+                            $ VTvaginaltt = "She plays with her innocent hungry fresh pussy."
+                        else:
+                            if person.vaginal_first == mc.name:
+                                $ VTvaginaltt = "She locks eyes with you and licks her lips \n and plays with her pussy."
+                            else:
+                                $ VTvaginaltt = "She pants heavily as she plays with her pussy."
+                        if person.energy <20 and person.had_sex_today:
+                            $ VTvaginaltt = "She seems lost in her bliss and panting."
 
         if VTvaginalat=="sexualized":
-            if person.vaginal_first == mc.name:
-                $ VTvaginalst = "claimedvag"
-                $ VTvaginaltt = "You Claimed this Pussy!"
-            else:
-                if person.vaginal_first !=None and person.hymen==2:
-                    $ VTvaginalst = "knowpeach"
-                    $ VTvaginaltt = "Someone else had this pussy before you... OWN IT!"
-            if person.vaginal_cum >0:
-                if person.vaginal_cum == 1:
-                    if person.hymen ==1 or person.hymen ==2:
-                        $ VTvaginalst = "vaghymen"
-                        $ VTvaginaltt += "\nYou marked her fresh"+VTbreedfertile+" womb with your seed. \n You have claimed her."
-                    else:
-                        $ VTvaginaltt += "\nShe has your seed in her"+VTbreedfertile+" womb."
-                else:
-                    if person.hymen ==1 or person.hymen ==2:
-                        $ VTvaginalst = "vaghymen"
-                        $ VTvaginaltt += "\nYou marked her fresh"+VTbreedfertile+" womb with "+str(person.vaginal_cum)+ " doses of your seed. \n You have fully claimed her."
-                    else:
-                        $ VTvaginaltt += "\nHas "+ str(person.vaginal_cum) +" doses of your cum \n swimming in her"+VTbreedfertile+" womb."+daysince
             imagebutton:
                 pos(752, 166)
                 idle VTvaginalst
@@ -1276,40 +1422,60 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
 
         if VTvaginalat=="talking":
             if person.vaginal_first == mc.name:
-                        $ VTvaginalst = "claimedvag"
-                        $ VTvaginaltt = "You Claimed this Pussy!"
+                $ VTvaginalst = "claimedvag"
+                $ VTvaginaltt = "You Claimed this Pussy!"
             else:
                 if person.vaginal_first !=None and person.hymen==2:
                     $ VTvaginalst = "knowpeach"
                     $ VTvaginaltt = "Someone else had this pussy before you... OWN IT!"
             if person.arousal_perc >= 59 and person.vaginal_cum<=0:
                 $ VTvaginalst = "spreadvag"
-                if person.vaginal_first == mc.name:
-                    $ VTvaginaltt += "\nHer pussy is dripping for you.\n*You can really smell her arousal*\nCome take me!"
-                else:
+                if person.vaginal_virgin <= 1:
+                    $ VTvaginaltt += "\nShe looks so innocent and inexperienced."
                     if person.hymen ==0:
                         $ VTvaginaltt += "\nShe is more than ready to be fucked."
+                else:
+                    if person.vaginal_first == mc.name:
+                        $ VTvaginaltt += "\nHer pussy is dripping for you.\n*You can really smell her arousal*\nCome take me!"
                     else:
                         $ VTvaginaltt += "\nHer pussy is dripping down her leg.\n*She is really aroused*"
             else:
                 if person.vaginal_cum >0:
                     if person.vaginal_cum == 1:
-                        if person.hymen ==1 or person.hymen ==2:
+                        if person.hymen <=1:
                             $ VTvaginalst = "vaghymen"
-                            $ VTvaginaltt += "\nYou marked her fresh"+VTbreedfertile+" womb with your seed. \n You have claimed her."
+                            $ VTvaginaltt += f"\n{{image=beezee_token_small}} You marked her fresh"+VTbreedfertile+VTpro+" womb with your seed. \n You have claimed her."
                         else:
-                            $ VTvaginaltt = "She has your seed in her"+VTbreedfertile+" womb."
+                            $ VTvaginalst = "openvag"
+                            $ VTvaginaltt += f"\n{{image=beezee_token_small}} She has your seed in her"+VTbreedfertile+VTpro+" womb."
                     else:
-                        if person.hymen ==1 or person.hymen ==2:
-                            $ VTvaginalst = "vaghymen"
-                            $ VTvaginaltt += "\nYou marked her fresh"+VTbreedfertile+" womb with "+str(person.vaginal_cum)+ " doses of your seed. \n You have fully claimed her."
+                        if person.hymen <=1:
+                            if person.vaginal_cum >3:
+                                $ VTvaginalst = "ahegaovag"
+                                $ VTvaginaltt += f"\n{{image=beezee_token_small}} Her freshly fucked"+VTbreedfertile+VTpro+" womb can barely contain your "+str(person.vaginal_cum)+ " doses of your seed. \n It is already oozing out."
+                            else:
+                                $ VTvaginalst = "vaghymen"
+                                $ VTvaginaltt += f"\n{{image=beezee_token_small}} You marked her fresh"+VTbreedfertile+VTpro+" womb with "+str(person.vaginal_cum)+ " doses of your seed. \n You have fully claimed her."
                         else:
-                            $ VTvaginaltt += "\nHas "+ str(person.vaginal_cum) +" doses of your cum \n swimming in her"+VTbreedfertile+" womb."+daysince                    
+                            if person.vaginal_cum >3:
+                                $ VTvaginalst = "ahegaovag"
+                                $ VTvaginaltt += f"\n{{image=beezee_token_small}} Her pussy can barely contain the "+ str(person.vaginal_cum) +" doses of your cum \n swimming in her"+VTbreedfertile+VTpro+" womb and is already oozing out."+daysince
+                            else:
+                                $ VTvaginalst = "openvag"
+                                $ VTvaginaltt += f"\n{{image=beezee_token_small}} Has "+ str(person.vaginal_cum) +" doses of your cum \n swimming in her"+VTbreedfertile+VTpro+" womb."+daysince
+                    if person.arousal_perc >= 59:
+                        $ VTvaginaltt += f"\n*You can really smell her arousal*"
             imagebutton:
                 pos(752, 166)
                 idle VTvaginalst
                 action NullAction()
                 tooltip VTvaginaltt
+            if person.hymen >1 and person.vaginal_cum >3:
+                imagebutton:
+                    pos(752, 166)
+                    idle "bc_cum"
+                    action NullAction()
+                    tooltip VTbreedfetishtt
 #### Had sex today
         if person.had_sex_today:
             imagebutton:
