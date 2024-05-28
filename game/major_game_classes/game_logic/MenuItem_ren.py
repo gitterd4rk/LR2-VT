@@ -110,7 +110,7 @@ def build_menu_item_list(element_list, draw_hearts_for_people = True, draw_perso
                         info.append("{image=vial2_token_small}")
                     else:
                         info.append("{image=vial_token_small}")
-                if item.infractions and item.is_at_work:    # only when at work
+                if item.infractions and item.is_at_office:    # only when at work
                     info.append("{image=infraction_token_small}")
                 if item.trance_training_available:
                     if item.has_exact_role(very_heavy_trance_role):
