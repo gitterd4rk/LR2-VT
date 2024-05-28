@@ -178,6 +178,7 @@ hadsextoday_image = Image(get_file_handle("sex32.png"))
 truevirgin_image = Image(get_file_handle("virgin.png"))
 dislike_image = Image(get_file_handle("dislike.png"))
 vaghymen_image = Image(get_file_handle("vaghymen.png"))
+pregnant_image = Image(get_file_handle("pregnant.png"))
 
 ahegaocondom_image = Image(get_file_handle("ahegaocondom.png"))
 wearcondom_image = Image(get_file_handle("wearcondom.png"))
