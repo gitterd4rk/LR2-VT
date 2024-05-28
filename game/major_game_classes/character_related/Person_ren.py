@@ -2628,6 +2628,17 @@ class Person(): #Everything that needs to be known about a person.
             return get_random_from_list(list(the_dict.keys())) #If we have something in the list we can return the topic string we used as a key for it. This can then be used with get_opinion_score to get the actual opinion
         return None #If we have nothing return None, make sure to deal with this when we use this function.
 
+    def favourite_opinion(self, topics: tuple[str]) -> str:
+        '''
+        Returns the opinion with the highest score from the list of topics.
+        If multiple opinions have the same score, one is chosen at random.
+        '''
+        for score in range(2, -3, -1):
+            values = [x for x in topics if self.get_opinion_score(x) == score]
+            if values:
+                return get_random_from_list(values)
+        return get_random_from_list(topics)
+
     def discover_opinion(self, topic: str, add_to_log = True): #topic is a string matching the topics given in our random list (ie. "the colour blue"). If the opinion is in either of our opinion dicts we will set it to known, otherwise we do nothing. Returns True if the opinion was updated, false if nothing was changed.
         updated = False
         if topic in self.opinions:
@@ -4741,11 +4752,6 @@ class Person(): #Everything that needs to be known about a person.
                 return location
 
         return self.schedule.get_destination(day_slot, time_slot) #Otherwise, go where we want.
-
-    def person_meets_requirements(self, slut_required = 0, slut_max = 2000, obedience_required = 0, obedience_max = 2000, love_required = -200, love_max = 2000, at_work = None, at_office = None):
-        if self.sluttiness >= slut_required and self.sluttiness <= slut_max and self.obedience >= obedience_required and self.obedience <= obedience_max and self.love >= love_required and self.love <= love_max:
-            return (at_work is None or self.is_at_work == at_work) and (at_office is None or self.is_at_office == at_office)
-        return False
 
     def create_formatted_title(self, title: str) -> str:
         return f"{{color={self.char.who_args['color']}}}{{font={self.char.what_args['font']}}}{title}{{/font}}{{/color}}"
