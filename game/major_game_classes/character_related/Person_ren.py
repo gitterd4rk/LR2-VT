@@ -4971,6 +4971,8 @@ class Person(): #Everything that needs to be known about a person.
         if not isinstance(new_job, JobDefinition):
             return
 
+        self.__dict__.pop("current_job", None)
+
         if is_primary:
             for role in self.primary_job.job_roles:
                 self.remove_role(role)
@@ -5000,7 +5002,7 @@ class Person(): #Everything that needs to be known about a person.
         job = self._add_job(new_job, jobindex, True)
         job.schedule = schedule
 
-        found.recalculate_salary()
+        self.__dict__.pop("current_job", None)
         return True
 
     def set_side_job(self, new_job: JobDefinition, job_known = True, start_day = -1) -> ActiveJob:
@@ -5012,6 +5014,8 @@ class Person(): #Everything that needs to be known about a person.
         '''
         if not isinstance(new_job, JobDefinition):
             return
+
+        self.__dict__.pop("current_job", None)
 
         if self.side_job:
             self.quit_job(self.side_job)
@@ -5030,6 +5034,8 @@ class Person(): #Everything that needs to be known about a person.
 
         if not isinstance(job, (ActiveJob, JobDefinition)):
             return False
+
+        self.__dict__.pop("current_job", None)
 
         found = next((x for x in self.jobs if x == job or x.job_definition == job), None)
         if not found:
