@@ -611,7 +611,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                 $ VTcreampiest = "handass"
                 $ VTcreampiett += f"\n{{image=ahegaoanal_small}} Has your cum swimming in her bowels."
             if person.anal_cum >1:
-                $ VTcreampiest = "ahegaoanal"
+                $ VTcreampiest = "ahegaopeach"
                 $ VTcreampiett += f"\n{{image=ahegaoanal_small}} Has "+ str(person.anal_cum) +" doses of your cum \n swimming in her bowels."
             imagebutton:
                 pos(470, 166)
@@ -789,7 +789,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
             if person.anal_cum ==1:
                 $ VTanalfetishst = "handass"
             if person.anal_cum >3:
-                $ VTanalfetishst = "ahegaoanal"
+                $ VTanalfetishst = "ahegaopeach"
 
         if VTcumfetishat=="sexualized":
             if person.anal_cum ==1:
