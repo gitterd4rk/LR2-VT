@@ -4842,58 +4842,58 @@ class Person(): #Everything that needs to be known about a person.
         return False
 
     @property
-    def jobs(self) -> list[ActiveJob]:
+    def jobs(self) -> tuple[ActiveJob]:
         '''
         Returns the list of ActiveJobs, ordered by their prevalance (scheduling priority)
         Priority: side_job <- primary_job <- secondary_job
         '''
-        return [x for x in (self.side_job, self.primary_job, self.secondary_job) if x]
+        return (x for x in (self.side_job, self.primary_job, self.secondary_job) if x)
 
     @property
     def salary(self) -> float:
         return round(sum(x.salary for x in self.jobs if x.is_paid), 2)
 
     @property
-    def job_roles(self) -> list[Role]:
+    def job_roles(self) -> tuple[Role]:
         '''
         Returns all roles linked to her jobs
         '''
-        return [role for job in self.jobs for role in job.job_roles]
+        return (role for job in self.jobs for role in job.job_roles)
 
     @property
-    def current_job_roles(self) -> list[Role]:
+    def current_job_roles(self) -> tuple[Role]:
         '''
         Returns all roles for her current job
         '''
         if not self.current_job:
-            return []
-        return [x for x in self.special_role if x in self.current_job.job_roles]
+            return ()
+        return (x for x in self.special_role if x in self.current_job.job_roles)
 
     @property
-    def current_job_actions(self) -> list[Action]:
+    def current_job_actions(self) -> tuple[Action]:
         '''
         Returns all actions related to her current job roles
         '''
         if not self.current_job or not self.current_job.job_known:
-            return []
+            return ()
 
-        return [action for x in self.current_job_roles for action in x.actions]
+        return (action for x in self.current_job_roles for action in x.actions)
 
     @property
-    def current_job_internet_actions(self) -> list[Action]:
+    def current_job_internet_actions(self) -> tuple[Action]:
         '''
         Returns all internet actions related to her current job roles
         '''
         if not self.current_job or not self.current_job.job_known:
-            return []
-        return [action for x in self.current_job_roles for action in x.internet_actions]
+            return ()
+        return (action for x in self.current_job_roles for action in x.internet_actions)
 
     @property
-    def duties(self) -> list[Duty]:
+    def duties(self) -> tuple[Duty]:
         '''
         Returns all duties related to her jobs
         '''
-        return [duty for job in self.jobs for duty in job.duties]
+        return (duty for job in self.jobs for duty in job.duties)
 
     def has_duty(self, duty: Duty):
         '''
@@ -4902,32 +4902,32 @@ class Person(): #Everything that needs to be known about a person.
         return any(x for x in self.duties if x == duty)
 
     @property
-    def active_duties(self) -> list[Duty]:
+    def active_duties(self) -> tuple[Duty]:
         '''
         Returns the currently active duties in relation to current job
         '''
-        return [x for x in self.duties if not x.only_at_work or (self.current_job and self.current_job.has_duty(x))]
+        return (x for x in self.duties if not x.only_at_work or (self.current_job and self.current_job.has_duty(x)))
 
     @property
-    def daily_duties(self) -> list[Duty]:
+    def daily_duties(self) -> tuple[Duty]:
         '''
         Returns all duties active for this day in relation to worked jobs
         '''
-        return [x for x in self.duties if not x.only_at_work or any(y for y in self.jobs if y.shifts > 0 and y.has_duty(x))]
+        return (x for x in self.duties if not x.only_at_work or any(y for y in self.jobs if y.shifts > 0 and y.has_duty(x)))
 
     @property
-    def current_duty_actions(self) -> list[Action]:
+    def current_duty_actions(self) -> tuple[Action]:
         '''
         Returns all duty actions currently available
         '''
-        return [x for job in self.jobs for x in job.duty_actions]
+        return (x for job in self.jobs for x in job.duty_actions)
 
     @property
-    def current_duty_internet_actions(self) -> list[Action]:
+    def current_duty_internet_actions(self) -> tuple[Action]:
         '''
         Returns all internet actions currently available
         '''
-        return [x for job in self.jobs for x in job.duty_internet_actions]
+        return (x for job in self.jobs for x in job.duty_internet_actions)
 
     def _add_job(self, new_job: JobDefinition, index = 0, job_known = True, start_day = -1):
         '''
