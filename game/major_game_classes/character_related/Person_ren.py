@@ -1228,12 +1228,15 @@ class Person(): #Everything that needs to be known about a person.
     def location(self) -> Room:
         return next((x for x in list_of_places if x.identifier == self._location), self.home or purgatory)
 
-    _location_clear_keys = ("location", "current_location_hub", "current_job", "is_at_work")
-
     def _set_location(self, value: Room):
         if not isinstance(value, Room):
             write_log("location.setter(): Error new location parameter is not a room.")
         self._location = value.identifier
+        self._clear_location_cache()
+
+    _location_clear_keys = ("location", "current_location_hub", "current_job", "is_at_work")
+
+    def _clear_location_cache(self):
         for x in Person._location_clear_keys:
             self.__dict__.pop(x, None)
 
@@ -1323,16 +1326,16 @@ class Person(): #Everything that needs to be known about a person.
 
     @cached_property
     def is_at_work(self) -> bool:
-        current_job = self.current_job
-        if current_job and current_job.scheduled_location:
-            if ((self.is_employee or self.is_intern) and self.is_at_office): # for employees the whole office is valid
-                return True
-            if (self.has_job(stripper_job) or self.is_strip_club_employee) and self.is_at_stripclub: # only if stripclub not closed
-                return not strip_club_is_closed()
+        if self.current_job and self.current_job.scheduled_location:
+            # list of special conditions for is at work
+            if ((self.is_employee or self.is_intern) and self.is_at_office):
+                return True # for employees the whole office is valid
+            if (self.has_job(stripper_job) or self.is_strip_club_employee) and self.is_at_stripclub:
+                return not strip_club_is_closed() # only if stripclub not closed
             if self.has_job("City Administrator") and self.is_at_office:
-                return True
+                return True # when she's at your office
 
-            return self.location == current_job.scheduled_location
+            return self.location == self.current_job.scheduled_location
 
         return False
 
@@ -3090,7 +3093,7 @@ class Person(): #Everything that needs to be known about a person.
 
     @property
     def is_wearing_uniform(self) -> bool:
-        if not self.current_job:
+        if not self.is_at_work:
             return False #If no uniform is set you aren't wearing one at all.
 
         if self.is_wearing_forced_uniform:
@@ -3102,7 +3105,7 @@ class Person(): #Everything that needs to be known about a person.
 
     @property
     def is_wearing_forced_uniform(self):
-        if not self.current_job:
+        if not self.is_at_work:
             return False
 
         return self.current_job.forced_uniform and self.current_job.forced_uniform == self.outfit
@@ -3137,7 +3140,7 @@ class Person(): #Everything that needs to be known about a person.
 
     @property
     def is_wearing_dress_code(self) -> bool:
-        if not self.current_job:
+        if not self.is_at_work:
             return False
         return self.outfit == self.current_job.dress_code_outfit and self.current_job.dress_code_outfit != self.planned_outfit
 
@@ -4791,7 +4794,7 @@ class Person(): #Everything that needs to be known about a person.
         '''
         Return True when person is current working at any of passed JobDefinition(s) or JobTitle
         '''
-        if not self.current_job or not self.is_at_work:
+        if not self.is_at_work:
             return False
 
         if isinstance(job, JobDefinition):
@@ -4971,7 +4974,7 @@ class Person(): #Everything that needs to be known about a person.
         if not isinstance(new_job, JobDefinition):
             return
 
-        self.__dict__.pop("current_job", None)
+        self._clear_location_cache()
 
         if is_primary:
             for role in self.primary_job.job_roles:
@@ -5002,7 +5005,7 @@ class Person(): #Everything that needs to be known about a person.
         job = self._add_job(new_job, jobindex, True)
         job.schedule = schedule
 
-        self.__dict__.pop("current_job", None)
+        self._clear_location_cache()
         return True
 
     def set_side_job(self, new_job: JobDefinition, job_known = True, start_day = -1) -> ActiveJob:
@@ -5015,7 +5018,7 @@ class Person(): #Everything that needs to be known about a person.
         if not isinstance(new_job, JobDefinition):
             return
 
-        self.__dict__.pop("current_job", None)
+        self._clear_location_cache()
 
         if self.side_job:
             self.quit_job(self.side_job)
@@ -5035,7 +5038,7 @@ class Person(): #Everything that needs to be known about a person.
         if not isinstance(job, (ActiveJob, JobDefinition)):
             return False
 
-        self.__dict__.pop("current_job", None)
+        self._clear_location_cache()
 
         found = next((x for x in self.jobs if x == job or x.job_definition == job), None)
         if not found:
