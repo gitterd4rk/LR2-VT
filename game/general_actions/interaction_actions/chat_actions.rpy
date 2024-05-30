@@ -857,7 +857,7 @@ label hug_person(the_person):
             "See you later [name]!",
             "Good [day_part] [name], don't be a stranger!",
             "Good [day_part] [name], have a good one!",
-            "Take it easy [name]"
+            "Take it easy [name]."
         ]))
     $ mc.change_energy(-5)
     $ kissing.redraw_scene(the_person)
@@ -905,11 +905,11 @@ label kiss_person(the_person):
         if day_part == "early morning":
             day_part = "morning"
         renpy.say(mc.name, renpy.random.choice([
-            "Mmmm [name], can't wait till next time",
+            "Mmmm [name], can't wait till next time.",
             "See you later [name]!",
             "Good [day_part] [name], keep those lips moist for me!",
             "Good [day_part] [name], till our lips meet again!",
-            "See you soon, [name]"
+            "See you soon, [name]."
         ]))
     $ mc.change_energy(-5)
     $ the_person.draw_person(position="kissing", emotion="happy")
