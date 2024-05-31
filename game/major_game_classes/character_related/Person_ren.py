@@ -4927,7 +4927,7 @@ class Person(): #Everything that needs to be known about a person.
         '''
         Returns all internet actions currently available
         '''
-        return (x for job in self.jobs for x in job.duty_internet_actions)
+        return tuple(x for job in self.jobs for x in job.duty_internet_actions)
 
     def _add_job(self, new_job: JobDefinition, index = 0, job_known = True, start_day = -1):
         '''
@@ -5104,7 +5104,7 @@ class Person(): #Everything that needs to be known about a person.
         if isinstance(role, basestring):
             return any(x for x in self.special_role if x.role_name == role) \
                 or any(x for x in self.special_role if x.check_parent_role(role))
-        if is_iterable(role):
+        if isinstance(role, (list, tuple, set)):
             return any(x in self.special_role for x in role) \
                 or any(y.check_parent_role(x) for y in self.special_role for x in role)
         return False
