@@ -228,7 +228,7 @@ def build_tile_information(known_people: list[Person], total_people: int, locati
         extra_info.append("{image=arousal_token_small}")
     if any(x for x in known_people if x.serum_effects):
         extra_info.append("{image=vial_token_small}")
-    if any(x for x in known_people if x.infractions and x.is_at_work):
+    if any(x for x in known_people if x.infractions and x.is_at_office):
         extra_info.append("{image=infraction_token_small}")
     if any(x for x in known_people if x.is_clone):
         extra_info.append("{image=dna_token_small}")
