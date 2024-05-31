@@ -17,7 +17,7 @@ from game.bugfix_additions.debug_info_ren import validate_texture_memory, write_
 from game.bugfix_additions.mapped_list_ren import generate_identifier
 from game.helper_functions.character_display_functions_ren import clear_scene
 from game.helper_functions.convert_to_string_ren import SO_relationship_to_title, capitalize_first_word, girl_relationship_to_title, opinion_score_to_string, remove_punctuation
-from game.helper_functions.list_functions_ren import all_people_in_the_game, flatten_list, get_random_from_list, is_iterable
+from game.helper_functions.list_functions_ren import all_people_in_the_game, flatten_list, get_random_from_list
 from game.helper_functions.play_sounds_ren import play_female_orgasm, play_spank_sound
 from game.helper_functions.random_generation_functions_ren import make_person
 from game.helper_functions.webcolors_usage_ren import closest_eye_color, closest_hair_colour
@@ -4801,7 +4801,7 @@ class Person(): #Everything that needs to be known about a person.
             return self.current_job.job_definition == job
         if isinstance(job, basestring):
             return self.current_job.job_definition.job_title == job
-        if is_iterable(job):
+        if isinstance(job, (list, tuple, set)):
             return any(x for x in job if x == self.current_job.job_definition)
         return False
 
@@ -4813,7 +4813,7 @@ class Person(): #Everything that needs to be known about a person.
             return any(x for x in self.jobs if x.job_definition == job)
         if isinstance(job, basestring):
             return any(x for x in self.jobs if x.job_title == job)
-        if is_iterable(job):
+        if isinstance(job, (list, tuple, set)):
             return any(x for x in self.jobs for y in job if x.job_definition == y)
         return False
 
@@ -4825,7 +4825,7 @@ class Person(): #Everything that needs to be known about a person.
             return next((x for x in self.jobs if x.job_definition == job), None)
         if isinstance(job, basestring):
             return next((x for x in self.jobs if x.job_title == job), None)
-        if is_iterable(job):
+        if isinstance(job, (list, tuple, set)):
             return next((x for x in self.jobs for y in job if x.job_definition == y), None)
         return False
 
@@ -4837,63 +4837,63 @@ class Person(): #Everything that needs to be known about a person.
             return job_role in self.job_roles
         if isinstance(job_role, basestring):
             return any(x for x in self.job_roles if x.role_name == job_role)
-        if is_iterable(job_role):
+        if isinstance(job_role, (list, tuple, set)):
             return any(x for x in job_role for y in self.job_roles if x == y)
         return False
 
     @property
-    def jobs(self) -> tuple[ActiveJob]:
+    def jobs(self) -> tuple[ActiveJob, ...]:
         '''
         Returns the list of ActiveJobs, ordered by their prevalance (scheduling priority)
         Priority: side_job <- primary_job <- secondary_job
         '''
-        return (x for x in (self.side_job, self.primary_job, self.secondary_job) if x)
+        return tuple(x for x in (self.side_job, self.primary_job, self.secondary_job) if x)
 
     @property
     def salary(self) -> float:
         return round(sum(x.salary for x in self.jobs if x.is_paid), 2)
 
     @property
-    def job_roles(self) -> tuple[Role]:
+    def job_roles(self) -> tuple[Role, ...]:
         '''
         Returns all roles linked to her jobs
         '''
-        return (role for job in self.jobs for role in job.job_roles)
+        return tuple(role for job in self.jobs for role in job.job_roles)
 
     @property
-    def current_job_roles(self) -> tuple[Role]:
+    def current_job_roles(self) -> tuple[Role, ...]:
         '''
         Returns all roles for her current job
         '''
         if not self.current_job:
             return ()
-        return (x for x in self.special_role if x in self.current_job.job_roles)
+        return tuple(x for x in self.special_role if x in self.current_job.job_roles)
 
     @property
-    def current_job_actions(self) -> tuple[Action]:
+    def current_job_actions(self) -> tuple[Action, ...]:
         '''
         Returns all actions related to her current job roles
         '''
         if not self.current_job or not self.current_job.job_known:
             return ()
 
-        return (action for x in self.current_job_roles for action in x.actions)
+        return tuple(action for x in self.current_job_roles for action in x.actions)
 
     @property
-    def current_job_internet_actions(self) -> tuple[Action]:
+    def current_job_internet_actions(self) -> tuple[Action, ...]:
         '''
         Returns all internet actions related to her current job roles
         '''
         if not self.current_job or not self.current_job.job_known:
             return ()
-        return (action for x in self.current_job_roles for action in x.internet_actions)
+        return tuple(action for x in self.current_job_roles for action in x.internet_actions)
 
     @property
-    def duties(self) -> tuple[Duty]:
+    def duties(self) -> tuple[Duty, ...]:
         '''
         Returns all duties related to her jobs
         '''
-        return (duty for job in self.jobs for duty in job.duties)
+        return tuple(duty for job in self.jobs for duty in job.duties)
 
     def has_duty(self, duty: Duty):
         '''
@@ -4902,28 +4902,28 @@ class Person(): #Everything that needs to be known about a person.
         return any(x for x in self.duties if x == duty)
 
     @property
-    def active_duties(self) -> tuple[Duty]:
+    def active_duties(self) -> tuple[Duty, ...]:
         '''
         Returns the currently active duties in relation to current job
         '''
-        return (x for x in self.duties if not x.only_at_work or (self.current_job and self.current_job.has_duty(x)))
+        return tuple(x for x in self.duties if not x.only_at_work or (self.current_job and self.current_job.has_duty(x)))
 
     @property
-    def daily_duties(self) -> tuple[Duty]:
+    def daily_duties(self) -> tuple[Duty, ...]:
         '''
         Returns all duties active for this day in relation to worked jobs
         '''
-        return (x for x in self.duties if not x.only_at_work or any(y for y in self.jobs if y.shifts > 0 and y.has_duty(x)))
+        return tuple(x for x in self.duties if not x.only_at_work or any(y for y in self.jobs if y.shifts > 0 and y.has_duty(x)))
 
     @property
-    def current_duty_actions(self) -> tuple[Action]:
+    def current_duty_actions(self) -> tuple[Action, ...]:
         '''
         Returns all duty actions currently available
         '''
-        return (x for job in self.jobs for x in job.duty_actions)
+        return tuple(x for job in self.jobs for x in job.duty_actions)
 
     @property
-    def current_duty_internet_actions(self) -> tuple[Action]:
+    def current_duty_internet_actions(self) -> tuple[Action, ...]:
         '''
         Returns all internet actions currently available
         '''
