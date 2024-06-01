@@ -2694,6 +2694,7 @@ class Person(): #Everything that needs to be known about a person.
                 self.opinions[topic] = [score, add_to_log]
 
         if add_to_log:
+            self.discover_opinion(topic, False)
             mc.log_event(f"{self.display_name} {opinion_score_to_string(score)} {topic}", "float_text_green")
 
     def strengthen_opinion(self, topic: str, add_to_log = True):
@@ -3935,10 +3936,21 @@ class Person(): #Everything that needs to be known about a person.
         return removed_something
 
     def strip_to_underwear(self, visible_enough = True, avoid_nudity = False, position = None, emotion = None, display_transform = None, lighting = None, scene_manager = None, wipe_scene = False, delay = 1):
+        '''
+        Use for on-screen stripping routine for removing all outer clothing
+        visible_enough = False will use is_availabe check instead of is_visible check
+        avoid_nudity = True will not strip clothing that would result in nudity
+        '''
         strip_list = self.outfit.get_underwear_strip_list(visible_enough = visible_enough, avoid_nudity = avoid_nudity)
         self.__strip_outfit_strip_list(strip_list, position = position, emotion = emotion, display_transform = display_transform, lighting = lighting, scene_manager = scene_manager, wipe_scene = wipe_scene, delay = delay)
 
     def strip_to_tits(self, visible_enough = True, prefer_half_off = False, position = None, emotion = None, display_transform = None, lighting = None, scene_manager = None, wipe_scene = False, delay = 1):
+        '''
+        Use for on-screen stripping routine for removing all upper body clothing
+        visible_enough = False will use is_availabe check instead of is_visible check
+        prefer_half_off = True will half_off (partially hide) instead of remove the clothing items
+        avoid_nudity = True will not strip clothing that would result in nudity
+        '''
         half_off_instead = False
         if prefer_half_off and self.outfit.can_half_off_to_tits(visible_enough = visible_enough):
             strip_list = self.outfit.get_half_off_to_tits_list(visible_enough = visible_enough)
@@ -3948,6 +3960,12 @@ class Person(): #Everything that needs to be known about a person.
         self.__strip_outfit_strip_list(strip_list, position = position, emotion = emotion, display_transform = display_transform, lighting = lighting, half_off_instead = half_off_instead, scene_manager = scene_manager, wipe_scene = wipe_scene, delay = delay)
 
     def strip_to_vagina(self, visible_enough = False, prefer_half_off = False, position = None, emotion = None, display_transform = None, lighting = None, scene_manager = None, wipe_scene = False, delay = 1):
+        '''
+        Use for on-screen stripping routine for removing all lower body clothing
+        visible_enough = True will use is_visible check instead of is_available check
+        prefer_half_off = True will half_off (partially hide) instead of remove the clothing items
+        avoid_nudity = True will not strip clothing that would result in nudity
+        '''
         half_off_instead = False
         if prefer_half_off and self.outfit.can_half_off_to_vagina(visible_enough = visible_enough):
             strip_list = self.outfit.get_half_off_to_vagina_list(visible_enough = visible_enough)
@@ -3957,10 +3975,18 @@ class Person(): #Everything that needs to be known about a person.
         self.__strip_outfit_strip_list(strip_list, position = position, emotion = emotion, display_transform = display_transform, lighting = lighting, half_off_instead = half_off_instead, scene_manager = scene_manager, wipe_scene = wipe_scene, delay = delay)
 
     def strip_full_outfit(self, strip_feet = False, strip_accessories = False, position: str | None = None, emotion: str | None = None, display_transform = None, lighting: list[float] | None = None, scene_manager: Scene | None = None, wipe_scene = False, delay = 1):
+        '''
+        Use for on-screen stripping routine for removing all clothing
+        strip_feet = True will also remove shoes and stockings
+        strip_accessories = True will also remove any accessories she is wearing
+        '''
         strip_list = self.outfit.get_full_strip_list(strip_feet = strip_feet, strip_accessories = strip_accessories)
         self.__strip_outfit_strip_list(strip_list, position = position, emotion = emotion, display_transform = display_transform, lighting = lighting, scene_manager = scene_manager, wipe_scene = wipe_scene, delay = delay)
 
     def remove_clothing(self, clothing: list[Clothing] | Clothing, position: str | None = None, emotion: str | None = None, display_transform = None, lighting: list[float] | None = None, scene_manager: Scene | None = None, wipe_scene = False, delay = 1):
+        '''
+        Use for on-screen stripping of passed clothing list
+        '''
         if not clothing:
             return
         if not isinstance(clothing, list):
@@ -3969,7 +3995,7 @@ class Person(): #Everything that needs to be known about a person.
         self.__strip_outfit_strip_list(clothing, position = position, emotion = emotion, display_transform = display_transform, lighting = lighting, scene_manager = scene_manager, wipe_scene = wipe_scene, delay = delay)
 
     def strip_outfit(self, top_layer_first = True, exclude_upper = False, exclude_lower = False, exclude_feet = True, delay = 1, display_transform = None, position = None, emotion = None, lighting = None, scene_manager = None, wipe_scene = False):
-        def extra_strip_check(person, exclude_upper, exclude_lower, exclude_feet):
+        def extra_strip_check(person: Person, exclude_upper: bool, exclude_lower: bool, exclude_feet: bool):
             done = exclude_upper or person.tits_available
             if done and (exclude_lower or person.vagina_available):
                 if done and (exclude_feet or person.outfit.feet_available):

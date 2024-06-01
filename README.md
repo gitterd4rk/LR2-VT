@@ -9,8 +9,9 @@
 💮 Category: Visual, QoL, serums, virginity 💮 Dependencies: None 
 
 💮 Compatibility
-🥵 Moresomes_2.0 - Good!
-🥵 Real Porn Mod 0.6 - Good!
+🥵 LR2 AIO Script - Awesome!
+🥵 Moresomes_2.1 - Good!
+🥵 Real Porn Mod 0.62 - Good!
 🥵 KiNA's Mods - Good!
 🥵 Kaden's Mods - Good!
 🥵 MonQ Mod - Good!
@@ -19,7 +20,7 @@
 
 🔥 Lab Rats2 Reformulate: v2024.06-code-beta  Ren'Py 8.2.1
 
-🔥 lr2mods-develop - May 31, 2024 7:50 AM EDT - https://discord.com/channels/564870606382956576/571557121716387840/1246068208503357471
+🔥 lr2mods-develop - June 1, 2024 11:41 AM EDT - https://discord.com/channels/564870606382956576/571557121716387840/1246488696996368424
 
 💮 Vanilla files modified: 12 files
 
