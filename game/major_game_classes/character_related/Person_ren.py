@@ -3935,43 +3935,78 @@ class Person(): #Everything that needs to be known about a person.
 
         return removed_something
 
-    def strip_to_underwear(self, visible_enough = True, avoid_nudity = False, position = None, emotion = None, display_transform = None, lighting = None, scene_manager = None, wipe_scene = False, delay = 1):
+    def strip_top_to_underwear(self, visible_enough = True, prefer_half_off = False, avoid_nudity = False, position = None, emotion = None, display_transform = None, lighting = None, scene_manager = None, wipe_scene = False, delay = 1):
         '''
-        Use for on-screen stripping routine for removing all outer clothing
-        visible_enough = False will use is_availabe check instead of is_visible check
+        Use for on-screen stripping routine for removing all upper outer clothing
+        [Deprecated]visible_enough = False will use is_availabe check instead of is_visible check
+        prefer_half_off = True will half_off (partially hide) instead of remove the clothing items
         avoid_nudity = True will not strip clothing that would result in nudity
         '''
-        strip_list = self.outfit.get_underwear_strip_list(visible_enough = visible_enough, avoid_nudity = avoid_nudity)
-        self.__strip_outfit_strip_list(strip_list, position = position, emotion = emotion, display_transform = display_transform, lighting = lighting, scene_manager = scene_manager, wipe_scene = wipe_scene, delay = delay)
+        half_off_instead = False
+        if prefer_half_off and self.outfit.can_half_off_to_tits(visible_enough):
+            strip_list = self.outfit.get_half_off_to_tits_list(avoid_nudity = avoid_nudity)
+            half_off_instead = True
+        else:
+            strip_list = self.outfit.get_tit_strip_list(visible_enough)
+        self.__strip_outfit_strip_list(strip_list, position = position, emotion = emotion, display_transform = display_transform, lighting = lighting, half_off_instead = half_off_instead, scene_manager = scene_manager, wipe_scene = wipe_scene, delay = delay)
+
+    def strip_bottom_to_underwear(self, visible_enough = True, prefer_half_off = False, avoid_nudity = False, position = None, emotion = None, display_transform = None, lighting = None, scene_manager = None, wipe_scene = False, delay = 1):
+        '''
+        Use for on-screen stripping routine for removing all lower outer clothing
+        [Deprecated]visible_enough = False will use is_availabe check instead of is_visible check
+        prefer_half_off = True will half_off (partially hide) instead of remove the clothing items
+        avoid_nudity = True will not strip clothing that would result in nudity
+        '''
+        half_off_instead = False
+        if prefer_half_off and self.outfit.can_half_off_to_vagina()(visible_enough):
+            strip_list = self.outfit.get_half_off_to_vagina_list(avoid_nudity = avoid_nudity)
+            half_off_instead = True
+        else:
+            strip_list = self.outfit.get_vagina_strip_list(visible_enough)
+        self.__strip_outfit_strip_list(strip_list, position = position, emotion = emotion, display_transform = display_transform, lighting = lighting, half_off_instead = half_off_instead, scene_manager = scene_manager, wipe_scene = wipe_scene, delay = delay)
+
+    def strip_to_underwear(self, visible_enough = True, prefer_half_off = False, avoid_nudity = False, position = None, emotion = None, display_transform = None, lighting = None, scene_manager = None, wipe_scene = False, delay = 1):
+        '''
+        Use for on-screen stripping routine for removing all outer clothing
+        [Deprecated]visible_enough = False will use is_availabe check instead of is_visible check
+        prefer_half_off = True will half_off (partially hide) instead of remove the clothing items
+        avoid_nudity = True will not strip clothing that would result in nudity
+        '''
+        if self.opinion.showing_her_ass > self.opinion.showing_her_tits:
+            self.strip_bottom_to_underwear(visible_enough, prefer_half_off, avoid_nudity, position, emotion, display_transform, lighting, scene_manager, wipe_scene, delay)
+            self.strip_top_to_underwear(visible_enough, prefer_half_off, avoid_nudity, position, emotion, display_transform, lighting, scene_manager, wipe_scene, delay)
+        else:
+            self.strip_top_to_underwear(visible_enough, prefer_half_off, avoid_nudity, position, emotion, display_transform, lighting, scene_manager, wipe_scene, delay)
+            self.strip_bottom_to_underwear(visible_enough, prefer_half_off, avoid_nudity, position, emotion, display_transform, lighting, scene_manager, wipe_scene, delay)
 
     def strip_to_tits(self, visible_enough = True, prefer_half_off = False, position = None, emotion = None, display_transform = None, lighting = None, scene_manager = None, wipe_scene = False, delay = 1):
         '''
         Use for on-screen stripping routine for removing all upper body clothing
-        visible_enough = False will use is_availabe check instead of is_visible check
+        [Deprecated]visible_enough = False will use is_availabe check instead of is_visible check
         prefer_half_off = True will half_off (partially hide) instead of remove the clothing items
         avoid_nudity = True will not strip clothing that would result in nudity
         '''
         half_off_instead = False
-        if prefer_half_off and self.outfit.can_half_off_to_tits(visible_enough = visible_enough):
-            strip_list = self.outfit.get_half_off_to_tits_list(visible_enough = visible_enough)
+        if prefer_half_off and self.outfit.can_half_off_to_tits(visible_enough):
+            strip_list = self.outfit.get_half_off_to_tits_list(visible_enough)
             half_off_instead = True
         else:
-            strip_list = self.outfit.get_tit_strip_list(visible_enough = visible_enough)
+            strip_list = self.outfit.get_tit_strip_list(visible_enough)
         self.__strip_outfit_strip_list(strip_list, position = position, emotion = emotion, display_transform = display_transform, lighting = lighting, half_off_instead = half_off_instead, scene_manager = scene_manager, wipe_scene = wipe_scene, delay = delay)
 
-    def strip_to_vagina(self, visible_enough = False, prefer_half_off = False, position = None, emotion = None, display_transform = None, lighting = None, scene_manager = None, wipe_scene = False, delay = 1):
+    def strip_to_vagina(self, visible_enough = True, prefer_half_off = False, position = None, emotion = None, display_transform = None, lighting = None, scene_manager = None, wipe_scene = False, delay = 1):
         '''
         Use for on-screen stripping routine for removing all lower body clothing
-        visible_enough = True will use is_visible check instead of is_available check
+        [Deprecated]visible_enough = True will use is_visible check instead of is_available check
         prefer_half_off = True will half_off (partially hide) instead of remove the clothing items
         avoid_nudity = True will not strip clothing that would result in nudity
         '''
         half_off_instead = False
-        if prefer_half_off and self.outfit.can_half_off_to_vagina(visible_enough = visible_enough):
-            strip_list = self.outfit.get_half_off_to_vagina_list(visible_enough = visible_enough)
+        if prefer_half_off and self.outfit.can_half_off_to_vagina(visible_enough):
+            strip_list = self.outfit.get_half_off_to_vagina_list(visible_enough)
             half_off_instead = True
         else:
-            strip_list = self.outfit.get_vagina_strip_list(visible_enough = visible_enough)
+            strip_list = self.outfit.get_vagina_strip_list(visible_enough)
         self.__strip_outfit_strip_list(strip_list, position = position, emotion = emotion, display_transform = display_transform, lighting = lighting, half_off_instead = half_off_instead, scene_manager = scene_manager, wipe_scene = wipe_scene, delay = delay)
 
     def strip_full_outfit(self, strip_feet = False, strip_accessories = False, position: str | None = None, emotion: str | None = None, display_transform = None, lighting: list[float] | None = None, scene_manager: Scene | None = None, wipe_scene = False, delay = 1):
