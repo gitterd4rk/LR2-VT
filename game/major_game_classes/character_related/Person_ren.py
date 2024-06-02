@@ -747,7 +747,7 @@ class Person(): #Everything that needs to be known about a person.
             if relationship not in ("Fiancée", "Married"):
                 kids_range[1] -= 1 #People who are in a stable relationship have kids more often than single people
         if relationships_list is None or (is_in_weighted_list("Fiancée", relationships_list) or is_in_weighted_list("Married", relationships_list)):
-            if relationship not in ["Married"]:
+            if relationship not in ("Married",):
                 kids_range[1] -= 2 #People who married have kids more often than single people
         kids_range[0] = max(kids_range[0], 0)
         kids_range[1] = max(kids_range[1], 0)
@@ -1246,7 +1246,11 @@ class Person(): #Everything that needs to be known about a person.
 
     @cached_property
     def home(self) -> Room:
-        return next((x for x in list_of_places if x.identifier == self._home), None)
+        found = next((x for x in list_of_places if x.identifier == self._home), None)
+        if found:
+            return found
+        # something got fucked up -> create new home
+        return self.generate_home()
 
     def _set_home(self, value: Room):
         if not isinstance(value, Room):
@@ -1257,15 +1261,13 @@ class Person(): #Everything that needs to be known about a person.
 
     @cached_property
     def home_hub(self) -> HomeHub:
-        if not self.home:
-            return HomeHub("Unknown", "Unkonwn")
-        if self.home in [harem_hub.locations]:
+        if self.home in harem_hub.locations:
             return harem_hub
-        if self in [lily, mom]:
+        if self in (lily, mom):
             return home_hub
-        if self in [aunt, cousin]:
+        if self in (aunt, cousin):
             return aunt_home_hub
-        return next((x for x in [residential_home_hub, industrial_home_hub, downtown_home_hub, university_home_hub] if self.home in x), HomeHub("Unknown", "Unknown"))
+        return next((x for x in (residential_home_hub, industrial_home_hub, downtown_home_hub, university_home_hub) if self.home in x), HomeHub("Unknown", "Unknown"))
 
     def learn_home(self) -> bool: # Adds the_person.home to mc.known_home_locations allowing it to be visited without having to go through date label
         if self.home not in mc.known_home_locations + [lily_bedroom, mom_bedroom, aunt_bedroom, cousin_bedroom]:
@@ -1288,7 +1290,7 @@ class Person(): #Everything that needs to be known about a person.
             self.change_location(new_home)
 
         # special case: unique character changes home location (moves in with someone or harem mansion)
-        for hub in [residential_home_hub, industrial_home_hub, downtown_home_hub, university_home_hub]:
+        for hub in (residential_home_hub, industrial_home_hub, downtown_home_hub, university_home_hub):
             if self in hub.people:
                 hub.people.remove(self)
 
@@ -1891,7 +1893,7 @@ class Person(): #Everything that needs to be known about a person.
         return the_mother
 
     def _remove_expired_serums(self):
-        for serum in [x for x in self.serum_effects if x.is_expired]:
+        for serum in (x for x in self.serum_effects if x.is_expired):
             self.serum_effects.remove(serum)
             serum.run_on_remove(self)
 
@@ -1922,7 +1924,7 @@ class Person(): #Everything that needs to be known about a person.
             self.add_situational_obedience("over serum tolerance", over_tolerance_count * -5, "My body feels strange...")
 
             # side effect of going over tolerance is shorter duration of all serum
-            for serum in [x for x in self.serum_effects if x.expires]:
+            for serum in (x for x in self.serum_effects if x.expires):
                 serum.duration_counter += over_tolerance_count
 
             self._remove_expired_serums()
@@ -1999,8 +2001,8 @@ class Person(): #Everything that needs to be known about a person.
         self.apply_turn_based_outfit_bonus()
 
         # expire limited time actions
-        for lta_store in [self.on_room_enter_event_list, self.on_talk_event_list]:
-            for an_action in [x for x in lta_store if isinstance(x, Limited_Time_Action)]:
+        for lta_store in (self.on_room_enter_event_list, self.on_talk_event_list):
+            for an_action in (x for x in lta_store if isinstance(x, Limited_Time_Action)):
                 an_action.turns_valid -= 1
                 if an_action.turns_valid <= 0:
                     lta_store.remove(an_action)
@@ -2077,19 +2079,19 @@ class Person(): #Everything that needs to be known about a person.
         if (not self.has_anal_fetish and self.anal_sex_skill >= 5
                 and self.opinion.anal_sex >= 2 and self.opinion.anal_creampies >= 2
                 and (self.anal_sex_count > 19 or self.anal_creampie_count > 19)):
-            if start_anal_fetish_quest(self):
+            if start_anal_fetish_quest(self)==False:
                 self.event_triggers_dict["anal_fetish_start"] = True
 
         if (not self.has_cum_fetish and self.oral_sex_skill >= 5
                 and self.opinion.giving_blowjobs >= 2 and (self.opinion.drinking_cum >= 2 or self.opinion.cum_facials >= 2)
                 and self.cum_exposure_count > 19):
-            if start_cum_fetish_quest(self):
+            if start_cum_fetish_quest(self)==False:
                 self.event_triggers_dict["cum_fetish_start"] = True
 
         if (not self.has_breeding_fetish and self.vaginal_sex_skill >= 5
                 and self.opinion.vaginal_sex >= 2 and self.opinion.creampies >= 2
                 and self.vaginal_creampie_count > 19):
-            if start_breeding_fetish_quest(self):
+            if start_breeding_fetish_quest(self)==False:
                 self.event_triggers_dict["breeding_fetish_start"] = True
 
         # dealing with virgin hymen healing, 0-seal 1-bleeding/torn 2-normalized
@@ -2182,7 +2184,7 @@ class Person(): #Everything that needs to be known about a person.
             hash((self.face_style, self.hair_style.name, self.skin, special_modifier)
                 + tuple(self.hair_style.colour)
                 + tuple(self.eyes[1])),
-            hash(tuple([x.identifier for x in self.base_outfit])))
+            hash(tuple(x.identifier for x in self.base_outfit)))
 
         global portrait_cache
 
@@ -3277,11 +3279,11 @@ class Person(): #Everything that needs to be known about a person.
         outfit_mapping: dict[Clothing, Callable] = {}
 
         # determine items to add and method for adding it to outfit
-        for item in [x for x in outfit.upper_body if not self.outfit.has_clothing(x)]:
+        for item in (x for x in outfit.upper_body if not self.outfit.has_clothing(x)):
             outfit_mapping[item] = self.outfit.add_upper
-        for item in [x for x in outfit.lower_body if not x.is_extension and not self.outfit.has_clothing(x)]:
+        for item in (x for x in outfit.lower_body if not x.is_extension and not self.outfit.has_clothing(x)):
             outfit_mapping[item] = self.outfit.add_lower
-        for item in [x for x in outfit.feet if not self.outfit.has_clothing(x)]:
+        for item in (x for x in outfit.feet if not self.outfit.has_clothing(x)):
             outfit_mapping[item] = self.outfit.add_feet
 
         # add items based on redressing order
@@ -3320,7 +3322,7 @@ class Person(): #Everything that needs to be known about a person.
         self.apply_outfit(self.planned_outfit, ignore_base = ignore_base, update_taboo = update_taboo, show_dress_sequence = show_dress_sequence, scene_manager = scene_manager)
 
     def approves_outfit_color(self, outfit: Outfit) -> bool:
-        return not any(color in self.hated_color_opinions for color in [WardrobeBuilder.get_color_opinion(x.colour) for x in outfit.feet + outfit.lower_body + outfit.upper_body])
+        return not any(color in self.hated_color_opinions for color in (WardrobeBuilder.get_color_opinion(x.colour) for x in outfit.feet + outfit.lower_body + outfit.upper_body))
 
     def review_outfit(self, dialogue = True):
         if not self.has_cum_fetish:
@@ -5512,7 +5514,7 @@ class Person(): #Everything that needs to be known about a person.
             mc.known_home_locations.remove(self.home) # remove home location from known_home_locations
 
         # cleanup crisis events where person is in argument list
-        for crisis_store in [mc.business.mandatory_crises_list, mc.business.mandatory_morning_crises_list]:
+        for crisis_store in (mc.business.mandatory_crises_list, mc.business.mandatory_morning_crises_list):
             for crisis in crisis_store[:]:
                 args = crisis.args
                 if not isinstance(args, list):
