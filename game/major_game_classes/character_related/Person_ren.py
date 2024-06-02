@@ -1733,7 +1733,9 @@ class Person(): #Everything that needs to be known about a person.
 
     def generate_home(self, set_home_time = True, force_new_home = False) -> Room: #Creates a home location for this person and adds it to the master list of locations so their turns are processed.
         # generate new home location if we don't have one
-        start_home = self.home
+        # don't use self.home since it now calls this function
+        # when we cannot find self._home in list of places
+        start_home = next((x for x in list_of_places if x.identifier == self._home), None)
         if force_new_home or not start_home:
             start_home = Room(f"{self.name} {self.last_name}", f"{self.name} {self.last_name}", house_background, [make_wall(), make_floor(), make_couch(), make_window()], [], False, [0.5, 0.5], visible = False, hide_in_known_house_map = False, lighting_conditions = standard_indoor_lighting)
 
