@@ -51,7 +51,7 @@ def build_menu_item_list(element_list, draw_hearts_for_people = True, draw_perso
     for item in column_elements:
         mi = MenuItem()
 
-        if isinstance(item, list): #It's a title/return value pair. Show the title, return the value.
+        if isinstance(item, (list, tuple, set)): #It's a title/return value pair. Show the title, return the value.
             if isinstance(item[0], Action): #It's an action with extra arguments.
                 mi.extra_args = item[1]
                 item = item[0] #Rename item so that this is caught by the action section below.

@@ -331,7 +331,7 @@ specific_actions.append(command_action)
 def build_person_introduction_titles(person: Person):
     title_tuple = []
     for title in person.get_player_titles():
-        title_tuple.append([title, title])
+        title_tuple.append((title, title))
     return title_tuple
 
 def get_date_plan_actions(person: Person):
@@ -345,7 +345,7 @@ def get_date_plan_actions(person: Person):
     date_list = [[lunch_date_action, person], [movie_date_action, person], [dinner_date_action, person]]
     for a_role in person.special_role:
         for a_date in a_role.role_dates:
-            date_list.append([a_date, person])
+            date_list.append((a_date, person))
 
     date_list.insert(0, "Select Date")
     date_list.append(["Never mind", None])
@@ -367,8 +367,8 @@ def new_title_menu(person: Person):
     title_tuple = []
     title_choice = None
     for title in person.get_titles():
-        title_tuple.append([title, title])
-    title_tuple.append(["Do not change her title", "Back"])
+        title_tuple.append((title, title))
+    title_tuple.append(("Do not change her title", "Back"))
     title_choice = renpy.display_menu(title_tuple, True, "Choice")
     return title_choice
 
@@ -376,8 +376,8 @@ def new_mc_title_menu(person: Person):
     title_tuple = []
     title_choice = None
     for title in person.get_player_titles():
-        title_tuple.append([title, title])
-    title_tuple.append(["Do not change your title", "Back"])
+        title_tuple.append((title, title))
+    title_tuple.append(("Do not change your title", "Back"))
     title_choice = renpy.display_menu(title_tuple, True, "Choice")
     return title_choice
 
@@ -385,8 +385,8 @@ def new_possessive_title_menu(person: Person):
     title_tuple = []
     title_choice = None
     for title in person.get_possessive_titles():
-        title_tuple.append([title, title])
-    title_tuple.append(["Do not change your title", "Back"])
+        title_tuple.append((title, title))
+    title_tuple.append(("Do not change your title", "Back"))
     title_choice = renpy.display_menu(title_tuple, True, "Choice")
     return title_choice
 
@@ -403,7 +403,7 @@ def build_opinion_smalltalk_list(opinion_text, opinion_score):
         opinion_string = f"{text_opinion_list[4 - menu_score]} {opinion_text}"
         if opinion_score[1] and opinion_score[0] == 2 - menu_score:
             opinion_string = f"{{color=#00E000}}{opinion_string}{{/color}}"
-        opinion_list.append([opinion_string, 2 - menu_score])
+        opinion_list.append((opinion_string, 2 - menu_score))
     opinion_list.insert(0, "Smalltalk")
     return opinion_list
 
@@ -451,18 +451,18 @@ def serum_give_chance_color_wrapper(chance):
 
 def serum_give_build_menu_options(person, chances):
     option_list = []
-    option_list.append(["Give it to her stealthily" + serum_give_chance_color_wrapper(chances[0]), "stealth"])
-    option_list.append(["Demand she takes it" + serum_give_chance_color_wrapper(chances[2]), "demand"])
+    option_list.append(("Give it to her stealthily" + serum_give_chance_color_wrapper(chances[0]), "stealth"))
+    option_list.append(("Demand she takes it" + serum_give_chance_color_wrapper(chances[2]), "demand"))
     if person.is_slave:
-        option_list.append(["Order her to take it\n{size=12}{color=#00D000}She is your slave{/color}{/size}", "slave"])
+        option_list.append(("Order her to take it\n{size=12}{color=#00D000}She is your slave{/color}{/size}", "slave"))
     elif person.is_employee:
         if mandatory_unpaid_serum_testing_policy.is_owned:
-            option_list.append(["Ask her to take it\n{size=12}{color=#00D000}Required by Policy{/color}{/size}", "policy"])
+            option_list.append(("Ask her to take it\n{size=12}{color=#00D000}Required by Policy{/color}{/size}", "policy"))
         else:
-            option_list.append(["Ask her to take it" + serum_give_chance_color_wrapper(chances[1]), "ask"])
+            option_list.append(("Ask her to take it" + serum_give_chance_color_wrapper(chances[1]), "ask"))
             if mandatory_paid_serum_testing_policy.is_owned and mc.business.has_funds(chances[3]):
-                option_list.append([f"Pay her to take it\n{{size=12}}{{color=#D00000}}Costs ${chances[3]:.2f}{{/color}}{{/size}}", "paid"])
+                option_list.append((f"Pay her to take it\n{{size=12}}{{color=#D00000}}Costs ${chances[3]:.2f}{{/color}}{{/size}}", "paid"))
     else:
-        option_list.append(["Ask her to take it" + serum_give_chance_color_wrapper(chances[1]), "ask"])
+        option_list.append(("Ask her to take it" + serum_give_chance_color_wrapper(chances[1]), "ask"))
     option_list.insert(0, "Give Serum")
     return option_list

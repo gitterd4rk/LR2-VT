@@ -119,7 +119,7 @@ house_background = Image("")
 
 def make_character_unique(person: Person, home_hub: HomeHub) -> bool:
     return True
-def build_specific_action_list(person: Person, keep_talking = True) -> None:
+def build_specific_action_list(person: Person, keep_talking = True) -> list:
     return
 def apply_sex_modifiers(person: Person, private = True) -> None:
     return
@@ -6080,9 +6080,9 @@ class Person(): #Everything that needs to be known about a person.
     def is_jealous_sister(self) -> bool:
         return self.has_role(jealous_sister_role)
 
-    def add_jealous_event(self, the_description, the_act):  #Add the tuple to the list and add to her jealousy score
+    def add_jealous_event(self, the_description: str, the_act: str):  #Add the tuple to the list and add to her jealousy score
         if self.is_jealous_sister:
-            self.event_triggers_dict["jealous_list"].append([the_description, the_act])
+            self.event_triggers_dict["jealous_list"].append((the_description, the_act))
             self.jealous_change_score(jealous_act_get_score(the_act))
 
     def get_jealous_description(self):
