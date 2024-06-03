@@ -137,7 +137,7 @@ def dinner_date_requirement(person: Person):
     return True
 
 def serum_give_requirement(person: Person):
-    if mc.inventory.total_serum_count <= 0:
+    if not mc.inventory.has_serum:
         return "Requires: Serum in inventory"
     return True
 
@@ -189,13 +189,13 @@ def serum_demand_requirement(person: Person):
         #It's easier to convince her if she works for you
         if person.obedience < 110:
             return "Requires: 110 Obedience"
-        if mc.inventory.total_serum_count <= 0:
+        if not mc.inventory.has_serum:
             return "Requires: Serum in inventory"
         return True
 
     if person.obedience < 120:
         return "Requires: 120 Obedience"
-    if mc.inventory.total_serum_count <= 0:
+    if not mc.inventory.has_serum:
         return "Requires: Serum in inventory"
     return True
 
@@ -348,7 +348,7 @@ def get_date_plan_actions(person: Person):
             date_list.append((a_date, person))
 
     date_list.insert(0, "Select Date")
-    date_list.append(["Never mind", None])
+    date_list.append(("Never mind", None))
     return date_list
 
 def create_movie_date_action(person: Person):
