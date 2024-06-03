@@ -76,7 +76,7 @@ def clear_map_cache():
 def create_tooltip_dictionary(locations: list[Room]) -> dict[str, str]:
     # start_time = time.time()
     # only create this once for each build-up
-    active_progression_scene_names = tuple([y.progression_scene_action.name for y in list_of_progression_scenes if y.progression_available])
+    active_progression_scene_names = tuple(y.progression_scene_action.name for y in list_of_progression_scenes if y.progression_available)
 
     result = {}
     for place in locations:
@@ -181,12 +181,12 @@ def get_location_tile_text(location: Room, tt_dict: dict[str, str]) -> str:
 
 @lru_cache(100)
 def get_hub_tile_text(hub: MapHub) -> str:
-    active_progression_scene_names = tuple([y.progression_scene_action.name for y in list_of_progression_scenes if y.progression_available])
+    active_progression_scene_names = tuple(y.progression_scene_action.name for y in list_of_progression_scenes if y.progression_available)
     known_people = []
     total_people = 0
     has_event = False
     has_progress = False
-    for location in [x for x in hub.visible_locations if x.is_accessible]:
+    for location in (x for x in hub.visible_locations if x.is_accessible):
         known_people.extend(known_people_at_location(location))
         total_people += location.person_count
         (loc_event, loc_progress) = get_location_on_enter_events(location, active_progression_scene_names)
