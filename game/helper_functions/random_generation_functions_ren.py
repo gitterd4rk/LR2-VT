@@ -264,17 +264,6 @@ def create_random_person(name = None, name_list = None, last_name = None, last_n
             for stat_range in stat_range_array
         ]
 
-#    if sex_skill_array is None:
-#        if sex_skill_range_array is None:
-#            sex_skill_range_array = [
-#                [Person.get_sex_skill_floor(), Person.get_sex_skill_ceiling()]
-#                for x in range(0, 4)
-#            ]
-#        sex_skill_array = [
-#            renpy.random.randint(sex_skill_range[0], sex_skill_range[1])
-#            for sex_skill_range in sex_skill_range_array
-#        ]
-
     if love is None:
         if love_range is None:
             love_range = [Person.get_love_floor(), Person.get_love_ceiling()]
@@ -353,6 +342,7 @@ def create_random_person(name = None, name_list = None, last_name = None, last_n
         if kids_ceiling is not None:
             kids = min(kids, kids_ceiling)
         if age <=18 and (type!="story" or type!="unique"): kids=0
+        if hymen==0 or hymen==1: kids=0
 
     if relationship != "Single" and SO_name is None:
         SO_name = (
@@ -374,12 +364,10 @@ def create_random_person(name = None, name_list = None, last_name = None, last_n
     # sex array 0-Foreplay 1-Oral 2-Vaginal 3-Anal
     if sex_skill_array is None:
         sex_skill_array = [renpy.random.randint(0,sex_cap),renpy.random.randint(0,sex_cap),renpy.random.randint(0,sex_cap),renpy.random.randint(0,sex_cap)]
-
     #sets the virgin stats and adjust the sex_array if hymen isn't set.
     #could always use this to tweak the randomness of the sexskill array too.
     #ie, not a virginal... doing a randint(-2,2) would give a random result of their skills based on experience
-    #not sure if I need to set it here, or persons
-
+    
     if hymen is None:
         #story or unique character Check so the random doesn't affect them
         if type=="story" or type=="unique":
@@ -499,9 +487,9 @@ def create_random_person(name = None, name_list = None, last_name = None, last_n
                         sex_skill_array[3] = 0
             elif age >=20 and age <=30:
                 #According to the same CDC data: 20-24:12.3%, 25-29: 5%, 30-34:2.4, 40-44: 0.3%
-                #so if I used 90%, to maintain ratio would be 30%            
+                #so if I used 90% then it would be 10%, to maintain an interesting ratio would be 30%
                 #Oral Check
-                if (renpy.random.randint(1, 100))>=30: #10% chance of being virginal
+                if (renpy.random.randint(1, 100))>=30: #10% chance of being virginal 30 for interests
                     if relationship!="Single":
                         if SO_name is None or SO_name is mc.name: 
                             if SO_name==mc.name: oral_first = mc.name
@@ -521,42 +509,39 @@ def create_random_person(name = None, name_list = None, last_name = None, last_n
                 #Vaginal check - taking kids into consideration
                 if kids <= 0 or kids is None:
                     if (renpy.random.randint(1, 100))>=30: #10% chance of being virginal
+                        hymen = 2
                         if relationship!="Single":
                             if SO_name is None or SO_name is mc.name: 
                                 if SO_name==mc.name: vaginal_first = mc.name
                                 else: vaginal_first = Person.get_random_male_name()
                             else: vaginal_first = SO_name
                         else: vaginal_first = Person.get_random_male_name()
-                        
                         if sex_skill_array[2]<= 2: 
                             vaginal_virgin = renpy.random.randint(2,sex_cap)
                             sex_skill_array[2] = vaginal_virgin
                         else: 
                             if sex_skill_array[2]>10: vaginal_virgin = 10
                             else: vaginal_virgin = sex_skill_array[2]
-                            
-                        hymen = 2
                     else:
                         if sex_skill_array[2]==1: hymen = 0  #just the tip :P
                         else: 
                             sex_skill_array[2] = 0
                             hymen = 0
                 else:
+                    hymen = 2
                     if relationship!="Single":
                         if SO_name is None or SO_name is mc.name: 
                             if SO_name==mc.name: vaginal_first = mc.name
                             else: vaginal_first = Person.get_random_male_name()
                         else: vaginal_first = SO_name
                     else: vaginal_first = Person.get_random_male_name()
-                    
                     if sex_skill_array[2]<= 2: 
                         vaginal_virgin = renpy.random.randint(2,sex_cap)
                         sex_skill_array[2] = vaginal_virgin
                     else: 
                         if sex_skill_array[2]>10: vaginal_virgin = 10
                         else: vaginal_virgin = 7 ##giving the mothers an edge :P
-                    hymen = 2
-     
+
                 #Anal Check
                 if (renpy.random.randint(1, 100))>=30: #30% chance of being virginal
                     if relationship!="Single":
@@ -596,7 +581,9 @@ def create_random_person(name = None, name_list = None, last_name = None, last_n
 
                 #Vaginal check
                 if kids <= 0 or kids is None:
+                    kids = 0
                     if (renpy.random.randint(1, 100))>=10: #10% chance of being virginal for spice
+                        hymen = 2
                         if relationship!="Single":
                             if SO_name is None or SO_name is mc.name: 
                                 if SO_name==mc.name: vaginal_first = mc.name
@@ -610,14 +597,13 @@ def create_random_person(name = None, name_list = None, last_name = None, last_n
                         else: 
                             if sex_skill_array[2]>10: vaginal_virgin = 10
                             else: vaginal_virgin = sex_skill_array[2]
-                            
-                        hymen = 2
                     else:
                         if sex_skill_array[2]==1: hymen = 0  #just the tip :P
                         else: 
                             sex_skill_array[2] = 0
                             hymen = 0
                 else:
+                    hymen = 2
                     if relationship!="Single":
                         if SO_name is None or SO_name is mc.name: 
                             if SO_name==mc.name: vaginal_first = mc.name
@@ -631,8 +617,6 @@ def create_random_person(name = None, name_list = None, last_name = None, last_n
                     else: 
                         if sex_skill_array[2]>10: vaginal_virgin = 10
                         else: vaginal_virgin = 7 ##giving the mothers an edge :P
-                    hymen = 2
-
                 #Anal Check
                 if (renpy.random.randint(1, 100))>=30: #30% chance of being virginal
                     if relationship!="Single":
