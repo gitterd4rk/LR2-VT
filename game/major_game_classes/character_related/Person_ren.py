@@ -119,7 +119,7 @@ house_background = Image("")
 
 def make_character_unique(person: Person, home_hub: HomeHub) -> bool:
     return True
-def build_specific_action_list(person: Person, keep_talking = True) -> None:
+def build_specific_action_list(person: Person, keep_talking = True) -> list:
     return
 def apply_sex_modifiers(person: Person, private = True) -> None:
     return
@@ -1733,7 +1733,9 @@ class Person(): #Everything that needs to be known about a person.
 
     def generate_home(self, set_home_time = True, force_new_home = False) -> Room: #Creates a home location for this person and adds it to the master list of locations so their turns are processed.
         # generate new home location if we don't have one
-        start_home = self.home
+        # don't use self.home since it now calls this function
+        # when we cannot find self._home in list of places
+        start_home = next((x for x in list_of_places if x.identifier == self._home), None)
         if force_new_home or not start_home:
             start_home = Room(f"{self.name} {self.last_name}", f"{self.name} {self.last_name}", house_background, [make_wall(), make_floor(), make_couch(), make_window()], [], False, [0.5, 0.5], visible = False, hide_in_known_house_map = False, lighting_conditions = standard_indoor_lighting)
 
@@ -6078,9 +6080,9 @@ class Person(): #Everything that needs to be known about a person.
     def is_jealous_sister(self) -> bool:
         return self.has_role(jealous_sister_role)
 
-    def add_jealous_event(self, the_description, the_act):  #Add the tuple to the list and add to her jealousy score
+    def add_jealous_event(self, the_description: str, the_act: str):  #Add the tuple to the list and add to her jealousy score
         if self.is_jealous_sister:
-            self.event_triggers_dict["jealous_list"].append([the_description, the_act])
+            self.event_triggers_dict["jealous_list"].append((the_description, the_act))
             self.jealous_change_score(jealous_act_get_score(the_act))
 
     def get_jealous_description(self):
