@@ -2959,7 +2959,7 @@ class Person(): #Everything that needs to be known about a person.
             return self.current_job.planned_uniform
 
         if limited_wardrobes.should_use_limited_wardrobe(self):
-            return limited_wardrobes.decide_on_outfit(self)
+            return limited_wardrobes.decide_on_outfit(self, allow_personal_wardrobe = False)
 
         return self.planned_outfit
 
