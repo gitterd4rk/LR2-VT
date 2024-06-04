@@ -367,7 +367,7 @@ def create_random_person(name = None, name_list = None, last_name = None, last_n
     #sets the virgin stats and adjust the sex_array if hymen isn't set.
     #could always use this to tweak the randomness of the sexskill array too.
     #ie, not a virginal... doing a randint(-2,2) would give a random result of their skills based on experience
-    
+
     if hymen is None:
         #story or unique character Check so the random doesn't affect them
         if type=="story" or type=="unique":
@@ -617,6 +617,7 @@ def create_random_person(name = None, name_list = None, last_name = None, last_n
                     else: 
                         if sex_skill_array[2]>10: vaginal_virgin = 10
                         else: vaginal_virgin = 7 ##giving the mothers an edge :P
+
                 #Anal Check
                 if (renpy.random.randint(1, 100))>=30: #30% chance of being virginal
                     if relationship!="Single":
