@@ -1954,7 +1954,7 @@ class Person(): #Everything that needs to be known about a person.
             self.oral_cum -=1
         if self.anal_cum>0 and (day -self.sex_record.get("Last Anal Day", -1)) >=0:
             self.anal_cum -=1
-        if self.vaginal_cum>4 and (day -self.sex_record.get("Last Vaginal Day", -1)) >=0:
+        if self.vaginal_cum>1 and (day -self.sex_record.get("Last Vaginal Day", -1)) >=0:
             self.vaginal_cum -=1
     #########################################################
     # helper method for outfit_thread to load daily outfits #
@@ -2110,7 +2110,7 @@ class Person(): #Everything that needs to be known about a person.
         if self.anal_virgin>3 and (day -self.sex_record.get("Last Anal Day", -1)) >= 3:
             self.anal_virgin -=1
         #dealing with cum in orfices
-        if self.vaginal_cum>0 and (day -self.sex_record.get("Last Vaginal Day", -1)) >=1:
+        if self.vaginal_cum>0 and (day -self.sex_record.get("Last Vaginal Day", -1)) >=4:
             self.vaginal_cum -=1
 
     def apply_turn_based_outfit_bonus(self):
