@@ -30,42 +30,30 @@ def gym_is_open():
     return time_of_day not in (0, 4)
 
 def sex_shop_is_open():
-    if (time_of_day == 0
-            or (time_of_day == 4 and day % 7 in (0, 1, 2, 3, 4, 5))
-            or day % 7 == 6):
-        return False
-    return True
+    return time_of_day in (1, 2, 3) and day % 7 != 6    # closed on sundays
 
 def university_is_open():
-    return not (time_of_day in (0, 4) or day % 7 == 6)
+    return time_of_day in (1, 2, 3) and day % 7 != 6    # closed on sundays
 
 def coffee_shop_is_open():
     return time_of_day not in (0, 4)
 
 def hair_salon_is_open():
-    return day % 7 != 6
+    return time_of_day in (1, 2, 3) and day % 7 != 6    # closed on sundays
 
 def downtown_bar_is_open():
-    if time_of_day < 2 or day % 7 == 0:
-        return False
-    return True
+    return time_of_day in (2, 3, 4) and day % 7 != 0    # closed on mondays
 
 def strip_club_is_open():
     return time_of_day > 2
 
 def mom_office_is_open():
-    if time_of_day == 0 or time_of_day > 2 or day % 7 in (5, 6):
-        return False
-    return True
+    return time_of_day in (1, 2) and day % 7 not in (5, 6)
 
 def gaming_cafe_is_open():
-    if not myra.event_triggers_dict.get("gaming_cafe_open", False):
-        return False
-    if day % 7 in (2, 3, 4) and time_of_day in (2, 3):
-        return True
-    if day % 7 in (5, 6) and time_of_day in (1, 2, 3):
-        return True
-    return False
+    return (myra.event_triggers_dict.get("gaming_cafe_open", False)
+        and ((day % 7 in (2, 3, 4) and time_of_day in (2, 3))
+             or (day % 7 in (5, 6) and time_of_day in (1, 2, 3))))
 
 def clear_map_cache():
     calculate_hub_offsets.cache_clear()
