@@ -185,16 +185,16 @@ screen person_info_detailed(person):
                     text "Anal Skill: [person.anal_sex_skill]" style "menu_text_style"
                     text "Novelty: [person.novelty:.0f]%" style "menu_text_style"
                     if person.oral_first is None:
-                        text "{image=virgin_token_small} Oral Virginity: Retained" style "menu_text_style"
+                        text "Oral Virginity: {image=virgin_token_small}" style "menu_text_style"
                     else:
                         text "Oral Claimed: {}".format(person.oral_first) style "menu_text_style"
                     if person.anal_first is None:
-                        text "{image=virgin_token_small} Anal Virginity: Retained" style "menu_text_style"
+                        text "Anal Virginity: {image=virgin_token_small}" style "menu_text_style"
                     else:
                         text "Anal Claimed: {}".format(person.anal_first) style "menu_text_style"
 
                     if person.hymen <= 1 and person.vaginal_first is None:
-                        text "{image=virgin_token_small} Vaginal Virginity: Retained" style "menu_text_style"
+                        text "Vaginal Virginity: {image=virgin_token_small}" style "menu_text_style"
                     else:
                         text "Vaginal Claimed: {}".format(person.vaginal_first) style "menu_text_style"
                     if person.hymen == 0 and person.vaginal_virgin <=1:
