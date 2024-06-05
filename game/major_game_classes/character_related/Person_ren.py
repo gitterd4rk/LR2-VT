@@ -1170,7 +1170,7 @@ class Person(): #Everything that needs to be known about a person.
 
     def __getstate__(self): # excludes decorators from serialization
         state = self.__dict__.copy()
-        excluded = ["opinion", "known_opinion", "progress", "location", "current_job", "is_at_work", "current_location_hub", "home", "home_hub"]
+        excluded = ["opinion", "known_opinion", "progress", "location", "current_job", "is_at_work", "current_location_hub", "home", "home_hub", "is_at_office", "is_at_stripclub", "is_at_mc_house"]
         for x in excluded:
             state.pop(x, None)
         return state
@@ -1234,7 +1234,7 @@ class Person(): #Everything that needs to be known about a person.
         self._location = value.identifier
         self._clear_location_cache()
 
-    _location_clear_keys = ("location", "current_location_hub", "current_job", "is_at_work")
+    _location_clear_keys = ("location", "current_location_hub", "current_job", "is_at_work", "is_at_office", "is_at_stripclub", "is_at_mc_house")
 
     def _clear_location_cache(self):
         for x in Person._location_clear_keys:
@@ -1341,15 +1341,15 @@ class Person(): #Everything that needs to be known about a person.
 
         return False
 
-    @property
+    @cached_property
     def is_at_office(self) -> bool:
         return self.location in office_hub
 
-    @property
+    @cached_property
     def is_at_stripclub(self) -> bool:
         return self.location in strip_club_hub
 
-    @property
+    @cached_property
     def is_at_mc_house(self) -> bool:
         return self.location in home_hub
 
