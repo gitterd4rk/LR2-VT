@@ -64,7 +64,7 @@ from game.major_game_classes.character_related.Relationship_ren import Relations
 from game.major_game_classes.clothing_related.outfit_selector_ren import outfit_queue
 from game.major_game_classes.clothing_related.Outfit_ren import Outfit
 from game.major_game_classes.clothing_related.Wardrobe_ren import Wardrobe, lingerie_wardrobe
-from game.major_game_classes.clothing_related.wardrobe_builder_ren import WardrobeBuilder, panties_list, real_bra_list, thong, tiny_g_string, strappy_panties, string_panties, crotchless_panties, teddy, kitty_babydoll, lace_bra, thin_bra, strappy_bra, quarter_cup_bustier
+from game.major_game_classes.clothing_related.wardrobe_builder_ren import WardrobeBuilder, panties_list, real_bra_list, thong, tiny_g_string, strappy_panties, string_panties, crotchless_panties, lace_bra, thin_bra, strappy_bra, quarter_cup_bustier
 from game.major_game_classes.clothing_related.wardrobe_preferences_ren import WardrobePreference
 from game.major_game_classes.clothing_related.LimitedWardrobeCollection_ren import limited_wardrobes
 from game.people.Sarah.sarah_definition_ren import sarah_threesomes_unlocked
@@ -3074,7 +3074,7 @@ class Person(): #Everything that needs to be known about a person.
             outfit.remove_clothing(bra)
             return True
 
-        new_bra = get_random_from_list([x for x in real_bra_list if x not in (teddy, kitty_babydoll) and x.slut_value >= min_slut and x.slut_value <= max_slut])
+        new_bra = get_random_from_list([x for x in real_bra_list if x.slut_value >= min_slut and x.slut_value <= max_slut])
         if not new_bra:
             new_bra = get_random_from_list([lace_bra, thin_bra, strappy_bra, quarter_cup_bustier])
 
@@ -3127,7 +3127,7 @@ class Person(): #Everything that needs to be known about a person.
             return True
 
         wardrobe = self.current_job.wardrobe
-        if not wardrobe or wardrobe.outfit_count == 0:
+        if not wardrobe or wardrobe.total_count == 0:
             return False
 
         if self.is_at_job((stripper_job, stripclub_stripper_job, stripclub_waitress_job, stripclub_bdsm_performer_job, stripclub_manager_job, stripclub_mistress_job)):
@@ -5622,7 +5622,7 @@ class Person(): #Everything that needs to be known about a person.
 
     @property
     def is_naked(self) -> bool:
-        return len(self.outfit.upper_body + self.outfit.lower_body + self.outfit.feet) == 0
+        return len(self.outfit.upper_body) + len(self.outfit.lower_body) + len(self.outfit.feet) == 0
 
     @property
     def tits_available(self) -> bool:
@@ -5892,7 +5892,7 @@ class Person(): #Everything that needs to be known about a person.
             self.apply_outfit(self.event_triggers_dict.pop("girlfriend_sleepover_lingerie"))
         elif self.event_triggers_dict.get("favourite_lingerie", None):
             self.apply_outfit(self.event_triggers_dict.get("favourite_lingerie", None))
-        elif len(self.wardrobe.underwear_sets) > 0:
+        elif self.wardrobe.underwear_count > 0:
             self.apply_outfit(get_random_from_list(self.wardrobe.underwear_sets))
         else:
             self.apply_outfit(lingerie_wardrobe.pick_random_outfit())
