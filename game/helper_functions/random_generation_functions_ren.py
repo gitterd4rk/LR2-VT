@@ -683,8 +683,8 @@ def get_premade_character(age_range, tits_range, height_range, kids_range, relat
         if x.age >= age_range[0] and x.age <= age_range[1] and
         x.height >= height_range[0] and x.height <= height_range[1] and
         x.kids >= kids_range[0] and x.kids <= kids_range[1] and
-        x.tits in [x[0] for x in tits_range] and
-        x.relationship in [x[0] for x in relationship_list]]
+        x.tits in (x[0] for x in tits_range) and
+        x.relationship in (x[0] for x in relationship_list)]
 
     if len(allowed_characters) == 0: # no more pre-made left or do not conform to hire restrictions
         return None
@@ -881,19 +881,19 @@ def ensure_opinion_on_sexual_preference(person: Person, sex_skill, opinions):
 def enhance_existing_wardrobe(person: Person, max_outfits):
     outfit_builder = WardrobeBuilder(person)
 
-    while builtins.len(person.wardrobe.outfit_sets) <= max_outfits:    # add some generated outfits
+    while person.wardrobe.outfit_count <= max_outfits:    # add some generated outfits
         (min_slut, max_slut) = WardrobeBuilder.get_clothing_min_max_slut_value(renpy.random.randint(20, 100))
         outfit = outfit_builder.build_outfit("full", max_slut, min_slut)
         if outfit.has_overwear and person.approves_outfit_color(outfit):
             person.wardrobe.add_outfit(outfit)
 
-    while builtins.len(person.wardrobe.overwear_sets) <= max_outfits:    # add some generated outfits
+    while person.wardrobe.overwear_count <= max_outfits:    # add some generated outfits
         (min_slut, max_slut) = WardrobeBuilder.get_clothing_min_max_slut_value(renpy.random.randint(20, 100))
         overwear = outfit_builder.build_outfit("over", max_slut, min_slut)
         if overwear.is_suitable_overwear_set and person.approves_outfit_color(overwear):
             person.wardrobe.add_overwear_set(overwear)
 
-    while builtins.len(person.wardrobe.underwear_sets) <= max_outfits:    # add some generated outfits
+    while person.wardrobe.underwear_count <= max_outfits:    # add some generated outfits
         (min_slut, max_slut) = WardrobeBuilder.get_clothing_min_max_slut_value(renpy.random.randint(20, 100))
         underwear = outfit_builder.build_outfit("under", max_slut, min_slut)
         if underwear.is_suitable_underwear_set and person.approves_outfit_color(underwear):
@@ -912,33 +912,33 @@ def rebuild_wardrobe(person: Person, force = False):
     preferences = WardrobePreference(person)
 
     outfit: Outfit
-    for outfit in renpy.random.sample(default_wardrobe.outfit_sets, builtins.len(default_wardrobe.outfit_sets)):
+    for outfit in renpy.random.sample(default_wardrobe.outfit_sets, default_wardrobe.outfit_count):
         if not outfit.has_clothing(sweater_dress) and outfit.has_overwear and preferences.evaluate_outfit(outfit, 999) and person.approves_outfit_color(outfit):
             base_wardrobe.add_outfit(outfit.get_copy())
-        if builtins.len(base_wardrobe.outfit_sets) > 5:
+        if base_wardrobe.outfit_count > 5:
             break
 
     overwear: Outfit
-    for overwear in renpy.random.sample(default_wardrobe.overwear_sets, builtins.len(default_wardrobe.overwear_sets)):
+    for overwear in renpy.random.sample(default_wardrobe.overwear_sets, default_wardrobe.overwear_count):
         if not overwear.has_clothing(sweater_dress) and overwear.is_suitable_overwear_set and preferences.evaluate_outfit(overwear, 999) and person.approves_outfit_color(overwear):
             base_wardrobe.add_overwear_set(overwear.get_copy())
-        if builtins.len(base_wardrobe.overwear_sets) > 5:
+        if base_wardrobe.overwear_count > 5:
             break
 
     underwear: Outfit
-    for underwear in renpy.random.sample(default_wardrobe.underwear_sets, builtins.len(default_wardrobe.underwear_sets)):
+    for underwear in renpy.random.sample(default_wardrobe.underwear_sets, default_wardrobe.underwear_count):
         if underwear.is_suitable_underwear_set and preferences.evaluate_outfit(underwear, 999) and person.approves_outfit_color(underwear):
             base_wardrobe.add_underwear_set(underwear.get_copy())
-        if builtins.len(base_wardrobe.underwear_sets) > 5:
+        if base_wardrobe.underwear_count > 5:
             break
 
     # ensure we have at least 2 base wardrobe outfits by removing surplus, but keep the most decent outfit from default wardrobe
-    while builtins.len(base_wardrobe.outfit_sets) > 3:
-        base_wardrobe.remove_outfit(sorted(base_wardrobe.outfit_sets, key = lambda x: x.outfit_slut_score)[renpy.random.randint(1, builtins.len(base_wardrobe.outfit_sets) - 1)])
-    while builtins.len(base_wardrobe.overwear_sets) > 3:
-        base_wardrobe.remove_outfit(sorted(base_wardrobe.overwear_sets, key = lambda x: x.outfit_slut_score)[renpy.random.randint(1, builtins.len(base_wardrobe.overwear_sets) - 1)])
-    while builtins.len(base_wardrobe.underwear_sets) > 3:
-        base_wardrobe.remove_outfit(sorted(base_wardrobe.underwear_sets, key = lambda x: x.outfit_slut_score)[renpy.random.randint(1, builtins.len(base_wardrobe.underwear_sets) - 1)])
+    while base_wardrobe.outfit_count > 3:
+        base_wardrobe.remove_outfit(sorted(base_wardrobe.outfit_sets, key = lambda x: x.outfit_slut_score)[renpy.random.randint(1, base_wardrobe.outfit_count - 1)])
+    while base_wardrobe.overwear_count > 3:
+        base_wardrobe.remove_outfit(sorted(base_wardrobe.overwear_sets, key = lambda x: x.outfit_slut_score)[renpy.random.randint(1, base_wardrobe.overwear_count - 1)])
+    while base_wardrobe.underwear_count > 3:
+        base_wardrobe.remove_outfit(sorted(base_wardrobe.underwear_sets, key = lambda x: x.outfit_slut_score)[renpy.random.randint(1, base_wardrobe.underwear_count - 1)])
 
     person.wardrobe = base_wardrobe
 
