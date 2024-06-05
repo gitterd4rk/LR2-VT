@@ -1400,7 +1400,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                                     $ VTvaginaltt += f"\n{{image=beezee_token_small}} You marked her fresh"+VTbreedfertile+VTpro+" womb with your seed. \n You have claimed her."
                             else:
                                 $ VTvaginalst = "openvag"
-                                $ VTvaginaltt = f"{{image=beezee_token_small}} She has your seed in her"+VTbreedfertile+VTpro+" womb.""
+                                $ VTvaginaltt = f"{{image=beezee_token_small}} She has your seed in her"+VTbreedfertile+VTpro+" womb."
                         else:
                             if person.hymen <=1:
                                 if person.vaginal_cum >3:

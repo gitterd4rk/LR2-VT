@@ -241,7 +241,7 @@ def suck_demand_requirement(person: Person):
     return True
 
 def bend_over_your_desk_requirement(person: Person):
-    if not (person.is_employee and person.is_at_work):
+    if not (person.is_employee and person.is_at_office):
         return False
     if person.is_at_stripclub:  # don't show when moonlighting in stripclub
         return False
