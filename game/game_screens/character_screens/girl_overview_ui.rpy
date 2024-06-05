@@ -185,22 +185,21 @@ screen person_info_detailed(person):
                     text "Anal Skill: [person.anal_sex_skill]" style "menu_text_style"
                     text "Novelty: [person.novelty:.0f]%" style "menu_text_style"
                     if person.oral_first is None:
-                        text "Oral Virginity: {image=virgin_token_small}" style "menu_text_style"
+                        text "Oral: {image=virgin_token_small}" style "menu_text_style"
                     else:
-                        text "Oral Claimed: {}".format(person.oral_first) style "menu_text_style"
+                        text "Oral: {}".format(person.oral_first) style "menu_text_style"
                     if person.anal_first is None:
-                        text "Anal Virginity: {image=virgin_token_small}" style "menu_text_style"
+                        text "Anal: {image=virgin_token_small}" style "menu_text_style"
                     else:
-                        text "Anal Claimed: {}".format(person.anal_first) style "menu_text_style"
-
+                        text "Anal: {}".format(person.anal_first) style "menu_text_style"
                     if person.hymen <= 1 and person.vaginal_first is None:
-                        text "Vaginal Virginity: {image=virgin_token_small}" style "menu_text_style"
+                        text "Vaginal: {image=virgin_token_small}" style "menu_text_style"
                     else:
-                        text "Vaginal Claimed: {}".format(person.vaginal_first) style "menu_text_style"
+                        text "Vaginal: {}".format(person.vaginal_first) style "menu_text_style"
                     if person.hymen == 0 and person.vaginal_virgin <=1:
-                        text "{image=virgin_token_small} Hymen: Intact" style "menu_text_style"
+                        text "Hymen: Intact {image=virgin_token_small}" style "menu_text_style"
                     elif person.hymen == 1:
-                        text "{image=virgin_token_small} Hymen: Torn" style "menu_text_style"
+                        text "Hymen: Torn {image=virgin_token_small}" style "menu_text_style"
                     else:
                         text "Hymen: Remnant" style "menu_text_style"
 
