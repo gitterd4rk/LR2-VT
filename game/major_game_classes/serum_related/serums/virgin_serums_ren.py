@@ -28,13 +28,13 @@ def anal_restore_on_apply(person: Person, serum: SerumDesign, add_to_log: bool):
     if add_to_log:
         mc.log_event(f"{person.title or person.create_formatted_title('???')}: Anal Stimulaltion Started", "float_text_pink")
     if person in mc.location.people: #If you're here applying this trait in person it causes her to exclaim.
-        renpy.say(f"{person.title or person.create_formatted_title('???')}", "Oh my god my....it itches!")
+        renpy.say(f"{person.title or person.create_formatted_title('???')}", "Oh my god! Excuse me! How embarrassing!")
 def oral_restore_on_apply(person: Person, serum: SerumDesign, add_to_log: bool):
     person.change_happiness(-5, add_to_log = add_to_log)
     if add_to_log:
         mc.log_event(f"{person.title or person.create_formatted_title('???')}: Throat Stimulation started", "float_text_pink")
     if person in mc.location.people: #If you're here applying this trait in person it causes her to exclaim.
-        renpy.say(f"{person.title or person.create_formatted_title('???')}", "Oh my god my....it itches!")
+        renpy.say(f"{person.title or person.create_formatted_title('???')}", "Ugh, why am I drooling???!")
 ### Virgin ON TURN ###
 def hymen_restore_on_turn(person: Person, serum: SerumDesign, add_to_log: bool):
     person.change_happiness(-5, add_to_log = add_to_log)
@@ -45,24 +45,28 @@ def hymen_restore_on_turn(person: Person, serum: SerumDesign, add_to_log: bool):
     elif person.vaginal_virgin ==0:
         if person.hymen==2: 
             person.hymen=1
-        if add_to_log:
-            mc.log_event(f"{person.title or person.create_formatted_title('???')}: Hymen 50% Restored", "float_text_grey")
+            if add_to_log:
+                mc.log_event(f"{person.title or person.create_formatted_title('???')}: Hymen 50% Restored", "float_text_grey")
         if person.hymen==1:
             person.hymen=0
             if add_to_log:
-                mc.log_event(f"{person.title or person.create_formatted_title('???')}: My bleeding stopped!", "float_text_grey")
+                mc.log_event(f"{person.title or person.create_formatted_title('???')}: Vaginal Stimulation Ended", "float_text_pink")
 def anal_restore_on_turn(person: Person, serum: SerumDesign, add_to_log: bool):
     person.change_happiness(-5, add_to_log = add_to_log)
     if person.anal_virgin>=1: 
         person.anal_virgin -=1
         if person in mc.location.people: #If you're here applying this trait in person it causes her to exclaim.
-            renpy.say(f"{person.title or person.create_formatted_title('???')}", "Oh my god my....it itches!")  
+            renpy.say(f"{person.title or person.create_formatted_title('???')}", "Oh my god! Excuse me! How embarrassing!")
+    if person.anal_virgin==0:
+        mc.log_event(f"{person.title or person.create_formatted_title('???')}: Anal Stimulation Ended", "float_text_pink")
 def oral_restore_on_turn(person: Person, serum: SerumDesign, add_to_log: bool):
     person.change_happiness(-5, add_to_log = add_to_log)
     if person.oral_virgin>=1: 
         person.oral_virgin -=1
         if person in mc.location.people: #If you're here applying this trait in person it causes her to exclaim.
-            renpy.say(f"{person.title or person.create_formatted_title('???')}", "Oh my god my....it itches!")  
+            renpy.say(f"{person.title or person.create_formatted_title('???')}", "Ugh, why am I drooling???!")
+    if person.oral_virgin==0:
+        mc.log_event(f"{person.title or person.create_formatted_title('???')}: Throat Stimulation Ended", "float_text_pink")
 ### Virgin ON REMOVE ###
 def hymen_restore_on_remove(person: Person, serum: SerumDesign, add_to_log: bool):
     if add_to_log:
@@ -95,7 +99,7 @@ def init_Virginal_Serum():
     SerumTraitMod(name = "Anal Muscle Stim",
         desc = "A special serum trait developed to restore the muscles around the anal cavity. Requires a week to fully stimulate.",
         positive_slug = "Anal muscles will be stimulated",
-        negative_slug = "Stimulation is not a comfortable process",
+        negative_slug = "Stimulation is not a comfortable process, may cause excessive methane production.",
         research_added = 300,
         base_side_effect_chance = 50,
         duration_added = 3,
@@ -112,7 +116,7 @@ def init_Virginal_Serum():
     SerumTraitMod(name = "Throat Muscle Stim",
         desc = "A special serum trait developed to restore the muscles around the throat cavity. Requires a week to fully stimulate.",
         positive_slug = "Throat muscles will be stimulated",
-        negative_slug = "Stimulation is not a comfortable process",
+        negative_slug = "Stimulation is not a comfortable process, may cause excessive saliva production.",
         research_added = 300,
         base_side_effect_chance = 50,
         duration_added = 3,

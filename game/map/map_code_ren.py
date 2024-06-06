@@ -108,12 +108,8 @@ def get_location_tooltip(location: Room) -> str:
                     info.append("{image=paramour_token_small}")
                 else:
                     info.append("{image=gf_token_small}")
-        else:
-            info.append(" {image=empty_token_small}")
         if person.age <= 18:
             info.append("{image=matureteen_token_small}")
-        else:
-            info.append(" {image=empty_token_small}")
         if person.is_clone:
             info.append("{image=dna_token_small}")
         if person.knows_pregnant:
