@@ -363,7 +363,7 @@ screen person_info_ui(person): #Used to display stats for a person while you're 
                 $ VTbcst = "pregnant"
                 $ VTbctt = "She is pregnant."
                 $ VTpro = ""
-                $ VTbreedfertile = "pregnant"
+                $ VTbreedfertile = " pregnant"
         if VTbcat=="sexualized":
             imagebutton:
                 pos(359, 166)
