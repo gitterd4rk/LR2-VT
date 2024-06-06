@@ -17,7 +17,7 @@ from game.major_game_classes.character_related._job_definitions_ren import JobDe
 from game.major_game_classes.character_related.Person_ren import Person, list_of_patreon_characters
 from game.major_game_classes.clothing_related.Outfit_ren import Outfit
 from game.major_game_classes.clothing_related.Wardrobe_ren import Wardrobe, default_wardrobe
-from game.major_game_classes.clothing_related.wardrobe_builder_ren import WardrobeBuilder, add_make_up_to_outfit
+from game.major_game_classes.clothing_related.wardrobe_builder_ren import WardrobeBuilder
 from game.major_game_classes.clothing_related.wardrobe_preferences_ren import WardrobePreference
 
 
@@ -62,7 +62,7 @@ def make_person(name = None, name_list = None, last_name = None, last_name_list 
             return_character.sexy_opinions[opinion[0]] = [opinion[1], opinion[2]]
 
     if return_character.base_outfit and len(return_character.base_outfit.accessories) == 0 and return_character.opinion.makeup > 0:
-        add_make_up_to_outfit(return_character, return_character.base_outfit)
+        WardrobeBuilder.add_make_up_to_outfit(return_character, return_character.base_outfit)
 
     if return_character.type == 'random':
         create_party_schedule(return_character)
@@ -743,7 +743,7 @@ def create_old_hooker_with_daughter():
     return daughter
 
 def create_stripper():
-    person = make_person(sluttiness = renpy.random.randint(15, 55),
+    person = make_person(sluttiness = renpy.random.randint(25, 55),
         job = stripper_job,
         type="unique",
         #sex_skill_range_array = [[2, Person.get_sex_skill_ceiling()] for x in range(8)],
@@ -943,7 +943,7 @@ def rebuild_wardrobe(person: Person, force = False):
     person.wardrobe = base_wardrobe
 
     # add make-up to base outfit (based on pref)
-    add_make_up_to_outfit(person, person.base_outfit)
+    WardrobeBuilder.add_make_up_to_outfit(person, person.base_outfit)
 
     # add some auto generated outfits (max 4 outfits per category)
     enhance_existing_wardrobe(person, 4)
