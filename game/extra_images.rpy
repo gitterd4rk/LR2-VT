@@ -14,8 +14,6 @@ init -10:
     define harem_mansion_background = Image(get_file_handle("harem_mansion.jpg"))
     define lily_bedroom_background = Image(get_file_handle("Lily_Bedroom_Background.jpg"))
     define cousin_bedroom_background = Image(get_file_handle("Cousin_Bedroom_Background.jpg"))
-
-
     define mall_background = Image(get_file_handle("Mall_Background.png"))
     define electronics_store_background = Image(get_file_handle("Electronics_Store_Background.jpg"))
     define home_improvement_store_background = Image(get_file_handle("Home_Improvement_Store_Background.jpg"))
