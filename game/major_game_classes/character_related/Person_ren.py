@@ -1025,6 +1025,7 @@ class Person(): #Everything that needs to be known about a person.
         self.ideal_fertile_day = renpy.random.randint(0, 29) #Influences a girls fertility chance. It is double on the exact day of the month, dropping down to half 15 days before/after. Only applies on sem-realistic setting.
 
         self.lactation_sources = 0 #How many things are causing this girl to lactate. Mainly serum traits, side effects, or pregnancy.
+        self.breast_milk = 0.0  # available breast milk
 
         ## Clothing things.
         self.wardrobe: Wardrobe | None = None
@@ -1328,6 +1329,10 @@ class Person(): #Everything that needs to be known about a person.
 
     @cached_property
     def is_at_work(self) -> bool:
+        '''
+        Returns True when the person is at currently scheduled job
+        '''
+
         if self.current_job and self.current_job.scheduled_location:
             # list of special conditions for is at work
             if ((self.is_employee or self.is_intern) and self.is_at_office):
@@ -1343,14 +1348,23 @@ class Person(): #Everything that needs to be known about a person.
 
     @cached_property
     def is_at_office(self) -> bool:
+        '''
+        Returns True when the person is at the MC's business.
+        '''
         return self.location in office_hub
 
     @cached_property
     def is_at_stripclub(self) -> bool:
+        '''
+        Returns True when the person is at the strip club.
+        '''
         return self.location in strip_club_hub
 
     @cached_property
     def is_at_mc_house(self) -> bool:
+        '''
+        Returns True when the person is at the MC's home.
+        '''
         return self.location in home_hub
 
     @property
@@ -1899,6 +1913,36 @@ class Person(): #Everything that needs to be known about a person.
             self.serum_effects.remove(serum)
             serum.run_on_remove(self)
 
+    def _check_serum_tolerance(self):
+        over_tolerance_count = len(self.serum_effects) - self.serum_tolerance
+        if over_tolerance_count <= 0:
+            self.clear_situational_slut("over serum tolerance")
+            self.clear_situational_obedience("over serum tolerance")
+            return
+
+        self.change_happiness(over_tolerance_count * -5, add_to_log = False)
+        self.add_situational_slut("over serum tolerance", over_tolerance_count * -5, "My body feels strange...")
+        self.add_situational_obedience("over serum tolerance", over_tolerance_count * -5, "My body feels strange...")
+
+        # side effect of going over tolerance is shorter duration of all serum
+        for serum in (x for x in self.serum_effects if x.expires):
+            serum.duration_counter += over_tolerance_count
+
+        self._remove_expired_serums()
+
+    def _update_breast_milk(self):
+        if self.lactation_sources <= 0 or not hasattr(self, "breast_milk"): # quick reset
+            self.breast_milk = 0
+            return
+        if self.breast_milk >= self.maximum_milk_in_breasts:    # quick exit
+            self.breast_milk = self.maximum_milk_in_breasts
+            return
+
+        milk_increase = Person.rank_tits(self.tits) * self.lactation_sources * 0.2
+        if self.breast_milk + milk_increase > self.maximum_milk_in_breasts:
+            milk_increase = self.maximum_milk_in_breasts - self.breast_milk
+        self.breast_milk += milk_increase
+
     def run_turn(self):
         self.change_energy(20, add_to_log = False)
 
@@ -1919,29 +1963,10 @@ class Person(): #Everything that needs to be known about a person.
         self._remove_expired_serums()
 
         # Check for serum overdoses after expired effects have been removed.
-        over_tolerance_count = len(self.serum_effects) - self.serum_tolerance
-        if over_tolerance_count > 0:
-            self.change_happiness(over_tolerance_count * -5, add_to_log = False)
-            self.add_situational_slut("over serum tolerance", over_tolerance_count * -5, "My body feels strange...")
-            self.add_situational_obedience("over serum tolerance", over_tolerance_count * -5, "My body feels strange...")
+        self._check_serum_tolerance()
 
-            # side effect of going over tolerance is shorter duration of all serum
-            for serum in (x for x in self.serum_effects if x.expires):
-                serum.duration_counter += over_tolerance_count
-
-            self._remove_expired_serums()
-
-        else:
-            self.clear_situational_slut("over serum tolerance")
-            self.clear_situational_obedience("over serum tolerance")
-
-        if self.lactation_sources > 0: #She'll have milky tits, which can be milked in some cases
-            self.event_triggers_dict["max_milk_in_breasts"] = Person.rank_tits(self.tits) * 2 #Max milk is determined by tit size
-            self.event_triggers_dict["milk_in_breasts"] = self.event_triggers_dict.get("milk_in_breasts", 0) + Person.rank_tits(self.tits) * self.lactation_sources * 0.2
-            if self.event_triggers_dict.get("milk_in_breasts", 0) > self.event_triggers_dict.get("max_milk_in_breasts", 0):
-                self.event_triggers_dict["milk_in_breasts"] = self.event_triggers_dict.get("max_milk_in_breasts", 0)
-        else:
-            self.event_triggers_dict["max_milk_in_breasts"] = 0
+        if persistent.pregnancy_pref != 0:    # only when pregnancy enabled
+            self._update_breast_milk()
 
         for duty in self.active_duties:
             duty.on_turn(self)
@@ -4824,6 +4849,31 @@ class Person(): #Everything that needs to be known about a person.
     def create_formatted_title(self, title: str) -> str:
         return f"{{color={self.char.who_args['color']}}}{{font={self.char.what_args['font']}}}{title}{{/font}}{{/color}}"
 
+    @property
+    def relation_possessive_title(self) -> str:
+        '''
+        Returns the possessive title always as family relationship if person is family.
+        When person is not family will return appropriate relationship reference.
+        Usage: for dialogues where you specifically want to refer to your family relationship
+        '''
+        if not self.is_family:
+            if self.is_girlfriend:
+                return "your girlfriend"
+            if self.is_affair:
+                return "your mistress"
+            if self.vaginal_sex_count > 9:
+                return "your booty call"
+            return "your friend"
+        if self == mom:
+            return "your mother"
+        if self == lily:
+            return "your sister"
+        if self == aunt:
+            return "your aunt"
+        if self == cousin:
+            return "your cousin"
+        return "your family"
+
     def set_title(self, title: str | None = None): #Takes the given title and formats it so that it will use the characters font colours when the_person.title is used.
         '''
         title: None -> set random title
@@ -5247,9 +5297,13 @@ class Person(): #Everything that needs to be known about a person.
             self.pubes_colour = list(pubes_colour.rgba)
             self.pubes_style.colour = self.pubes_colour
 
+    @property
+    def maximum_milk_in_breasts(self) -> int:
+        return Person.rank_tits(self.tits) * 2
+
     def get_milk_trait(self) -> SerumTrait: # Generates a milk trait that can be used any time you harvest lactating milk.
-        milk_trait = SerumTrait(f"{self.display_name}'s Breast Milk",
-            f"Fresh breast milk produced by {self.possessive_title}. Valuable to the right sort of person.",
+        milk_trait = SerumTrait("Breast Milk",
+            f"Fresh breast milk from {self.name} {self.last_name}. Valuable to the right sort of person.",
             sexual_aspect = 2, medical_aspect = 2)
         return milk_trait
 
