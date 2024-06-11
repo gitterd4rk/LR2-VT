@@ -1,9 +1,9 @@
 from __future__ import annotations
 import builtins
 from renpy.text.text import Text
-from game.major_game_classes.character_related.Person_ren import Person
-from game.major_game_classes.game_logic.Room_ren import Room
-from game.game_roles._role_definitions_ren import mc, affair_role, girlfriend_role, harem_role
+from game.major_game_classes.character_related.Person_ren import Person, list_of_people
+from game.major_game_classes.game_logic.Room_ren import Room, list_of_places
+from game.game_roles._role_definitions_ren import affair_role, girlfriend_role, harem_role
 from game.people.Myrabelle.myra_definition_ren import myra
 from game.helper_functions.list_functions_ren import known_people_at_location
 from game.major_game_classes.game_logic.Action_ren import Limited_Time_Action
@@ -282,3 +282,8 @@ def calculate_hub_offsets(hub: MapHub, idx: int, location: Room) -> tuple[int, i
         if GRID_MAP_POS[(idx % 3)][0] % 2 == 1:
             offset_y += 75
     return (offset_x, offset_y - hex_offset)
+
+
+def check_for_any_room_events():
+    return (any(y for x in list_of_people for y in x.on_room_enter_event_list.enabled_actions(x) if x.location.visible and not y.silent)
+        or any(y for x in list_of_places for y in x.on_room_enter_event_list.enabled_actions() if x.visible and not y.silent))
