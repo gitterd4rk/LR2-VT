@@ -1173,8 +1173,8 @@ class Person(): #Everything that needs to be known about a person.
     def __hash__(self) -> int:
         return self.identifier
 
-    def __eq__(self, other):
-        if not isinstance(self, other.__class__):
+    def __eq__(self, other: Person) -> bool:
+        if not isinstance(self, Person):
             return NotImplemented
         return self.identifier == other.identifier
 

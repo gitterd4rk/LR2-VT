@@ -20,7 +20,7 @@
 
 🔥 Lab Rats2 Reformulate: v2024.06-code-beta  Ren'Py 8.2.1
 
-🔥 lr2mods-develop - June 11, 2024 2:54 PM EDT - https://discord.com/channels/564870606382956576/571557121716387840/1248971714734329897
+🔥 lr2mods-develop - June 11, 2024 4:44 PM EDT - https://discord.com/channels/564870606382956576/571557121716387840/1250188818234085570
 
 💮 Vanilla files modified: 12 files
 
