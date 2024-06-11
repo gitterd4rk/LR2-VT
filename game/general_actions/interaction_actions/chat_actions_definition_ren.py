@@ -8,6 +8,7 @@ from game.game_roles._role_definitions_ren import onlyfans_role
 from game.game_roles.stripclub._stripclub_role_definitions_ren import get_strip_club_foreclosed_stage
 from game.game_roles.relationship_role_definition_ren import ask_girlfriend_requirement, evening_date_trigger
 from game.major_game_classes.character_related.Person_ren import Person, mc
+from game.major_game_classes.game_logic.ActionList_ren import ActionList
 from game.major_game_classes.game_logic.Action_ren import Action
 from game.major_game_classes.game_logic.Room_ren import strip_club, bdsm_room
 from renpy import persistent
@@ -280,53 +281,126 @@ def demand_bc_requirement(person: Person):
         return "Requires: 115 Obedience"
     return True
 
-
 #Chat actions shown with all girls. Add to these lists to have options displayed when talking to someone.
-chat_actions: list[Action] = [] #Default actions that are displayed when you are talking to a girl. Remember to set is_fast = False if an event can advance time.
+#Default actions that are displayed when you are talking to a girl. Remember to set is_fast = False if an event can advance time.
+chat_actions = ActionList([
+    Action("Make small talk  {energy=-15}", requirement = small_talk_requirement, effect = "small_talk_person",
+        menu_tooltip = "A pleasant chat about your likes and dislikes. A good way to get to know someone and the first step to building a lasting relationship. Provides a chance to study the effects of active serum traits and raise their mastery level."),
+    Action("Compliment her  {energy=-15}", requirement = compliment_requirement, effect = "compliment_person",
+        menu_tooltip = "Lay the charm on thick and heavy. A great way to build a relationship, and every girl is happy to receive a compliment! Provides a chance to study the effects of active serum traits and raise their mastery level."),
+    Action("Flirt with her  {energy=-15}", requirement = flirt_requirement, effect = "flirt_person",
+        menu_tooltip = "A conversation filled with innuendo and double entendre. Both improves your relationship with a girl and helps make her a little bit sluttier. Provides a chance to study the effects of active serum traits and raise their mastery level."),
+    Action("Ask her to be your girlfriend", requirement = ask_girlfriend_requirement, effect = "ask_be_girlfriend_label",
+        menu_tooltip = "Ask her to start an official, steady relationship and be your girlfriend.",
+        priority = 10),
+    Action("Talk about her birth control", requirement = bc_talk_requirement, effect = "bc_talk_label",
+        menu_tooltip = "Talk to her about her use of birth control. Ask her to start or stop taking it, or just check what she's currently doing."),
+    Action("Ask her on a date", requirement = date_option_requirement, effect = "date_person",
+        menu_tooltip = "Ask her out on a date. The more you impress her the closer you'll grow. If you play your cards right you might end up back at her place.",
+        is_fast = False),
+])
 
-small_talk_action = Action("Make small talk  {energy=-15}", requirement = small_talk_requirement, effect = "small_talk_person",
-    menu_tooltip = "A pleasant chat about your likes and dislikes. A good way to get to know someone and the first step to building a lasting relationship. Provides a chance to study the effects of active serum traits and raise their mastery level.")
-chat_actions.append(small_talk_action)
+#Default "aggressive" actions that are displayed when talking to a girl.
+specific_actions = ActionList([
+    Action("Hug goodbye  {energy=-5}", requirement = hug_requirement, effect = "hug_person",
+    menu_tooltip = "Be \"friendly\"! A good hug goes a long way."),
+    Action("Kiss goodbye  {energy=-5}", requirement = kiss_requirement, effect = "kiss_person",
+    menu_tooltip = "Give your sweet gal some loving."),
+    Action("Grope her  {energy=-5}", requirement = grope_requirement, effect = "grope_person",
+        menu_tooltip = 'Be "friendly" and see how far she is willing to let you take things. May make her more comfortable with physical contact, but at the cost of her opinion of you.'),
+    Action("Give her a command", requirement = command_requirement, effect = "command_person",
+        menu_tooltip = "Leverage her obedience and command her to do something."),
+])
+command_actions = ActionList([
+    Action("Change how we refer to each other", requirement = change_titles_requirement, effect = "change_titles_person",
+        menu_tooltip = "Manage how you refer to her and tell her how she should refer to you. Different combinations of stats, roles, and personalities unlock different titles."),
+    Action("Change your wardrobe", requirement = wardrobe_change_requirement, effect = "wardrobe_change_label",
+        menu_tooltip = "Add and remove outfits from her wardrobe, or ask her to put on a specific outfit."),
+    Action("Drink a dose of serum for me", requirement = serum_demand_requirement, effect = "serum_demand_label",
+        menu_tooltip = "Demand she drinks a dose of serum right now. Easier to command employees to test serum."),
+    Action("Strip for me", requirement = demand_strip_requirement, effect = "demand_strip_label",
+        menu_tooltip = "Command her to strip off some of her clothing."),
+    Action("Let me touch you   {energy=-10}", requirement = demand_touch_requirement, effect = "demand_touch_label",
+        menu_tooltip = "Demand she stays still and lets you touch her. Going too far may damage your relationship."),
+    Action("Suck my cock", requirement = suck_demand_requirement, effect = "suck_demand_label",
+        menu_tooltip = "Demand she get onto her knees and worship your cock."),
+    Action("Talk about birth control", requirement = demand_bc_requirement, effect = "bc_demand_label",
+        menu_tooltip = "Discuss her use of birth control."),
+    Action("Make an OnlyFans video together", requirement = make_onlyfans_together_requirement, effect = "make_onlyfans_together_label",
+        menu_tooltip = "Order her to make a OnlyFans video together with you."),
+    Action("Bend her over her desk", requirement = bend_over_your_desk_requirement, effect = "bend_over_your_desk_label",
+        menu_tooltip = "Order her to bend over her desk so you can enjoy her ass."),
+])
 
-compliment_action = Action("Compliment her  {energy=-15}", requirement = compliment_requirement, effect = "compliment_person",
-    menu_tooltip = "Lay the charm on thick and heavy. A great way to build a relationship, and every girl is happy to receive a compliment! Provides a chance to study the effects of active serum traits and raise their mastery level.")
-chat_actions.append(compliment_action)
+def sort_display_list(the_item): #Function to use when sorting lists of actions (and potentially people or strings)
+    extra_args = None
+    if isinstance(the_item, list): #If it's a list it's actually an item of some sort with extra args. Break those out and continue.
+        extra_args = the_item[1]
+        the_item = the_item[0]
 
-flirt_action = Action("Flirt with her  {energy=-15}", requirement = flirt_requirement, effect = "flirt_person",
-    menu_tooltip = "A conversation filled with innuendo and double entendre. Both improves your relationship with a girl and helps make her a little bit sluttier. Provides a chance to study the effects of active serum traits and raise their mastery level.")
-chat_actions.append(flirt_action)
+    if isinstance(the_item, Action):
+        if the_item.is_action_enabled(extra_args):
+            return the_item.priority
+        return the_item.priority - 1000 #Apply a ranking penalty to disabled items. They will appear in priority order but below enabled events (Unless something has a massive priority).
 
-make_girlfriend_action = Action("Ask her to be your girlfriend", requirement = ask_girlfriend_requirement, effect = "ask_be_girlfriend_label",
-    menu_tooltip = "Ask her to start an official, steady relationship and be your girlfriend.", priority = 10)
-chat_actions.append(make_girlfriend_action)
+    if isinstance(the_item, Person):
+        return the_item.sluttiness #Order people by sluttiness? Love? Something else?
+    return 0
 
-bc_talk_action = Action("Talk about her birth control", requirement = bc_talk_requirement, effect = "bc_talk_label",
-    menu_tooltip = "Talk to her about her use of birth control. Ask her to start or stop taking it, or just check what she's currently doing.")
-chat_actions.append(bc_talk_action)
+def build_chat_action_list(person: Person, keep_talking = True):
+    chat_list = []
+    for act in chat_actions:
+        if keep_talking or act.is_fast:
+            chat_list.append((act, person))
 
-date_action = Action("Ask her on a date", requirement = date_option_requirement, effect = "date_person",
-    menu_tooltip = "Ask her out on a date. The more you impress her the closer you'll grow. If you play your cards right you might end up back at her place.", is_fast = False)
-chat_actions.append(date_action)
+    chat_list.sort(key = sort_display_list, reverse = True)
+    chat_list.insert(0, "Chat with her")
+    return chat_list
 
+def build_specific_action_list(person: Person, keep_talking = True):
+    specific_actions_list = ["Say goodbye"]
+    for act in specific_actions:
+        if keep_talking or act.is_fast:
+            specific_actions_list.append((act, person))
 
-specific_actions = [] #Default "aggressive" actions that are displayed when talking to a girl.
+    specific_actions_list.sort(key = sort_display_list, reverse = True)
+    specific_actions_list.insert(0, "Do something specific")
+    return specific_actions_list
 
-hug_action = Action("Hug goodbye  {energy=-5}", requirement = hug_requirement, effect = "hug_person",
-    menu_tooltip = "Be \"friendly\"! A good hug goes a long way.")
-specific_actions.append(hug_action)
+def build_special_role_actions_list(person: Person, keep_talking = True):
+    special_role_actions = []
+    # add non-job actions
+    for role in (x for x in person.special_role if x not in person.job_roles):
+        for act in role.actions:
+            if keep_talking or act.is_fast:
+                special_role_actions.append((act, person))
 
-kiss_action = Action("Kiss goodbye  {energy=-5}", requirement = kiss_requirement, effect = "kiss_person",
-    menu_tooltip = "Give your sweet gal some loving.")
-specific_actions.append(kiss_action)
+    # add job actions
+    for act in person.current_job_actions:
+        if keep_talking or act.is_fast:
+            special_role_actions.append((act, person))
 
-grope_action = Action("Grope her  {energy=-5}", requirement = grope_requirement, effect = "grope_person",
-    menu_tooltip = 'Be "friendly" and see how far she is willing to let you take things. May make her more comfortable with physical contact, but at the cost of her opinion of you.')
-specific_actions.append(grope_action)
+    # add duty actions
+    for act in person.current_duty_actions:
+        if keep_talking or act.is_fast:
+            special_role_actions.append((act, person))
 
-command_action = Action("Give her a command", requirement = command_requirement, effect = "command_person",
-    menu_tooltip = "Leverage her obedience and command her to do something.")
-specific_actions.append(command_action)
+    for act in mc.main_character_actions: #The main character has a "role" that lets us add special actions as well.
+        if keep_talking or act.is_fast:
+            special_role_actions.append((act, person))
 
+    special_role_actions.sort(key = sort_display_list, reverse = True)
+    special_role_actions.insert(0, "Special Actions")
+    return special_role_actions
+
+def build_command_action_list(person, keep_talking = True):
+    command_actions_list = ["Never mind"]
+    for act in command_actions:
+        if keep_talking or act.is_fast:
+            command_actions_list.append((act, person))
+    command_actions_list.sort(key = sort_display_list, reverse = True)
+    command_actions_list.insert(0, "Command Her")
+    return command_actions_list
 
 def build_person_introduction_titles(person: Person):
     title_tuple = []
@@ -466,3 +540,23 @@ def serum_give_build_menu_options(person, chances):
         option_list.append(("Ask her to take it" + serum_give_chance_color_wrapper(chances[1]), "ask"))
     option_list.insert(0, "Give Serum")
     return option_list
+
+def manage_bc(person, start, update_knowledge = True):
+    if start:
+        event_label = "bc_start_event"
+    else:
+        event_label = "bc_stop_event"
+
+    mc.business.add_mandatory_morning_crisis(
+        Action("Change birth control", always_true_requirement, event_label, args = [person, update_knowledge])
+    ) # She starts or stops the next morning (morning crisis event triggers only before time_of_day = 0).
+
+def start_birth_control(person: Person, update_knowledge = True):
+    person.on_birth_control = True
+    if update_knowledge:
+        person.update_birth_control_knowledge()
+
+def stop_birth_control(person: Person, update_knowledge = True):
+    person.on_birth_control = False
+    if update_knowledge:
+        person.update_birth_control_knowledge()
