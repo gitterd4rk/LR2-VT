@@ -673,6 +673,11 @@ def create_random_person(name = None, name_list = None, last_name = None, last_n
     if persistent.mark_unique_as_favourite and type == "story":
         person.toggle_favourite()
 
+    # girl has ended her menopause and is no longer able to have children
+    # TODO: maybe add a story line for these characters to make them produce eggs again
+    if persistent.pregnancy_pref != 0 and person.age > renpy.random.randint(49, 53):
+        person.fertility_percent = -1000
+
     # make her dress using the newly created wardrobe
     person.planned_outfit = person.decide_on_outfit()
     person.apply_outfit(person.planned_outfit)
