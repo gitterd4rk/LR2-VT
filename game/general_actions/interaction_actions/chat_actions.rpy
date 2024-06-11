@@ -1036,45 +1036,14 @@ label grope_person(the_person):
                         $ the_person.review_outfit()
     return
 
-init -2 python:
-    def build_command_person_actions_menu(the_person):
-        change_titles_action = Action("Change how we refer to each other", requirement = change_titles_requirement, effect = "change_titles_person", args = the_person, requirement_args = the_person,
-            menu_tooltip = f"Manage how you refer to {the_person.display_name} and tell her how she should refer to you. Different combinations of stats, roles, and personalities unlock different titles.", priority = -5)
-
-        wardrobe_change_action = Action("Change your wardrobe", requirement = wardrobe_change_requirement, effect = "wardrobe_change_label", args = the_person, requirement_args = the_person,
-            menu_tooltip = f"Add and remove outfits from {the_person.display_name}'s wardrobe, or ask her to put on a specific outfit.", priority = -5)
-
-        serum_demand_action = Action("Drink a dose of serum for me", requirement = serum_demand_requirement, effect = "serum_demand_label", args = the_person, requirement_args = the_person,
-            menu_tooltip = f"Demand {the_person.display_name} drinks a dose of serum right now. Easier to command employees to test serum.", priority = -5)
-
-        strip_demand_action = Action("Strip for me", requirement = demand_strip_requirement, effect = "demand_strip_label", args = the_person, requirement_args = the_person,
-            menu_tooltip = "Command her to strip off some of her clothing.", priority = -5)
-
-        touch_demand_action = Action("Let me touch you   {energy=-10}", requirement = demand_touch_requirement, effect = "demand_touch_label", args = the_person, requirement_args = the_person,
-            menu_tooltip = f"Demand {the_person.display_name} stays still and lets you touch her. Going too far may damage your relationship.", priority = -5)
-
-        suck_demand_action = Action("Suck my cock", requirement = suck_demand_requirement, effect = "suck_demand_label", args = the_person, requirement_args = the_person,
-            menu_tooltip = f"Demand {the_person.display_name} get onto her knees and worship your cock.", priority = -5)
-
-        bc_demand_action = Action("Talk about birth control", requirement = demand_bc_requirement, effect = "bc_demand_label", args = the_person, requirement_args = the_person,
-            menu_tooltip = f"Discuss {the_person.display_name}'s use of birth control.", priority = -5)
-
-        make_onlyfans_together_action = Action("Make an OnlyFans video together", requirement = make_onlyfans_together_requirement, effect = "make_onlyfans_together_label", args = the_person, requirement_args = the_person,
-            menu_tooltip = f"Order {the_person.display_name} to make a OnlyFans video together with you.", priority = -5)
-
-        bend_over_your_desk_action = Action("Bend her over her desk", requirement = bend_over_your_desk_requirement, effect = "bend_over_your_desk_label", args = the_person, requirement_args = the_person,
-            menu_tooltip = f"Order {the_person.display_name} to bend over her desk so you can enjoy her ass.", priority = -5)
-
-        return ["Command", change_titles_action, wardrobe_change_action, serum_demand_action, strip_demand_action, touch_demand_action, make_onlyfans_together_action, suck_demand_action, bend_over_your_desk_action, bc_demand_action, ["Never mind", "Return"]]
-
 label command_person(the_person):
     mc.name "[the_person.title], I want you to do something for me."
     the_person "Yes [the_person.mc_title]?"
 
-    call screen main_choice_display(build_menu_items([build_command_person_actions_menu(the_person)]))
+    call screen main_choice_display(build_menu_items([build_command_action_list(the_person, True)]))
 
     if isinstance(_return, Action):
-        $ _return.call_action()
+        $ _return.call_action(the_person)
     return
 
 label bc_talk_label(the_person):
@@ -1082,6 +1051,12 @@ label bc_talk_label(the_person):
     mc.name "Can we talk about something?"
     the_person "Mmhm, what's that?"
     mc.name "I want to talk about your birth control."
+    if the_person.fertility_percent < 0:
+        the_person "I have an IUD, so there is nothing to worry about."
+        mc.name "That's good to know, thanks you for letting me know."
+        $ the_person.update_birth_control_knowledge()
+        return
+
     if the_person.has_relation_with_mc:
         #She'll talk to you about it. High Love or moderate sluttiness are needed to convince her to stop taking BC. Easier to convince her to start.
         # High influence from opinion of creampies.
@@ -1249,11 +1224,17 @@ label bc_demand_label(the_person):
     # Contains the obedience based approach to asking someone to stop taking birth control.
     # This event can have a moderately low Obedience requirement, with higher requirements to actually make changes.
     mc.name "Tell me about your birth control."
+    $ the_person.update_birth_control_knowledge()
+
+    if the_person.fertility_percent < 0:
+        the_person "I have an IUD, so there is nothing to worry about."
+        mc.name "That's good to know, thanks you for letting me know."
+        return
+
     if the_person.on_birth_control:
         the_person "I'm taking birth control right now."
     else:
         the_person "I'm... not taking any right now."
-    $ the_person.update_birth_control_knowledge()
 
     menu:
         "Start taking birth control" if not the_person.on_birth_control and the_person.obedience >= 130:
@@ -1300,25 +1281,10 @@ label bc_demand_label(the_person):
             mc.name "Good. That's all I wanted to know."
     return
 
-init 5 python:
-    def manage_bc(person, start, update_knowledge = True):
-        if start:
-            event_label = "bc_start_event"
-        else:
-            event_label = "bc_stop_event"
-
-        mc.business.add_mandatory_morning_crisis(
-            Action("Change birth control", always_true_requirement, event_label, args = [person, update_knowledge])
-        ) # She starts or stops the next morning.
-
 label bc_start_event(the_person, update_knowledge = True):
-    $ the_person.on_birth_control = True
-    if update_knowledge:
-        $ the_person.update_birth_control_knowledge()
+    $ start_birth_control(the_person, update_knowledge)
     return
 
 label bc_stop_event(the_person, update_knowledge = True):
-    $ the_person.on_birth_control = False
-    if update_knowledge:
-        $ the_person.update_birth_control_knowledge()
+    $ stop_birth_control(the_person, update_knowledge)
     return
