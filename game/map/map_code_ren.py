@@ -85,9 +85,14 @@ def get_location_tooltip(location: Room) -> str:
         info = []
         #added girlfriend statuses to beginning
         if person.is_favourite:
-            info.append(" {image=full_star_token_small}")
+            info.append("{image=full_star_token_small}")
         else:
-            info.append(" {image=empty_token_small}")
+            info.append("{image=empty_token_small}")
+        if person.type=="story":
+            info.append("{image=labbook_token_small}")
+        else:
+            info.append("{image=empty_token_small}")
+        info.append(" ")
         info.append(person.name)
         info.append(" ")
         info.append(person.last_name)
@@ -186,6 +191,8 @@ def build_tile_information(known_people: list[Person], total_people: int, locati
     extra_info = []
     if any(x for x in known_people if x.is_favourite):
         extra_info.append("{image=full_star_token_small}")
+    if any(x for x in known_people if x.type=="story"):
+        extra_info.append("{image=labbook_token_small}")
     if any(x for x in known_people if x.has_exact_role(harem_role) and x.has_exact_role(affair_role)==False):
         extra_info.append("{image=harem_token_small}")
     if any(x for x in known_people if x.has_exact_role(harem_role) and x.has_exact_role(affair_role)):
