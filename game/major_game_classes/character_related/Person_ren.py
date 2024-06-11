@@ -5310,12 +5310,6 @@ class Person(): #Everything that needs to be known about a person.
     def maximum_milk_in_breasts(self) -> int:
         return Person.rank_tits(self.tits) * 2
 
-    def get_milk_trait(self) -> SerumTrait: # Generates a milk trait that can be used any time you harvest lactating milk.
-        milk_trait = SerumTrait("Breast Milk",
-            f"Fresh breast milk from {self.name} {self.last_name}. Valuable to the right sort of person.",
-            sexual_aspect = 2, medical_aspect = 2)
-        return milk_trait
-
     @property
     def so_title(self) -> str:
         if self.has_significant_other:
