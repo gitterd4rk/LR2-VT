@@ -15,8 +15,6 @@ screen person_info_detailed(person):
     default person_job_info = person_info_ui_get_job_title(person)
     default base_salary = sum(x.base_salary for x in person.jobs if x.is_paid)
     default fertility_info = f"{person.effective_fertility:.1f}%"
-    if person.is_infertile: # infertile
-        $ fertility_info = "Infertile"
     default baby_desire_string = get_baby_desire_format(person)
     default fertility_peak_day = str(person.ideal_fertile_day + 1)
     default known_days = str(day - person.event_triggers_dict.get("birth_control_known_day", 0))
@@ -81,6 +79,8 @@ screen person_info_detailed(person):
                             text "Fertility: Sterile" style "menu_text_style"
                         elif person.is_infertile:
                             text "Fertility: Infertile" style "menu_text_style"
+                        elif person.fertility_percent < 0:
+                            text "Fertility: Intrauterine Device" style "menu_text_style"
                         else:
                             if persistent.pregnancy_pref > 0:
                                 hbox:

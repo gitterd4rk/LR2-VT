@@ -824,6 +824,15 @@ class Person(): #Everything that needs to be known about a person.
         self.set_title("???")
         if title is not None:
             self.set_title(title)
+            #need a better way of dealing with clone base stats for VT
+            if title=="Clone" and type=="random":
+                self.oral_first = None
+                self.oral_virgin = 0
+                self.anal_first = None
+                self.anal_virgin = 0
+                self.vaginal_first = None
+                self.vaginal_virgin = 0
+                self.hymen = 0
 
         self.set_possessive_title("the unknown woman")  #The way the girl is referred to in relation to you. For example "your sister", "your head researcher", or just their title again.
         if possessive_title is not None:
@@ -5300,12 +5309,6 @@ class Person(): #Everything that needs to be known about a person.
     @property
     def maximum_milk_in_breasts(self) -> int:
         return Person.rank_tits(self.tits) * 2
-
-    def get_milk_trait(self) -> SerumTrait: # Generates a milk trait that can be used any time you harvest lactating milk.
-        milk_trait = SerumTrait("Breast Milk",
-            f"Fresh breast milk from {self.name} {self.last_name}. Valuable to the right sort of person.",
-            sexual_aspect = 2, medical_aspect = 2)
-        return milk_trait
 
     @property
     def so_title(self) -> str:

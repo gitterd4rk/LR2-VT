@@ -240,6 +240,13 @@ renpy.image("starttrance_token_small", starttrance_token_small_image)
 donetrain_token_small_image = im.Scale(Image(get_file_handle("donetrain.png")), 18, 18)
 renpy.image("donetrain_token_small", donetrain_token_small_image)
 
+handprint_token_small_image = im.Scale(Image(get_file_handle("handprint.png")), 18, 18)
+renpy.image("handprint_token_small", handprint_token_small_image)
+
+labbook_token_small_image = im.Scale(Image(get_file_handle("labbook.png")), 18, 18)
+renpy.image("labbook_token_small", labbook_token_small_image)
+labbook_image = Image(get_file_handle("labbook.png"))
+
 matureteen_image = Image(get_file_handle("matureteen.png"))
 
 claimedmouth_image = Image(get_file_handle("claimedmouth.png"))
