@@ -355,11 +355,11 @@ def create_random_person(name = None, name_list = None, last_name = None, last_n
         serum_tolerance = get_random_from_weighted_list([[0, 5], [1, 20], [2, 40], [3, 30], [4, 5]])
 
 ### ADDING THE Virginal Tracker Script
-    #hymen is 0 = sealed, 1=recently torn bleeding(negative number instead?), 2=normal - serum to regenerate vaginal and hymen!
-    #vaginal_virgin is 0=virgin, 1=just the tip, 2=full penetration, 3-10 is degree of tightness to loose, longer they go without sex usually returns to 7=normal if had kids
+    #hymen is 0 = sealed, 1=recently torn bleeding, 3=normal - serum to regenerate vaginal and hymen!
+    #vaginal_virgin is 0=virgin, 1=just the tip, 2=full penetration, 3-10 is degree of tightness to loose
     #anal_virgin is 0=virgin, 1=just the tip, 2=full penetration, 3-10 is degree of tightness to loose -placeholder atm
     #oral_virgin is 0=virgin, 1=just the tip, 2=full penetration, 3-10 is degree of tightness to loose -placeholder atm
-    #vaginal_first = None (Placeholder), anal_first = None (Placeholder), Oral_first = None (Placeholder) - can change to 'You' or SO_name
+    #vaginal_first = None (Placeholder), anal_first = None (Placeholder), Oral_first = None (Placeholder) - can change to mc.name or SO_name
     #moved sexstats here to have the skill/stat/sex array be handled in one flow.
     # sex array 0-Foreplay 1-Oral 2-Vaginal 3-Anal
     if sex_skill_array is None:
@@ -489,7 +489,7 @@ def create_random_person(name = None, name_list = None, last_name = None, last_n
                 #According to the same CDC data: 20-24:12.3%, 25-29: 5%, 30-34:2.4, 40-44: 0.3%
                 #so if I used 90% then it would be 10%, to maintain an interesting ratio would be 30%
                 #Oral Check
-                if (renpy.random.randint(1, 100))>=30: #10% chance of being virginal 30 for interests
+                if (renpy.random.randint(1, 100))>=30: #10% chance of being virginal 30% for interests
                     if relationship!="Single":
                         if SO_name is None or SO_name is mc.name: 
                             if SO_name==mc.name: oral_first = mc.name
@@ -540,7 +540,7 @@ def create_random_person(name = None, name_list = None, last_name = None, last_n
                         sex_skill_array[2] = vaginal_virgin
                     else: 
                         if sex_skill_array[2]>10: vaginal_virgin = 10
-                        else: vaginal_virgin = 7 ##giving the mothers an edge :P
+                        else: vaginal_virgin = 7
 
                 #Anal Check
                 if (renpy.random.randint(1, 100))>=30: #30% chance of being virginal
@@ -616,7 +616,7 @@ def create_random_person(name = None, name_list = None, last_name = None, last_n
                         sex_skill_array[2] = vaginal_virgin
                     else: 
                         if sex_skill_array[2]>10: vaginal_virgin = 10
-                        else: vaginal_virgin = 7 ##giving the mothers an edge :P
+                        else: vaginal_virgin = 7
 
                 #Anal Check
                 if (renpy.random.randint(1, 100))>=30: #30% chance of being virginal
