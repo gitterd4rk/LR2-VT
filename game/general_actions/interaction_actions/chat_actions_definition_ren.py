@@ -311,6 +311,8 @@ specific_actions = ActionList([
     Action("Give her a command", requirement = command_requirement, effect = "command_person",
         menu_tooltip = "Leverage her obedience and command her to do something."),
 ])
+
+
 command_actions = ActionList([
     Action("Change how we refer to each other", requirement = change_titles_requirement, effect = "change_titles_person",
         menu_tooltip = "Manage how you refer to her and tell her how she should refer to you. Different combinations of stats, roles, and personalities unlock different titles."),
@@ -331,6 +333,7 @@ command_actions = ActionList([
     Action("Bend her over her desk", requirement = bend_over_your_desk_requirement, effect = "bend_over_your_desk_label",
         menu_tooltip = "Order her to bend over her desk so you can enjoy her ass."),
 ])
+
 
 def sort_display_list(the_item): #Function to use when sorting lists of actions (and potentially people or strings)
     extra_args = None
