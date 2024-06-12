@@ -2,6 +2,7 @@ from __future__ import annotations
 import builtins
 import collections
 import copy
+from itertools import chain
 import renpy
 from typing import Callable, Iterable
 from renpy import persistent
@@ -1174,14 +1175,13 @@ class Person(): #Everything that needs to be known about a person.
         return self.identifier
 
     def __eq__(self, other: Person) -> bool:
-        if not isinstance(self, Person):
+        if not isinstance(other, Person):
             return NotImplemented
         return self.identifier == other.identifier
 
     def __getstate__(self): # excludes decorators from serialization
         state = self.__dict__.copy()
-        excluded = ["opinion", "known_opinion", "progress", "location", "current_job", "is_at_work", "current_location_hub", "home", "home_hub", "is_at_office", "is_at_stripclub", "is_at_mc_house"]
-        for x in excluded:
+        for x in chain(("opinion", "known_opinion", "progress") + Person._location_clear_keys):
             state.pop(x, None)
         return state
 
@@ -1241,6 +1241,7 @@ class Person(): #Everything that needs to be known about a person.
     def _set_location(self, value: Room):
         if not isinstance(value, Room):
             write_log("location.setter(): Error new location parameter is not a room.")
+            return NotImplemented
         self._location = value.identifier
         self._clear_location_cache()
 
@@ -1252,7 +1253,7 @@ class Person(): #Everything that needs to be known about a person.
 
     @cached_property
     def current_location_hub(self) -> MapHub:
-        return next((x for x in list_of_hubs if self.location in x), MapHub("Unknown", "Unkonwn"))
+        return next((x for x in list_of_hubs if self.location in x), MapHub("Unknown", "Unknown"))
 
     @cached_property
     def home(self) -> Room:
@@ -1265,6 +1266,7 @@ class Person(): #Everything that needs to be known about a person.
     def _set_home(self, value: Room):
         if not isinstance(value, Room):
             write_log("home.setter(): Error new home parameter is not a room.")
+            return NotImplemented
         self._home = value.identifier
         self.__dict__.pop("home", None)
         self.__dict__.pop("home_hub", None)
@@ -1288,7 +1290,7 @@ class Person(): #Everything that needs to be known about a person.
     def change_home_location(self, new_home):
         if not isinstance(new_home, Room):
             write_log("change_home_location(): Error new home parameter is not a room.")
-            return
+            return NotImplemented
 
         # remove current location, if house will be empty
         if not any(x for x in all_people_in_the_game(excluded_people = [self]) if x.home == self.home) \
@@ -1341,7 +1343,6 @@ class Person(): #Everything that needs to be known about a person.
         '''
         Returns True when the person is at currently scheduled job
         '''
-
         if self.current_job and self.current_job.scheduled_location:
             # list of special conditions for is at work
             if ((self.is_employee or self.is_intern) and self.is_at_office):
@@ -1388,7 +1389,7 @@ class Person(): #Everything that needs to be known about a person.
     @bedroom.setter
     def bedroom(self, location: Room):
         if not isinstance(location, Room):
-            return
+            return NotImplemented
         self._bedroom = location.identifier
 
     def change_location(self, destination: Room) -> bool:
