@@ -38,12 +38,12 @@ def oral_restore_on_apply(person: Person, serum: SerumDesign, add_to_log: bool):
 ### Virgin ON TURN ###
 def hymen_restore_on_turn(person: Person, serum: SerumDesign, add_to_log: bool):
     person.change_happiness(-5, add_to_log = add_to_log)
-    if person.vaginal_virgin>=1: 
+    if person.vaginal_virgin>=1:
         person.vaginal_virgin -=1
         if person in mc.location.people: #If you're here applying this trait in person it causes her to exclaim.
             renpy.say(f"{person.title or person.create_formatted_title('???')}", "Oh my god my....it itches!")
     elif person.vaginal_virgin ==0:
-        if person.hymen==2: 
+        if person.hymen==2:
             person.hymen=1
             if add_to_log:
                 mc.log_event(f"{person.title or person.create_formatted_title('???')}: Hymen 50% Restored", "float_text_grey")
@@ -53,7 +53,7 @@ def hymen_restore_on_turn(person: Person, serum: SerumDesign, add_to_log: bool):
                 mc.log_event(f"{person.title or person.create_formatted_title('???')}: Vaginal Stimulation Ended", "float_text_pink")
 def anal_restore_on_turn(person: Person, serum: SerumDesign, add_to_log: bool):
     person.change_happiness(-5, add_to_log = add_to_log)
-    if person.anal_virgin>=1: 
+    if person.anal_virgin>=1:
         person.anal_virgin -=1
         if person in mc.location.people: #If you're here applying this trait in person it causes her to exclaim.
             renpy.say(f"{person.title or person.create_formatted_title('???')}", "Oh my god! Excuse me! How embarrassing!")
@@ -61,7 +61,7 @@ def anal_restore_on_turn(person: Person, serum: SerumDesign, add_to_log: bool):
         mc.log_event(f"{person.title or person.create_formatted_title('???')}: Anal Stimulation Ended", "float_text_pink")
 def oral_restore_on_turn(person: Person, serum: SerumDesign, add_to_log: bool):
     person.change_happiness(-5, add_to_log = add_to_log)
-    if person.oral_virgin>=1: 
+    if person.oral_virgin>=1:
         person.oral_virgin -=1
         if person in mc.location.people: #If you're here applying this trait in person it causes her to exclaim.
             renpy.say(f"{person.title or person.create_formatted_title('???')}", "Ugh, why am I drooling???!")
@@ -129,4 +129,3 @@ def init_Virginal_Serum():
         research_needed = 750,
         clarity_cost = 500,
         mental_aspect = 2, physical_aspect = 2, sexual_aspect = 2, medical_aspect = 6, flaws_aspect = 0, attention = 1)
-    
